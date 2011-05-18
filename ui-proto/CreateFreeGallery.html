@@ -5,6 +5,7 @@
     <title>Sharevent: Easy Photo Sharing</title>
 </head>
 <body>
+    <div style="width: 500px; margin-left: auto; margin-right: auto;">
     <h1>Sharevent</h1>
     <h2>Start a free gallery</h2>
     <form action="" method="get">
@@ -106,17 +107,26 @@
             </select>
             <br />
             
-            Your Name (Will be displayed in the gallery)
+            Your first name
             <br />
-            <input name="GalleryLocation" type="text" size="50" maxlength="250" />
+            <input name="CreatorFirstName" type="text" size="50" maxlength="250" />
+            <br />
+            Your last name
+            <br />
+            <input name="CreatorLastName" type="text" size="50" maxlength="250" />
+            <br />
+            Your e-mail address (Will be displayed in the gallery)
+            <br />
+            <input name="CreatorEmail" type="text" size="50" maxlength="250" />
             <br />
             
-            <input type="button" name="NextStepButton" value="Start" />
+            <a href="ShareGallery.html">Create!</a>
             
             <div id="AdDiv" style="background-color: red;">
                 Ads
             </div>
         </p>
     </form>
+    </div>
 </body>
 </html>
