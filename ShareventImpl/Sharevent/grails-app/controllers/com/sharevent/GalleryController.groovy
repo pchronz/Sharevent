@@ -98,7 +98,16 @@ class GalleryController {
         }
     }
 
-    // ********* CUSTOM VIEWS BELOW ************
+    // ********* OWN ACTIONS BELOW *******
+
+    def view = {
+        def galleryInstance = Gallery.get(params.id)
+        if(galleryInstance)
+            render(view:"view", model:[galleryInstance:galleryInstance])
+        else
+            redirect(controller:"main")
+    }
+
     def createFree = {
 
     }
@@ -107,19 +116,22 @@ class GalleryController {
 
     }
 
-    def pay = {
-
-    }
-
     def share = {
-
+        println params
+        def creator = new GalleryUser(params)
+        def gallery = new Gallery(params)
+        gallery.creator = creator
+        creator.save(flush:true)
+        gallery.save(flush:true)
+        render(view:"share", model:[galleryInstance:gallery])
     }
 
-    def view = {
+    def pay = {
 
     }
 
     def download = {
 
     }
+
 }

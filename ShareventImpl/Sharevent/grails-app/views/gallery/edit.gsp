@@ -60,10 +60,10 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                  <label for="contributor"><g:message code="gallery.contributor.label" default="Contributor" /></label>
+                                  <label for="contributors"><g:message code="gallery.contributors.label" default="Contributors" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: galleryInstance, field: 'contributor', 'errors')}">
-                                    <g:select name="contributor" from="${com.sharevent.GalleryUser.list()}" multiple="yes" optionKey="id" size="5" value="${galleryInstance?.contributor*.id}" />
+                                <td valign="top" class="value ${hasErrors(bean: galleryInstance, field: 'contributors', 'errors')}">
+                                    <g:select name="contributors" from="${com.sharevent.GalleryUser.list()}" multiple="yes" optionKey="id" size="5" value="${galleryInstance?.contributors*.id}" />
                                 </td>
                             </tr>
                         

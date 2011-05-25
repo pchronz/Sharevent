@@ -28,155 +28,45 @@
   </head>
   <body>
     <div style="width: 850px; margin-left: auto; margin-right: auto;">
-        <h2>MyGalleryTitle</h2>
+        <h2>${galleryInstance.title}</h2>
         <p>
             <g:link controller="gallery" action="share"><img src="${resource(dir:'images',file:'Share.jpg')}" /></g:link>
             <br />
-            Dortmund, May 2011
+            ${galleryInstance.location + ", " + galleryInstance.date.format("dd.MM.yyyy")}
             <br />
-            Creator: <a href="mailto:maike@flooblemail.com">Maike Ka</a>
+            Creator: <a href="mailto:${galleryInstance.creator.email}">${galleryInstance.creator.firstName + " " + galleryInstance.creator.lastName}</a>
         </p>
 
-        <div id="UserGallery1">
-            <p>Peter C. <a href="#markall">all</a> <a href="#marknone">none</a></p>
-            <div style="border-style: solid;">
+
+        <g:each var="user" in="${galleryInstance?.contributors}">
+            <div id="user_${user.id}">
+                <p><a href="mailto:${user.email}">${user.firstName} ${user.lastName}</a> <a href="#markall">all</a> <a href="#marknone">none</a></p>
+                <div style="border-style: solid;">
+
                 <div style="border-bottom-style: dotted; clear: both; margin: 10px;">
                     <p>
                         <a class="hide" href="#">Hide</a>
                     </p>
                 </div>
-                <div id="UserPhoto1_1" style="float: left; margin: 10px;">
+                <div id="user_${user.id}_photo_1" style="float: left; margin: 10px;">
                     <img src="${resource(dir:'images/galleryPhotos',file:'1.jpg')}" width="250px"/>
                     <br />
-                    <input type="checkbox" name="userPhoto1Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_2" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'2.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto2Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_3" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'3.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto3Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_4" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'4.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto4Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_5" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'5.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto5Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_6" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'6.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto6Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_7" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'7.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto7Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_8" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'8.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto8Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_9" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'9.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto9Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_10" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'10.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto10Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_11" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'11.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto11Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_12" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'12.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto12Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_13" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'13.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto13Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_14" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'14.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto14Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_15" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'15.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto15Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_16" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'16.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto16Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_17" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'17.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto17Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_18" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'18.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto18Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_19" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'19.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto19Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_20" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'20.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto20Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_21" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'21.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto21Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_22" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'22.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto22Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_23" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'23.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto23Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_24" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'24.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto24Checked" value="Selected" /> Select me!
-                </div>
-                <div id="UserPhoto1_25" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'25.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="userPhoto25Checked" value="Selected" /> Select me!
+                    <input type="checkbox" name="user_${user.id}_photo_1_checkbox" value="Selected" /> Select me!
                 </div>
                 <div id="HidePhotos1" style="border-top-style: dotted; clear: both; margin: 10px;">
                     <p>
                         <a class="hide" href="#">Hide</a>
                     </p>
                 </div>
-            </div>
         </div>
+
+
+            </div>
+
+        </g:each>
+
+
+
 
         <div id="UserGallery2">
             <p>Maike Ka <a href="#markall">all</a> <a href="#marknone">none</a></p>
@@ -187,7 +77,7 @@
                     </p>
                 </div>
                 <div id="UserPhoto2_1" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'.1jpg')}" width="250px"/>
+                    <img src="${resource(dir:'images/galleryPhotos',file:'1.jpg')}" width="250px"/>
                     <br />
                     <input type="checkbox" name="userPhoto1Checked" value="Selected" /> Select me!
                 </div>

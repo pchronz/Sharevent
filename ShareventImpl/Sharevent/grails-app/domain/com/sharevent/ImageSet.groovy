@@ -7,5 +7,6 @@ class ImageSet {
     static belongsTo = [galleryUser:GalleryUser]
 
     static constraints = {
+        galleryUser(nullable:false)
     }
 }

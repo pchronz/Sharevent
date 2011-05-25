@@ -51,11 +51,11 @@
                         </tr>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="gallery.contributor.label" default="Contributor" /></td>
+                            <td valign="top" class="name"><g:message code="gallery.contributors.label" default="Contributors" /></td>
                             
                             <td valign="top" style="text-align: left;" class="value">
                                 <ul>
-                                <g:each in="${galleryInstance.contributor}" var="c">
+                                <g:each in="${galleryInstance.contributors}" var="c">
                                     <li><g:link controller="galleryUser" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></li>
                                 </g:each>
                                 </ul>

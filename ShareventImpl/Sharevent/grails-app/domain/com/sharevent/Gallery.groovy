@@ -7,7 +7,7 @@ class Gallery {
     String location
 
     static belongsTo = [creator:GalleryUser]
-    static hasMany = [contributor:GalleryUser]
+    static hasMany = [contributors:GalleryUser]
 
     static constraints = {
         date(nullable:false)
