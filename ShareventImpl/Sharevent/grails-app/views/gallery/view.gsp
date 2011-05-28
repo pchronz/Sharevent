@@ -48,16 +48,20 @@
                         <a class="hide" href="#">Hide</a>
                     </p>
                 </div>
-                <div id="user_${user.id}_photo_1" style="float: left; margin: 10px;">
-                    <img src="${resource(dir:'images/galleryPhotos',file:'1.jpg')}" width="250px"/>
-                    <br />
-                    <input type="checkbox" name="user_${user.id}_photo_1_checkbox" value="Selected" /> Select me!
-                </div>
-                <div id="HidePhotos1" style="border-top-style: dotted; clear: both; margin: 10px;">
-                    <p>
-                        <a class="hide" href="#">Hide</a>
-                    </p>
-                </div>
+                ${user.imageSet?.size()}
+                <g:each var="image" in="${user.imageSet?.images}" >
+                    <div id="user_${user.id}_photo_${image.id}" style="float: left; margin: 10px;">
+                        <!-- TODO determined path depending on gallery and user id -->
+                        <img src="${resource(dir:'images/galleryPhotos',file:image.id + '.jpg')}" width="250px"/>
+                        <br />
+                        <input type="checkbox" name="user_${user.id}_photo_${image.id}_checkbox" value="Selected" /> Select me!
+                    </div>
+                    <div id="HidePhotos${user.id}" style="border-top-style: dotted; clear: both; margin: 10px;">
+                        <p>
+                            <a class="hide" href="#">Hide</a>
+                        </p>
+                    </div>
+                </g:each>
         </div>
 
 

@@ -6,12 +6,18 @@ class Gallery {
     String title
     String location
 
-    static belongsTo = [creator:GalleryUser]
+    String creatorFirstName
+    String creatorLastName
+    String creatorEmail
+
     static hasMany = [contributors:GalleryUser]
 
     static constraints = {
         date(nullable:false)
         title(nullable:false)
         location(nullable:false)
+        creatorFirstName(nullable:false)
+        creatorLastName(nullable: false)
+        creatorEmail(nullable: false)
     }
 }

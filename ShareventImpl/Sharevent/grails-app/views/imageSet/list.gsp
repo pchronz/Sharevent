@@ -29,6 +29,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                    ${imageSetInstanceList.size()}
                     <g:each in="${imageSetInstanceList}" status="i" var="imageSetInstance">
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
                         
