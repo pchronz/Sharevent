@@ -51,6 +51,27 @@
                         </tr>
                     
                         <tr class="prop">
+                            <td valign="top" class="name"><g:message code="gallery.creatorFirstName.label" default="Creator First Name" /></td>
+                            
+                            <td valign="top" class="value">${fieldValue(bean: galleryInstance, field: "creatorFirstName")}</td>
+                            
+                        </tr>
+                    
+                        <tr class="prop">
+                            <td valign="top" class="name"><g:message code="gallery.creatorLastName.label" default="Creator Last Name" /></td>
+                            
+                            <td valign="top" class="value">${fieldValue(bean: galleryInstance, field: "creatorLastName")}</td>
+                            
+                        </tr>
+                    
+                        <tr class="prop">
+                            <td valign="top" class="name"><g:message code="gallery.creatorEmail.label" default="Creator Email" /></td>
+                            
+                            <td valign="top" class="value">${fieldValue(bean: galleryInstance, field: "creatorEmail")}</td>
+                            
+                        </tr>
+                    
+                        <tr class="prop">
                             <td valign="top" class="name"><g:message code="gallery.contributors.label" default="Contributors" /></td>
                             
                             <td valign="top" style="text-align: left;" class="value">
@@ -60,13 +81,6 @@
                                 </g:each>
                                 </ul>
                             </td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
-                            <td valign="top" class="name"><g:message code="gallery.creator.label" default="Creator" /></td>
-                            
-                            <td valign="top" class="value"><g:link controller="galleryUser" action="show" id="${galleryInstance?.creator?.id}">${galleryInstance?.creator?.encodeAsHTML()}</g:link></td>
                             
                         </tr>
                     

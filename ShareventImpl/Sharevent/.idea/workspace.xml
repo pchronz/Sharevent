@@ -12,6 +12,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="Commander">
+    <leftPanel />
+    <rightPanel />
+    <splitter proportion="0.5" />
+  </component>
   <component name="CoverageDataManager" choice="3" />
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -21,73 +26,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <line_breakpoints>
-      <breakpoint url="file://$PROJECT_DIR$/grails-app/controllers/com/sharevent/GalleryController.groovy" line="105" class="Class at GalleryController.groovy:105" package="">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/grails-app/conf/BootStrap.groovy" line="20" class="Class at BootStrap.groovy:20" package="">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/grails-app/conf/BootStrap.groovy" line="48" class="Class at BootStrap.groovy:48" package="">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/grails-app/conf/BootStrap.groovy" line="23" class="Class at BootStrap.groovy:23" package="">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/grails-app/conf/BootStrap.groovy" line="15" class="Class at BootStrap.groovy:15" package="">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-    </line_breakpoints>
     <breakpoint_any>
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -128,28 +66,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BootStrap.groovy" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="BootStrap.groovy" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/grails-app/conf/BootStrap.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="46" column="26" selection-start="1666" selection-end="1666" vertical-scroll-proportion="1.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GalleryController.groovy" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/sharevent/GalleryController.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="105" column="0" selection-start="4162" selection-end="4162" vertical-scroll-proportion="-4.4347825">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="list.gsp" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/grails-app/views/imageSet/list.gsp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="49" selection-start="1500" selection-end="1500" vertical-scroll-proportion="-1.9090909">
+            <state line="26" column="50" selection-start="1048" selection-end="1048" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -158,19 +78,19 @@
       <file leaf-file-name="view.gsp" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/grails-app/views/gallery/view.gsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="50" column="32" selection-start="1967" selection-end="1967" vertical-scroll-proportion="-2.9772727">
+            <state line="39" column="80" selection-start="1489" selection-end="1489" vertical-scroll-proportion="-1.3181819">
               <folding>
-                <marker date="1306514630000" expanded="true" signature="337:662" placeholder="{...}" />
-                <marker date="1306514630000" expanded="true" signature="389:650" placeholder="{...}" />
+                <marker date="1307295996000" expanded="true" signature="337:662" placeholder="{...}" />
+                <marker date="1307295996000" expanded="true" signature="389:650" placeholder="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="show.gsp" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/grails-app/views/galleryUser/show.gsp">
+      <file leaf-file-name="ImageController.groovy" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/sharevent/ImageController.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="9.0">
+            <state line="112" column="98" selection-start="4337" selection-end="4402" vertical-scroll-proportion="-6.5652175">
               <folding />
             </state>
           </provider>
@@ -179,7 +99,7 @@
       <file leaf-file-name="GalleryUser.groovy" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/grails-app/domain/com/sharevent/GalleryUser.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="4" selection-start="48" selection-end="101" vertical-scroll-proportion="-1.0666667">
+            <state line="16" column="41" selection-start="363" selection-end="363" vertical-scroll-proportion="-4.266667">
               <folding />
             </state>
           </provider>
@@ -200,6 +120,18 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="Gallery.groovy" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/grails-app/domain/com/sharevent/Gallery.groovy">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="8" column="64" selection-start="119" selection-end="119" vertical-scroll-proportion="0.2716763">
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="org.jetbrains.plugins.grails.perspectives.DomainClassesRelationsEditorProvider">
+            <state />
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="ImageSet.groovy" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/grails-app/domain/com/sharevent/ImageSet.groovy">
           <provider selected="true" editor-type-id="text-editor">
@@ -212,15 +144,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Gallery.groovy" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/grails-app/domain/com/sharevent/Gallery.groovy">
+      <file leaf-file-name="GalleryController.groovy" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/sharevent/GalleryController.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="36" selection-start="458" selection-end="458" vertical-scroll-proportion="-5.3333335">
+            <state line="108" column="22" selection-start="4265" selection-end="4265" vertical-scroll-proportion="-7.0869565">
               <folding />
             </state>
-          </provider>
-          <provider editor-type-id="org.jetbrains.plugins.grails.perspectives.DomainClassesRelationsEditorProvider">
-            <state />
           </provider>
         </entry>
       </file>
@@ -234,7 +163,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/grails-app/views/ads/view.gsp" />
         <option value="$PROJECT_DIR$/grails-app/views/gallery/createPremium.gsp" />
         <option value="$PROJECT_DIR$/grails-app/views/gallery/pay.gsp" />
         <option value="$PROJECT_DIR$/grails-app/views/gallery/download.gsp" />
@@ -245,10 +173,11 @@
         <option value="$PROJECT_DIR$/grails-app/views/gallery/share.gsp" />
         <option value="$PROJECT_DIR$/grails-app/domain/com/sharevent/ImageSet.groovy" />
         <option value="$PROJECT_DIR$/grails-app/views/imageSet/list.gsp" />
-        <option value="$PROJECT_DIR$/grails-app/controllers/com/sharevent/GalleryController.groovy" />
-        <option value="$PROJECT_DIR$/grails-app/views/gallery/view.gsp" />
-        <option value="$PROJECT_DIR$/grails-app/conf/BootStrap.groovy" />
         <option value="$PROJECT_DIR$/grails-app/domain/com/sharevent/GalleryUser.groovy" />
+        <option value="$PROJECT_DIR$/grails-app/conf/BootStrap.groovy" />
+        <option value="$PROJECT_DIR$/grails-app/controllers/com/sharevent/ImageController.groovy" />
+        <option value="$PROJECT_DIR$/grails-app/views/gallery/view.gsp" />
+        <option value="$PROJECT_DIR$/grails-app/controllers/com/sharevent/GalleryController.groovy" />
         <option value="$PROJECT_DIR$/grails-app/domain/com/sharevent/Gallery.groovy" />
       </list>
     </option>
@@ -271,7 +200,7 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -282,7 +211,21 @@
       <autoscrollFromSource />
       <sortByType />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Sharevent" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Favorites" />
+      <pane id="PackagesPane" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
@@ -455,21 +398,22 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39908257" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Grails View" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3292683" sideWeight="0.60091746" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39816234" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32771823" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Grails View" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28455284" sideWeight="0.67381316" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.67381316" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2495935" sideWeight="0.67381316" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32721713" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32618684" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32771823" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -511,48 +455,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/grails-app/views/gallery/list.gsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/views/gallery/create.gsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="55" column="73" selection-start="3075" selection-end="3075" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/conf/Config.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.grails/1.3.6/projects/Sharevent/plugins/tomcat-1.3.6/lib/tomcat-core.jar!/org/apache/catalina/core/ApplicationFilterChain.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="41" selection-start="149" selection-end="2314" vertical-scroll-proportion="0.4020979">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///usr/share/grails/lib/org.springframework.web.servlet-3.0.5.RELEASE.jar!/org/springframework/web/servlet/FrameworkServlet.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="91" column="28" selection-start="5543" selection-end="5552" vertical-scroll-proportion="0.37254903">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///usr/share/grails/lib/org.springframework.web.servlet-3.0.5.RELEASE.jar!/org/springframework/web/servlet/DispatcherServlet.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="97" column="19" selection-start="6504" selection-end="6504" vertical-scroll-proportion="0.35947713">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/grails-app/views/galleryUser/show.gsp">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="9.0">
@@ -567,38 +469,56 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/views/gallery/view.gsp">
+    <entry file="jar:///usr/share/grails/lib/org.springframework.web-3.0.5.RELEASE.jar!/org/springframework/web/context/ContextLoaderListener.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="32" selection-start="1967" selection-end="1967" vertical-scroll-proportion="-2.9772727">
-          <folding>
-            <marker date="1306514630000" expanded="true" signature="337:662" placeholder="{...}" />
-            <marker date="1306514630000" expanded="true" signature="389:650" placeholder="{...}" />
-          </folding>
+        <state line="24" column="16" selection-start="895" selection-end="895" vertical-scroll-proportion="-9.08">
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/sharevent/GalleryController.groovy">
+    <entry file="jar://$USER_HOME$/.grails/1.3.6/projects/Sharevent/plugins/tomcat-1.3.6/lib/tomcat-core.jar!/org/apache/catalina/core/ContainerBase.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="105" column="0" selection-start="4162" selection-end="4162" vertical-scroll-proportion="-4.4347825">
+        <state line="172" column="19" selection-start="8084" selection-end="8084" vertical-scroll-proportion="0.36013985">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.grails/1.3.6/projects/Sharevent/plugins/tomcat-1.3.6/lib/tomcat-core.jar!/org/apache/catalina/core/StandardContext.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="625" column="16" selection-start="27913" selection-end="27913" vertical-scroll-proportion="0.31045753">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/share/grails/lib/org.springframework.web-3.0.5.RELEASE.jar!/org/springframework/web/context/ContextLoader.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="65" selection-start="1237" selection-end="1237" vertical-scroll-proportion="0.35947713">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file:///usr/share/grails/src/java/grails/util/Environment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="250" column="0" selection-start="7566" selection-end="7566" vertical-scroll-proportion="0.3323263">
+        <state line="219" column="0" selection-start="6543" selection-end="6543" vertical-scroll-proportion="0.3323263">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/domain/com/sharevent/Image.groovy">
+    <entry file="file://$PROJECT_DIR$/grails-app/domain/com/sharevent/GalleryUser.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="6" selection-start="29" selection-end="29" vertical-scroll-proportion="-0.53333336">
+        <state line="16" column="41" selection-start="363" selection-end="363" vertical-scroll-proportion="-4.266667">
           <folding />
         </state>
       </provider>
       <provider editor-type-id="org.jetbrains.plugins.grails.perspectives.DomainClassesRelationsEditorProvider">
         <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/conf/BootStrap.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="50" selection-start="1048" selection-end="1048" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/grails-app/domain/com/sharevent/ImageSet.groovy">
@@ -611,31 +531,55 @@
         <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/domain/com/sharevent/Image.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="6" selection-start="29" selection-end="29" vertical-scroll-proportion="-0.53333336">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="org.jetbrains.plugins.grails.perspectives.DomainClassesRelationsEditorProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/views/gallery/view.gsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="80" selection-start="1489" selection-end="1489" vertical-scroll-proportion="-1.3181819">
+          <folding>
+            <marker date="1307295996000" expanded="true" signature="337:662" placeholder="{...}" />
+            <marker date="1307295996000" expanded="true" signature="389:650" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/sharevent/ImageController.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="112" column="98" selection-start="4337" selection-end="4402" vertical-scroll-proportion="-6.5652175">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/conf/UrlMappings.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="49" selection-start="89" selection-end="90" vertical-scroll-proportion="0.12276215">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grails-app/controllers/com/sharevent/GalleryController.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="108" column="22" selection-start="4265" selection-end="4265" vertical-scroll-proportion="-7.0869565">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/grails-app/domain/com/sharevent/Gallery.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="36" selection-start="458" selection-end="458" vertical-scroll-proportion="-5.3333335">
+        <state line="8" column="64" selection-start="119" selection-end="119" vertical-scroll-proportion="0.2716763">
           <folding />
         </state>
       </provider>
       <provider editor-type-id="org.jetbrains.plugins.grails.perspectives.DomainClassesRelationsEditorProvider">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/domain/com/sharevent/GalleryUser.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="4" selection-start="48" selection-end="101" vertical-scroll-proportion="-1.0666667">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="org.jetbrains.plugins.grails.perspectives.DomainClassesRelationsEditorProvider">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/grails-app/conf/BootStrap.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="26" selection-start="1666" selection-end="1666" vertical-scroll-proportion="1.0">
-          <folding />
-        </state>
       </provider>
     </entry>
   </component>

@@ -60,19 +60,44 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                  <label for="contributors"><g:message code="gallery.contributors.label" default="Contributors" /></label>
+                                  <label for="creatorFirstName"><g:message code="gallery.creatorFirstName.label" default="Creator First Name" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: galleryInstance, field: 'contributors', 'errors')}">
-                                    <g:select name="contributors" from="${com.sharevent.GalleryUser.list()}" multiple="yes" optionKey="id" size="5" value="${galleryInstance?.contributors*.id}" />
+                                <td valign="top" class="value ${hasErrors(bean: galleryInstance, field: 'creatorFirstName', 'errors')}">
+                                    <g:textField name="creatorFirstName" value="${galleryInstance?.creatorFirstName}" />
                                 </td>
                             </tr>
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                  <label for="creator"><g:message code="gallery.creator.label" default="Creator" /></label>
+                                  <label for="creatorLastName"><g:message code="gallery.creatorLastName.label" default="Creator Last Name" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: galleryInstance, field: 'creator', 'errors')}">
-                                    <g:select name="creator.id" from="${com.sharevent.GalleryUser.list()}" optionKey="id" value="${galleryInstance?.creator?.id}"  />
+                                <td valign="top" class="value ${hasErrors(bean: galleryInstance, field: 'creatorLastName', 'errors')}">
+                                    <g:textField name="creatorLastName" value="${galleryInstance?.creatorLastName}" />
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                  <label for="creatorEmail"><g:message code="gallery.creatorEmail.label" default="Creator Email" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: galleryInstance, field: 'creatorEmail', 'errors')}">
+                                    <g:textField name="creatorEmail" value="${galleryInstance?.creatorEmail}" />
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                  <label for="contributors"><g:message code="gallery.contributors.label" default="Contributors" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: galleryInstance, field: 'contributors', 'errors')}">
+                                    
+<ul>
+<g:each in="${galleryInstance?.contributors?}" var="c">
+    <li><g:link controller="galleryUser" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></li>
+</g:each>
+</ul>
+<g:link controller="galleryUser" action="create" params="['gallery.id': galleryInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'galleryUser.label', default: 'GalleryUser')])}</g:link>
+
                                 </td>
                             </tr>
                         

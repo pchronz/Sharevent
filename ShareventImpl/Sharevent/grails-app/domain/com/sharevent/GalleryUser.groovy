@@ -6,15 +6,15 @@ class GalleryUser {
     String lastName
     String email
 
-    Gallery contributedGallery
     ImageSet imageSet
+
+    static belongsTo = [contributedGallery:Gallery]
 
     static constraints = {
         firstName(blank:false)
         lastName(blank:false)
         email(email:true, blank:false, nullable:false)
-        createdGallery(nullable:true)
-        contributedGallery(nullable:true)
+        contributedGallery(nullable:false)
         imageSet(nullable:true)
     }
 }

@@ -57,10 +57,28 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="creator"><g:message code="gallery.creator.label" default="Creator" /></label>
+                                    <label for="creatorFirstName"><g:message code="gallery.creatorFirstName.label" default="Creator First Name" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: galleryInstance, field: 'creator', 'errors')}">
-                                    <g:select name="creator.id" from="${com.sharevent.GalleryUser.list()}" optionKey="id" value="${galleryInstance?.creator?.id}"  />
+                                <td valign="top" class="value ${hasErrors(bean: galleryInstance, field: 'creatorFirstName', 'errors')}">
+                                    <g:textField name="creatorFirstName" value="${galleryInstance?.creatorFirstName}" />
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="creatorLastName"><g:message code="gallery.creatorLastName.label" default="Creator Last Name" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: galleryInstance, field: 'creatorLastName', 'errors')}">
+                                    <g:textField name="creatorLastName" value="${galleryInstance?.creatorLastName}" />
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="creatorEmail"><g:message code="gallery.creatorEmail.label" default="Creator Email" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: galleryInstance, field: 'creatorEmail', 'errors')}">
+                                    <g:textField name="creatorEmail" value="${galleryInstance?.creatorEmail}" />
                                 </td>
                             </tr>
                         

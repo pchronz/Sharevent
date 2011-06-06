@@ -30,7 +30,9 @@
                         
                             <g:sortableColumn property="location" title="${message(code: 'gallery.location.label', default: 'Location')}" />
                         
-                            <th><g:message code="gallery.creator.label" default="Creator" /></th>
+                            <g:sortableColumn property="creatorFirstName" title="${message(code: 'gallery.creatorFirstName.label', default: 'Creator First Name')}" />
+                        
+                            <g:sortableColumn property="creatorLastName" title="${message(code: 'gallery.creatorLastName.label', default: 'Creator Last Name')}" />
                         
                         </tr>
                     </thead>
@@ -46,7 +48,9 @@
                         
                             <td>${fieldValue(bean: galleryInstance, field: "location")}</td>
                         
-                            <td>${fieldValue(bean: galleryInstance, field: "creator")}</td>
+                            <td>${fieldValue(bean: galleryInstance, field: "creatorFirstName")}</td>
+                        
+                            <td>${fieldValue(bean: galleryInstance, field: "creatorLastName")}</td>
                         
                         </tr>
                     </g:each>

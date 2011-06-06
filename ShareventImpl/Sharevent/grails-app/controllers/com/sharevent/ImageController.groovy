@@ -1,5 +1,9 @@
 package com.sharevent
 
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream
+
 class ImageController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -95,6 +99,29 @@ class ImageController {
         else {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'image.label', default: 'Image'), params.id])}"
             redirect(action: "list")
+        }
+    }
+
+    // *************** CUSTOM ACTION FOLLOW *******************
+    def viewImage = {
+        def image = Image.get(params.id)
+
+        BufferedImage bufferedImage = null
+        try {
+            File file = new File("")
+            // TODO read image-path from configuration file
+            String imageDBPath = "/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/"
+            String imagePath = imageDBPath + Long.toString(image.imageSet.id) + "/" + Long.toString(image.id) + ".jpg"
+            // TODO lose assumption that we are dealing with JPEGs!
+            byte[] imageArray = new BufferedInputStream(new FileInputStream(imagePath.toString())).bytes
+            response.outputStream << imageArray
+        }
+        catch(IOException e) {
+            println e.printStackTrace()
+        }
+        finally {
+            // TODO show a standard error picture
+            // TODO log the error, for later analysis
         }
     }
 }

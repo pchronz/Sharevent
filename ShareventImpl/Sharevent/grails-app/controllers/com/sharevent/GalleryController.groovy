@@ -1,5 +1,9 @@
 package com.sharevent
 
+import java.util.zip.ZipOutputStream
+import org.apache.tools.ant.taskdefs.Zip
+import java.util.zip.ZipEntry
+
 class GalleryController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -102,6 +106,8 @@ class GalleryController {
 
     def view = {
         def galleryInstance = Gallery.get(params.id)
+        println params
+
         if(galleryInstance)
             render(view:"view", model:[galleryInstance:galleryInstance])
         else
@@ -118,6 +124,7 @@ class GalleryController {
 
     def share = {
         println params
+        // TODO the creator user does not exist anymore, read the properties directly
         def creator = new GalleryUser(params)
         def gallery = new Gallery(params)
         gallery.creator = creator
@@ -132,6 +139,46 @@ class GalleryController {
 
     def download = {
 
+        // first get the selected image ids
+        def images = []
+        params.each {
+            if(it.key instanceof java.lang.String) {
+                if(it.key.startsWith("image")) {
+                    // Assuming that Grails is providing only selected checkboxes!
+                    String imageId = it.key
+                    images.add(imageId.split("_")[1])
+                }
+            }
+        }
+
+
+        // the build the paths for the image ids
+        def imagePaths = []
+        images.each {
+            String imagePath = "/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/" + params.id + "/" + it + ".jpg"
+            imagePaths.add(imagePath)
+        }
+
+        // now zip the selected images to the response stream
+        ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(response.outputStream))
+        def data = new byte[2048]
+        def galleryInstance = Gallery.get(params.id)
+        imagePaths.each { imagePath ->
+            // check whether the gallery's path also works on windows
+            String imageId = imagePath.split("/")[-1]
+            String zipPath = galleryInstance.title + "/" + imageId
+            println zipPath
+            FileInputStream fi = new FileInputStream(imagePath)
+            BufferedInputStream origin = new BufferedInputStream(fi, 2048)
+            ZipEntry entry = new ZipEntry(zipPath)
+            zos.putNextEntry(entry)
+            int count
+            while((count = origin.read(data, 0, 2048)) != -1) {
+               zos.write(data, 0, count);
+            }
+            origin.close();
+        }
+        zos.close()
     }
 
 }

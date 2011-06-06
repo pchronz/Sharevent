@@ -10,6 +10,8 @@ class Gallery {
     String creatorLastName
     String creatorEmail
 
+    int adminKey
+
     static hasMany = [contributors:GalleryUser]
 
     static constraints = {
@@ -19,5 +21,6 @@ class Gallery {
         creatorFirstName(nullable:false)
         creatorLastName(nullable: false)
         creatorEmail(nullable: false)
+        adminKey(nullable: false)
     }
 }
