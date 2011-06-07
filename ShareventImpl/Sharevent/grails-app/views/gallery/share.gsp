@@ -32,7 +32,7 @@
         <p>
             Administration Link
             <br />
-            <g:link controller="gallery" action="view" id="${galleryInstance.id}" title="Here you can remove individual photos or even delete the whole gallery, you can also block further uploads to it!"><g:createLink controller="gallery" action="view" id="${galleryInstance.id}" /></g:link>
+            <a href="${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id) + "?key=" + galleryInstance.adminKey}" title="Here you can remove individual photos or even delete the whole gallery, you can also block further uploads to it!"><g:createLink controller="gallery" action="view" id="${galleryInstance.id}" />?key=${galleryInstance.adminKey}</a>
         </p>
     </div>
 

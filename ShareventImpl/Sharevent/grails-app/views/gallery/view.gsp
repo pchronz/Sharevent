@@ -30,6 +30,9 @@
     <div style="width: 850px; margin-left: auto; margin-right: auto;">
         <h2>${galleryInstance.title}</h2>
         <p>
+            <g:if test="${flash.message}">
+                <div class="message">${flash.message}</div>
+            </g:if>
             <g:link controller="gallery" action="share"><img src="${resource(dir:'images',file:'Share.jpg')}" /></g:link>
             <br />
             ${galleryInstance.location + ", " + galleryInstance.date.format("dd.MM.yyyy")}
@@ -37,7 +40,7 @@
             Creator: <a href="mailto:${galleryInstance.creatorEmail}">${galleryInstance.creatorFirstName + " " + galleryInstance.creatorLastName}</a>
         </p>
 
-        <g:form action="download" controller="gallery" id="${galleryInstance.id}">
+        <g:form controller="gallery" id="${galleryInstance.id}">
 
         <g:each var="user" in="${galleryInstance?.contributors}">
             <div id="user_${user.id}">
@@ -70,8 +73,18 @@
         </g:each>
 
         <p>
-            <g:submitButton name="Download" value="Download" />
+
             <a href="#upload"><img src="${resource(dir:'images',file:'UploadPhotos.jpg')}" alt="Upload Photos" /></a>
+            <!-- Addding a logout-link if logged in as admin might be a good idea -->
+            <g:if test="${session.isAdmin && session.galleryId == galleryInstance.id}">
+                <g:actionSubmit name="Download" value="Download" action="download" />
+                <!-- TODO issue warning before deleting some images or even whole gallery -->
+                <g:actionSubmit name="RemoveSelection" value="Delete selection" action="deleteImages" />
+                <g:actionSubmit name="DeleteGallery" value="Delete gallery" action="deleteGallery" />
+            </g:if>
+            <g:else>
+                <g:actionSubmit name="Download" value="Download" action="download" />
+            </g:else>
         </p>
 
         </g:form>

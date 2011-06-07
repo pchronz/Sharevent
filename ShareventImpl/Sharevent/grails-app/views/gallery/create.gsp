@@ -82,6 +82,15 @@
                                 </td>
                             </tr>
                         
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="adminKey"><g:message code="gallery.adminKey.label" default="Admin Key" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: galleryInstance, field: 'adminKey', 'errors')}">
+                                    <g:textField name="adminKey" value="${fieldValue(bean: galleryInstance, field: 'adminKey')}" />
+                                </td>
+                            </tr>
+                        
                         </tbody>
                     </table>
                 </div>

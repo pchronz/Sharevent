@@ -15,6 +15,11 @@
   </head>
   <body>
     <div style="width: 500px; margin-left: auto; margin-right: auto;">
+
+        <g:if test="${flash.message}">
+            <div class="message">${flash.message}</div>
+        </g:if>
+
         <p>
             <img src="${resource(dir:"images",file:"SharingPeople.jpg")}" alt="People sharing photos in a gallery" width="400"/>
         </p>

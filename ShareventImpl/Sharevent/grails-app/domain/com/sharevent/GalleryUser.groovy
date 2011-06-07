@@ -17,4 +17,8 @@ class GalleryUser {
         contributedGallery(nullable:false)
         imageSet(nullable:true)
     }
+
+    static mapping = {
+        imageSet cascade: "all-delete-orphan"
+    }
 }

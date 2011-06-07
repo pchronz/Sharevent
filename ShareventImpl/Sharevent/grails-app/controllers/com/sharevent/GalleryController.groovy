@@ -106,7 +106,17 @@ class GalleryController {
 
     def view = {
         def galleryInstance = Gallery.get(params.id)
-        println params
+        if(params.containsKey("key")) {
+            try {
+                if(params.key.toString().toInteger() == galleryInstance.adminKey) {
+                    session.isAdmin = true
+                    session.galleryId = galleryInstance.id
+                }
+            }
+            catch(Exception e) {
+                e.printStackTrace()
+            }
+        }
 
         if(galleryInstance)
             render(view:"view", model:[galleryInstance:galleryInstance])
@@ -125,10 +135,11 @@ class GalleryController {
     def share = {
         println params
         // TODO the creator user does not exist anymore, read the properties directly
-        def creator = new GalleryUser(params)
         def gallery = new Gallery(params)
-        gallery.creator = creator
-        creator.save(flush:true)
+        gallery.adminKey = new Random(System.currentTimeMillis()).nextInt()
+        gallery.creatorFirstName = params.firstName
+        gallery.creatorLastName = params.lastName
+        gallery.creatorEmail = params.email
         gallery.save(flush:true)
         render(view:"share", model:[galleryInstance:gallery])
     }
@@ -152,7 +163,7 @@ class GalleryController {
         }
 
 
-        // the build the paths for the image ids
+        // then build the paths for the image ids
         def imagePaths = []
         images.each {
             String imagePath = "/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/" + params.id + "/" + it + ".jpg"
@@ -179,6 +190,61 @@ class GalleryController {
             origin.close();
         }
         zos.close()
+    }
+
+    def deleteImages = {
+        // first get the selected image ids
+        def images = []
+        params.each {
+            if(it.key instanceof java.lang.String) {
+                if(it.key.startsWith("image")) {
+                    // Assuming that Grails is providing only selected checkboxes!
+                    String imageId = it.key
+                    images.add(imageId.split("_")[1])
+                }
+            }
+        }
+
+        // remove the corresponding entries in the database
+        images.each {
+            Image image = Image.get(it.toString().toLong())
+            image.imageSet.removeFromImages(image)
+        }
+
+        // if some user does not have anymore images, delete the user as well
+        def galleryInstance = Gallery.get(params.id)
+        def contributorsCopy = []
+        contributorsCopy += galleryInstance.contributors
+        contributorsCopy.each {
+            if(it.imageSet.images.size() == 0) {
+                galleryInstance.removeFromContributors(it)
+                it.delete(flush:true)
+            }
+        }
+
+
+        // then build the paths for the image ids
+        def imagePaths = []
+        images.each {
+            String imagePath = "/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/" + params.id + "/" + it + ".jpg"
+            imagePaths.add(imagePath)
+        }
+
+        // TODO finally delete the images from disk
+
+        flash.message = images.size() + " images have been deleted."
+
+
+        // show the gallery again
+        redirect(controller: "gallery", action: "view", params: [id: params.id])
+    }
+
+    def deleteGallery = {
+        Gallery.get(params.id).delete(flush: true)
+
+        flash.message = "The gallery has been deleted. Would you maybe like to create a new one?"
+
+        redirect(controller: "main", action: "index")
     }
 
 }

@@ -72,6 +72,13 @@
                         </tr>
                     
                         <tr class="prop">
+                            <td valign="top" class="name"><g:message code="gallery.adminKey.label" default="Admin Key" /></td>
+                            
+                            <td valign="top" class="value">${fieldValue(bean: galleryInstance, field: "adminKey")}</td>
+                            
+                        </tr>
+                    
+                        <tr class="prop">
                             <td valign="top" class="name"><g:message code="gallery.contributors.label" default="Contributors" /></td>
                             
                             <td valign="top" style="text-align: left;" class="value">

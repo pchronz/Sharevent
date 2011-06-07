@@ -8,4 +8,8 @@ class ImageSet {
 
     static constraints = {
     }
+
+    static mapping = {
+        images cascade: "all-delete-orphan"
+    }
 }
