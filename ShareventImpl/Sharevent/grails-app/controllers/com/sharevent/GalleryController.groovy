@@ -105,6 +105,8 @@ class GalleryController {
     // ********* OWN ACTIONS BELOW *******
 
     def view = {
+        // TODO provide an error message if a gallery does not exist
+
         def galleryInstance = Gallery.get(params.id)
         if(params.containsKey("key")) {
             try {
@@ -245,6 +247,49 @@ class GalleryController {
         flash.message = "The gallery has been deleted. Would you maybe like to create a new one?"
 
         redirect(controller: "main", action: "index")
+    }
+
+    def contributeImages = {
+        def galleryInstance = Gallery.get(params.id)
+        render(view: 'contributeImages', model: [galleryInstance: galleryInstance])
+    }
+
+    def uploadImage = {
+        println params
+
+        def galleryInstance = Gallery.get(params.id)
+
+        def user = new GalleryUser(params)
+        user.imageSet = new ImageSet()
+
+        def file = request.getFile('image-file-1')
+        if(!file.empty) {
+            def image = new Image()
+            user.imageSet.addToImages(image)
+            galleryInstance.addToContributors(user)
+            if(!galleryInstance.save(flush: true)) {
+                galleryInstance.errors.each {
+                    // TODO use log4j for logging everywhere
+                    println it
+                }
+            }
+
+            // create the directory if it does not exist
+            println "Checking for directory: /Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/" + user.id + "/"
+            File dir = new File("/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/" + user.id + "/" )
+            if(!dir.exists()) {
+                println "Directory does not yet exist!"
+                dir.mkdir()
+            }
+
+            println "Saving file: /Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/" + user.id + "/" + image.id + ".jpg"
+            file.transferTo(new File("/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/" + user.id + "/" + image.id + ".jpg"))
+        }
+
+        galleryInstance.save(flush: true)
+
+
+        redirect(action: 'view', params: [id: params.id])
     }
 
 }

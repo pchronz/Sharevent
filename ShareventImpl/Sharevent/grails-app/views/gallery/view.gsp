@@ -73,18 +73,15 @@
         </g:each>
 
         <p>
+            <g:link controller="gallery" action="contributeImages" id="${galleryInstance.id}"><img src="${resource(dir:'images',file:'UploadPhotos.jpg')}" alt="Upload Photos" /></g:link>
 
-            <a href="#upload"><img src="${resource(dir:'images',file:'UploadPhotos.jpg')}" alt="Upload Photos" /></a>
             <!-- Addding a logout-link if logged in as admin might be a good idea -->
+            <g:actionSubmit name="Download" value="Download" action="download" />
             <g:if test="${session.isAdmin && session.galleryId == galleryInstance.id}">
-                <g:actionSubmit name="Download" value="Download" action="download" />
                 <!-- TODO issue warning before deleting some images or even whole gallery -->
                 <g:actionSubmit name="RemoveSelection" value="Delete selection" action="deleteImages" />
                 <g:actionSubmit name="DeleteGallery" value="Delete gallery" action="deleteGallery" />
             </g:if>
-            <g:else>
-                <g:actionSubmit name="Download" value="Download" action="download" />
-            </g:else>
         </p>
 
         </g:form>
