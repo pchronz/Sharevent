@@ -6,7 +6,7 @@ import com.sharevent.Image
 class BootStrap {
 
     def init = { servletContext ->
-        for(int i = 0; i <10; i++) {
+        for(int i = 0; i <5; i++) {
             Gallery gallery = new Gallery(date:new Date(), title:"Super cool event", location:"Dortmund", creatorFirstName: "Cook", creatorLastName: "Poo", creatorEmail: "cook@poo.ie", adminKey: 1234);
 
             GalleryUser user = new GalleryUser(firstName:"Lance", lastName:"Hardwood", email:"lance@hardwood.xxx")

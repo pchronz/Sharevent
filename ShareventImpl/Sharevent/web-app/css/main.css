@@ -271,3 +271,82 @@ th.desc a {
     background: transparent url(../images/skin/database_save.png) 5px 50% no-repeat;
     padding-left: 28px;
 }
+
+/* ******** CUSTOMIZED STYLES BELOW ************ */
+
+#mainViewport {
+	width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#spinner {
+	display: none;
+}
+
+#shareventLogo {
+	margin-left: auto;
+	margin-right: auto;
+	width:330px;
+}
+
+#contributeImagesViewport {
+	width: 850px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#createFreeGalleryViewport {
+	width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#downloadViewport {
+	width: 850px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.popImage {
+	float: left;
+	margin: 5px;
+}
+
+#shareViewport {
+	width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#sharePublicLinkDiv {
+	background-color: #C0C0C0;
+	border-style: solid;
+}
+
+#shareAdminLinkDiv {
+	background-color: #C0C0C0;
+	border-style: solid;
+}
+
+#viewGalleryViewport {
+	width: 850px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#userBoxView {
+	border-style: solid;
+}
+
+.galleryImageDiv {
+	float: left;
+	margin: 10px;
+}
+
+.galleryHidePhotosDiv {
+	border-top-style: dotted;
+	clear: both;
+	margin: 10px;
+}
+

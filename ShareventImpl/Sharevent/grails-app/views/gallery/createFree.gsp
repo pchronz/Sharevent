@@ -1,5 +1,4 @@
 <%--
-  Created by IntelliJ IDEA.
   User: peterandreaschronz
   Date: 21.05.11
   Time: 11:08
@@ -14,7 +13,7 @@
     <title>Sharevent: Easy Photo Sharing</title>
   </head>
   <body>
-  <div style="width: 500px; margin-left: auto; margin-right: auto;">
+  <div id="createFreeGalleryViewport">
       <h2>Start a free gallery</h2>
       <g:form controller="gallery" action="share" >
           <p>
@@ -46,10 +45,6 @@
 
               <g:submitButton name="create-button" value="Create!" />
 
-              <div id="AdDiv" style="width: 501px; margin-left: auto; margin-right: auto;">
-                <p style="color: blue;">Advertisement</p>
-                <g:link controller="ads" action="view"><img src="${resource(dir:"images",file:"MindConnect.jpg")}" /></a></g:link>
-              </div>
           </p>
       </g:form>
       </div>

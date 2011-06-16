@@ -3,6 +3,11 @@ package com.sharevent
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import com.sun.xml.internal.messaging.saaj.util.ByteInputStream
+import java.awt.*;
+import java.awt.geom.*;
+import java.awt.image.*;
+import javax.imageio.*;
+import javax.imageio.stream.MemoryCacheImageOutputStream
 
 class ImageController {
 
@@ -102,7 +107,7 @@ class ImageController {
         }
     }
 
-    // *************** CUSTOM ACTION FOLLOW *******************
+    // *************** CUSTOM ACTIONS FOLLOW *******************
     def viewImage = {
         def image = Image.get(params.id)
 
@@ -110,14 +115,37 @@ class ImageController {
         try {
             File file = new File("")
             // TODO read image-path from configuration file
-            String imageDBPath = "/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/"
+            String imageDBPath = "${grailsApplication.config.sharevent.imageDBPath}"
             String imagePath = imageDBPath + Long.toString(image.imageSet.id) + "/" + Long.toString(image.id) + ".jpg"
             // TODO lose assumption that we are dealing with JPEGs!
-            byte[] imageArray = new BufferedInputStream(new FileInputStream(imagePath.toString())).bytes
-            response.outputStream << imageArray
+
+	    // TODO use asceticImages for high-quality scaling
+	    // TODO scale and cache images on upload or with an asynchronous job
+	    // scale the images before sending them
+	    def maxImageHeight = grailsApplication.config.sharevent.maxImageHeight as int
+
+	    BufferedImage bsrc = ImageIO.read(new File(imagePath.toString()));
+	    
+	    if(bsrc.getHeight() > maxImageHeight) {
+		    int height = maxImageHeight 
+		    int width = ((double)bsrc.getWidth()) * ((double)height)/((double)bsrc.getHeight())
+		    BufferedImage bdest = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		    Graphics2D g = bdest.createGraphics();
+		    AffineTransform at = AffineTransform.getScaleInstance((double)width/bsrc.getWidth(), (double)height/bsrc.getHeight());
+		    g.drawRenderedImage(bsrc,at);
+		    ImageIO.write(bdest, "JPG", new MemoryCacheImageOutputStream(response.outputStream))
+	    }
+	    else {
+	    	ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(response.outputStream))
+	    }
         }
+	catch(javax.imageio.IIOException ioEx) {
+		// delete the image if the file cannot be read
+		image.delete(flush: true)
+		log.error "Some images could not be read and have been deleted from the database: Image.id " + image.id + " User.id == " + image.imageSet.galleryUser.id
+	}
         catch(IOException e) {
-            println e.printStackTrace()
+             log.error e.printStackTrace()
         }
         finally {
             // TODO show a standard error picture

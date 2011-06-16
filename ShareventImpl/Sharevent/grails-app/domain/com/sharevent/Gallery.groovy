@@ -2,6 +2,9 @@ package com.sharevent
 
 class Gallery {
 
+    // need to add the id explicitly as String for the UUID-generator to work
+    String id
+
     Date date
     String title
     String location
@@ -22,5 +25,9 @@ class Gallery {
         creatorLastName(nullable: false)
         creatorEmail(nullable: false)
         adminKey(nullable: false)
+    }
+
+    static mapping = {
+	id generator: 'uuid'
     }
 }

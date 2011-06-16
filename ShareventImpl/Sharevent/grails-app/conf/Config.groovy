@@ -85,3 +85,6 @@ log4j = {
 
     warn   'org.mortbay.log'
 }
+
+sharevent = [imageDBPath: '/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/', maxImageWidth: 300, maxImageHeight: 300]
+

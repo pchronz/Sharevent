@@ -3,10 +3,20 @@ package com.sharevent
 import java.util.zip.ZipOutputStream
 import org.apache.tools.ant.taskdefs.Zip
 import java.util.zip.ZipEntry
+import org.springframework.http.HttpStatus
+import org.springframework.web.multipart.MultipartHttpServletRequest
+import org.springframework.web.multipart.commons.CommonsMultipartFile
+import org.springframework.web.multipart.MultipartFile
+import javax.servlet.http.HttpServletRequest
+import uk.co.desirableobjects.ajaxuploader.AjaxUploaderService
+import grails.converters.JSON
 
 class GalleryController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+
+    // TODO get rid of the GPL code for imageUpload
+    AjaxUploaderService ajaxUploaderService
 
     def index = {
         redirect(action: "list", params: params)
@@ -113,6 +123,7 @@ class GalleryController {
                 if(params.key.toString().toInteger() == galleryInstance.adminKey) {
                     session.isAdmin = true
                     session.galleryId = galleryInstance.id
+		    session.isLoggedIn = true
                 }
             }
             catch(Exception e) {
@@ -130,12 +141,7 @@ class GalleryController {
 
     }
 
-    def createPremium = {
-
-    }
-
     def share = {
-        println params
         // TODO the creator user does not exist anymore, read the properties directly
         def gallery = new Gallery(params)
         gallery.adminKey = new Random(System.currentTimeMillis()).nextInt()
@@ -143,11 +149,27 @@ class GalleryController {
         gallery.creatorLastName = params.lastName
         gallery.creatorEmail = params.email
         gallery.save(flush:true)
+
+	// login the creator as admin
+	session.isAdmin = true
+	session.galleryId = gallery.id
+	session.isLoggedIn = true
+
+	// actually also create a user
+	def user = new GalleryUser(params)
+	user.imageSet = new ImageSet()
+	user.imageSet.galleryUser = user
+	gallery.addToContributors(user)
+	user.contributedGallery = gallery
+	if(!gallery.save(flush:true)) {
+		gallery.errors.each{
+			println it
+		}
+	}
+
+	session.userId = user.id
+
         render(view:"share", model:[galleryInstance:gallery])
-    }
-
-    def pay = {
-
     }
 
     def download = {
@@ -168,7 +190,8 @@ class GalleryController {
         // then build the paths for the image ids
         def imagePaths = []
         images.each {
-            String imagePath = "/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/" + params.id + "/" + it + ".jpg"
+	    def userId = Image.get(it.toLong()).imageSet.galleryUser.id
+            String imagePath = "${grailsApplication.config.sharevent.imageDBPath}" + userId + "/" + it + ".jpg"
             imagePaths.add(imagePath)
         }
 
@@ -180,7 +203,6 @@ class GalleryController {
             // check whether the gallery's path also works on windows
             String imageId = imagePath.split("/")[-1]
             String zipPath = galleryInstance.title + "/" + imageId
-            println zipPath
             FileInputStream fi = new FileInputStream(imagePath)
             BufferedInputStream origin = new BufferedInputStream(fi, 2048)
             ZipEntry entry = new ZipEntry(zipPath)
@@ -228,7 +250,7 @@ class GalleryController {
         // then build the paths for the image ids
         def imagePaths = []
         images.each {
-            String imagePath = "/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/" + params.id + "/" + it + ".jpg"
+            String imagePath = "${grailsApplication.config.sharevent.imageDBPath}" + params.id + "/" + it + ".jpg"
             imagePaths.add(imagePath)
         }
 
@@ -255,41 +277,48 @@ class GalleryController {
     }
 
     def uploadImage = {
-        println params
-
-        def galleryInstance = Gallery.get(params.id)
-
-        def user = new GalleryUser(params)
-        user.imageSet = new ImageSet()
-
-        def file = request.getFile('image-file-1')
-        if(!file.empty) {
-            def image = new Image()
-            user.imageSet.addToImages(image)
-            galleryInstance.addToContributors(user)
-            if(!galleryInstance.save(flush: true)) {
-                galleryInstance.errors.each {
-                    // TODO use log4j for logging everywhere
-                    println it
-                }
+	def user = GalleryUser.get(session.userId)
+	Gallery galleryInstance = user.contributedGallery
+	def image = new Image()
+        user.imageSet.addToImages(image)
+	if(!galleryInstance.contributors.contains(user)) {
+        	galleryInstance.addToContributors(user)
+	}
+        if(!galleryInstance.save(flush: true)) {
+	    log.error 'Errors while saving gallerInstance'
+            galleryInstance.errors.each {
+                // TODO use log4j for logging everywhere
+                log.error it
             }
-
-            // create the directory if it does not exist
-            println "Checking for directory: /Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/" + user.id + "/"
-            File dir = new File("/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/" + user.id + "/" )
-            if(!dir.exists()) {
-                println "Directory does not yet exist!"
-                dir.mkdir()
-            }
-
-            println "Saving file: /Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/" + user.id + "/" + image.id + ".jpg"
-            file.transferTo(new File("/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/" + user.id + "/" + image.id + ".jpg"))
         }
 
-        galleryInstance.save(flush: true)
+	// create the directory for this user in our image database if it does not exist yet
+        if(!grailsApplication.config.sharevent.containsKey('imageDBPath')) {
+		// TODO throw an exception
+		log.error "Path to image DB not found in configuration!"
+		render(text: [success: false] as JSON, contentType: 'text/JSON')
+	}
+        File dir = new File("${grailsApplication.config.sharevent.imageDBPath}" + user.id + "/" )
+        if(!dir.exists()) {
+	    log.info 'Directory for user ${user.id} does not yet exist. Creating.'
+            dir.mkdir()
+        }
 
+	// create the image file handle itself
+	File imageFile = new File("${grailsApplication.config.sharevent.imageDBPath}" + user.id + "/" + image.id + ".jpg")
 
-        redirect(action: 'view', params: [id: params.id])
+	InputStream inputStream = null
+	if (request instanceof MultipartHttpServletRequest) {
+            MultipartFile uploadedFile = ((MultipartHttpServletRequest) request).getFile('qqfile')
+            inputStream = uploadedFile.inputStream
+        }
+        else {
+		inputStream = request.inputStream
+	}
+
+        ajaxUploaderService.upload(inputStream, imageFile)
+
+	render(text: [success: true] as JSON, contentType: 'text/JSON')
     }
 
 }

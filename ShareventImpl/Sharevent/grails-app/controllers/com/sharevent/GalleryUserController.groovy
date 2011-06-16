@@ -1,5 +1,7 @@
 package com.sharevent
 
+import grails.converters.JSON
+
 class GalleryUserController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -96,5 +98,27 @@ class GalleryUserController {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'galleryUser.label', default: 'GalleryUser'), params.id])}"
             redirect(action: "list")
         }
+    }
+
+
+    // USER DEFINED ACTIONS FOLLOW
+    def createNew = {
+	def user = new GalleryUser(params)
+	user.imageSet = new ImageSet()
+	user.imageSet.galleryUser = user
+	def gallery = Gallery.get(params.id)
+	gallery.addToContributors(user)
+	user.contributedGallery = gallery
+	if(!gallery.save(flush:true)) {
+		gallery.errors.each{
+			log.error it
+		}
+	}
+
+	session.userId = user.id
+	session.isLoggedIn = true
+	session.galleryId = gallery.id
+
+        render(text: [sucess: true] as JSON, contentType: 'text/JSON')
     }
 }

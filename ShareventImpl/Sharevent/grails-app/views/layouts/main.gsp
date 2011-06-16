@@ -8,10 +8,10 @@
         <g:javascript library="application" />
     </head>
     <body>
-        <div id="spinner" class="spinner" style="display:none;">
+        <div id="spinner" class="spinner">
             <img src="${resource(dir:'images',file:'spinner.gif')}" alt="${message(code:'spinner.alt',default:'Loading...')}" />
         </div>
-        <div id="shareventLogo" style="margin-left: auto; margin-right: auto; width:330px;"><a href="http://grails.org"><img src="${resource(dir:'images',file:'sharevent_logo.png')}" alt="Sharevent" border="0" /></a></div>
+        <div id="shareventLogo" ><a href="http://grails.org"><img src="${resource(dir:'images',file:'sharevent_logo.png')}" alt="Sharevent" border="0" /></a></div>
         <g:layoutBody />
     </body>
 </html>

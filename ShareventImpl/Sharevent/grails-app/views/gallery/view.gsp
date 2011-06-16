@@ -1,5 +1,4 @@
 <%--
-  Created by IntelliJ IDEA.
   User: peterandreaschronz
   Date: 21.05.11
   Time: 11:37
@@ -9,30 +8,22 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
   <head>
-    <g:javascript src="jquery-1.6.js"></g:javascript>
-    <g:javascript>
-        $(document).ready(function() {
-            $(".hide").click(function(eventObject){
-                $(this).parent().parent().siblings().toggle();
-                var text = $(this).text();
-                if(text == "Hide")
-                    $(this).text("Show");
-                else
-                    $(this).text("Hide");
-            });
-        });
-    </g:javascript>
+    <g:javascript library="prototype" />
+    <g:javascript src="gallery-view.js" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="layout" content="main" />
     <title>Sharevent: Easy Photo Sharing</title>
   </head>
   <body>
-    <div style="width: 850px; margin-left: auto; margin-right: auto;">
+    <div id="viewGalleryViewport">
         <h2>${galleryInstance.title}</h2>
         <p>
             <g:if test="${flash.message}">
                 <div class="message">${flash.message}</div>
             </g:if>
+	    <g:if test="${session.isAdmin && session.galleryId == galleryInstance.id}">
+	    	<div class="message">${galleryInstance.creatorFirstName}, you are logged in as admin!</div>
+	    </g:if>
             <g:link controller="gallery" action="share"><img src="${resource(dir:'images',file:'Share.jpg')}" /></g:link>
             <br />
             ${galleryInstance.location + ", " + galleryInstance.date.format("dd.MM.yyyy")}
@@ -43,33 +34,35 @@
         <g:form controller="gallery" id="${galleryInstance.id}">
 
         <g:each var="user" in="${galleryInstance?.contributors}">
+	<!-- only show the users contribution if it is not empty -->
+	<g:if test="${user.imageSet.images.size() > 0}">
             <div id="user_${user.id}">
-                <p><a href="mailto:${user.email}">${user.firstName} ${user.lastName}</a> <a href="#markall">all</a> <a href="#marknone">none</a></p>
-                <div style="border-style: solid;">
+                <p><a href="mailto:${user.email}">${user.firstName} ${user.lastName}</a> <a class="selectAll" href="">all</a> <a class="selectNone" href="">none</a></p>
+                <div id="userBoxView" >
 
-                <div style="border-bottom-style: dotted; clear: both; margin: 10px;">
+                <div class="galleryHidePhotosDiv">
                     <p>
-                        <a class="hide" href="#">Hide</a>
+                        <a class="hide" href="">Hide</a>
                     </p>
                 </div>
                 <g:each var="image" in="${user.imageSet?.images}" >
-                    <div id="user_${user.id}_photo_${image.id}" style="float: left; margin: 10px;">
-                        <!-- TODO determined path depending on gallery and user id -->
+                    <div id="user_${user.id}_photo_${image.id}" class="galleryImageDiv" >
                         <img src="${createLink(controller: 'image', action: 'viewImage', params: [id: image.id])}" width="250px"/>
                         <br />
-                        <g:checkBox name="image_${image.id}" value="${true}" /> Select me!
+                        <g:checkBox class="selectBox" name="image_${image.id}" value="${true}" /> Select me!
                     </div>
                 </g:each>
-                <div id="HidePhotos${user.id}" style="border-top-style: dotted; clear: both; margin: 10px;">
+                <div class="galleryHidePhotosDiv">
                     <p>
-                        <a class="hide" href="#">Hide</a>
+                        <a class="hide" href="">Hide</a>
                     </p>
                 </div>
         </div>
 
 
-            </div>
+        </div>
 
+	</g:if>
         </g:each>
 
         <p>
@@ -86,10 +79,6 @@
 
         </g:form>
 
-        <div id="AdDiv" style="width: 501px; margin-left: auto; margin-right: auto;">
-            <p style="color: blue;">Advertisement</p>
-            <g:link controller="ads" action="view"><img src="${resource(dir:"images",file:"MindConnect.jpg")}" /></a></g:link>
-        </div>
     </div>
   </body>
 </html>
