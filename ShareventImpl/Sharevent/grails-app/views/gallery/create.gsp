@@ -1,4 +1,7 @@
-
+<%--
+  Peter A. Chronz
+  Sat Jun 18 19:49:47 CEST 2011
+--%>
 
 <%@ page import="com.sharevent.Gallery" %>
 <html>

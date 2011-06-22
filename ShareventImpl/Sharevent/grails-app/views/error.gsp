@@ -1,3 +1,8 @@
+<!--
+  Peter A. Chronz
+  Sat Jun 18 20:23:37 CEST 2011
+-->
+
 <html>
   <head>
 	  <title>Grails Runtime Exception</title>

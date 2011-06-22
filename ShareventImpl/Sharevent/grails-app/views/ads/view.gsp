@@ -1,9 +1,6 @@
 <%--
-  Created by IntelliJ IDEA.
-  User: peterandreaschronz
-  Date: 21.05.11
-  Time: 11:20
-  To change this template use File | Settings | File Templates.
+  Peter A. Chronz
+  Sat Jun 18 20:21:26 CEST 2011
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" %>

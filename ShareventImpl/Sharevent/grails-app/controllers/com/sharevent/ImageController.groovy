@@ -8,26 +8,31 @@ import java.awt.geom.*;
 import java.awt.image.*;
 import javax.imageio.*;
 import javax.imageio.stream.MemoryCacheImageOutputStream
+import grails.plugins.springsecurity.Secured
 
 class ImageController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def index = {
         redirect(action: "list", params: params)
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def list = {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [imageInstanceList: Image.list(params), imageInstanceTotal: Image.count()]
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def create = {
         def imageInstance = new Image()
         imageInstance.properties = params
         return [imageInstance: imageInstance]
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def save = {
         def imageInstance = new Image(params)
         if (imageInstance.save(flush: true)) {
@@ -39,6 +44,7 @@ class ImageController {
         }
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def show = {
         def imageInstance = Image.get(params.id)
         if (!imageInstance) {
@@ -50,6 +56,7 @@ class ImageController {
         }
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def edit = {
         def imageInstance = Image.get(params.id)
         if (!imageInstance) {
@@ -61,6 +68,7 @@ class ImageController {
         }
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def update = {
         def imageInstance = Image.get(params.id)
         if (imageInstance) {
@@ -88,6 +96,7 @@ class ImageController {
         }
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def delete = {
         def imageInstance = Image.get(params.id)
         if (imageInstance) {
@@ -109,47 +118,59 @@ class ImageController {
 
     // *************** CUSTOM ACTIONS FOLLOW *******************
     def viewImage = {
-        def image = Image.get(params.id)
 
-        BufferedImage bufferedImage = null
-        try {
-            File file = new File("")
-            // TODO read image-path from configuration file
-            String imageDBPath = "${grailsApplication.config.sharevent.imageDBPath}"
-            String imagePath = imageDBPath + Long.toString(image.imageSet.id) + "/" + Long.toString(image.id) + ".jpg"
-            // TODO lose assumption that we are dealing with JPEGs!
+	synchronized(this.getClass()) {	
+            def image = Image.get(params.id)
+            try {
+	    	// synchronizing because else this lead to problems when many images were loaded concurrently
+	    	// TODO analyse this code properly to minimize the synchronized block
+	    	// XXX this might be another bottleneck
+                BufferedImage bufferedImage = null
+                File file = new File("")
+                // TODO read image-path from configuration file
+                String imageDBPath = "${grailsApplication.config.sharevent.imageDBPath}"
+                String imagePath = imageDBPath + image.imageSet.galleryUser.id + "/" + Long.toString(image.id) + ".jpg"
+                // TODO lose assumption that we are dealing with JPEGs!
 
-	    // TODO use asceticImages for high-quality scaling
-	    // TODO scale and cache images on upload or with an asynchronous job
-	    // scale the images before sending them
-	    def maxImageHeight = grailsApplication.config.sharevent.maxImageHeight as int
+	            // TODO use asceticImages for high-quality scaling
+	            // TODO scale and cache images on upload or with an asynchronous job
+	            // scale the images before sending them
+	            def maxImageHeight = grailsApplication.config.sharevent.maxImageHeight as int
 
-	    BufferedImage bsrc = ImageIO.read(new File(imagePath.toString()));
-	    
-	    if(bsrc.getHeight() > maxImageHeight) {
-		    int height = maxImageHeight 
-		    int width = ((double)bsrc.getWidth()) * ((double)height)/((double)bsrc.getHeight())
-		    BufferedImage bdest = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		    Graphics2D g = bdest.createGraphics();
-		    AffineTransform at = AffineTransform.getScaleInstance((double)width/bsrc.getWidth(), (double)height/bsrc.getHeight());
-		    g.drawRenderedImage(bsrc,at);
-		    ImageIO.write(bdest, "JPG", new MemoryCacheImageOutputStream(response.outputStream))
+	            BufferedImage bsrc = ImageIO.read(new File(imagePath.toString()));
+	            
+	            if(bsrc.getHeight() > maxImageHeight) {
+	                    int height = maxImageHeight 
+	                    int width = ((double)bsrc.getWidth()) * ((double)height)/((double)bsrc.getHeight())
+	                    BufferedImage bdest = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+	                    Graphics2D g = bdest.createGraphics();
+	                    AffineTransform at = AffineTransform.getScaleInstance((double)width/bsrc.getWidth(), (double)height/bsrc.getHeight());
+	                    g.drawRenderedImage(bsrc,at);
+	                    ImageIO.write(bdest, "JPG", new MemoryCacheImageOutputStream(response.outputStream))
+			    return
+	            }
+	            else {
+	            	ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(response.outputStream))
+			return
+	            }
+            }
+	    catch(javax.imageio.IIOException ioEx) {
+	    	// delete the image if the file cannot be read
+	    	image.delete(flush: true)
+	    	log.error "Some images could not be read and have been deleted from the database: Image.id " + image.id + " User.id == " + image.imageSet.galleryUser.id
 	    }
-	    else {
-	    	ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(response.outputStream))
+            catch(IOException e) {
+                 log.error "Caught an IOException: " + e.toString()
+            }
+	    catch(Exception e) {
+	    	log.error "Caught an exception: " + e.toString()
 	    }
-        }
-	catch(javax.imageio.IIOException ioEx) {
-		// delete the image if the file cannot be read
-		image.delete(flush: true)
-		log.error "Some images could not be read and have been deleted from the database: Image.id " + image.id + " User.id == " + image.imageSet.galleryUser.id
+	    catch(Throwable t) {
+	    	log.error "Caught a throwable: " + t
+	    }
+	    catch(e) {
+	    	log.error "Caught an e: " + e.toString()
+	    }
 	}
-        catch(IOException e) {
-             log.error e.printStackTrace()
-        }
-        finally {
-            // TODO show a standard error picture
-            // TODO log the error, for later analysis
-        }
     }
 }

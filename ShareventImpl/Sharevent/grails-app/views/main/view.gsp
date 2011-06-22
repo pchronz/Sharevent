@@ -20,15 +20,12 @@
         </g:if>
 
         <p>
-            <img src="${resource(dir:"images",file:"SharingPeople.jpg")}" alt="People sharing photos in a gallery" width="400"/>
-        </p>
-
-        <p>
             <img src="${resource(dir:"images",file:"ThreeSteps.jpg")}" alt="3 steps to share photos" width="400" />
         </p>
 
         <p>
-            <g:link controller="gallery" action="createFree"><img src="${resource(dir:"images",file:"FreeGallery.jpg")}" width="250" alt="Create a gallery" /></g:link>
+            <g:link controller="gallery" action="createFree">Create a gallery</g:link>
+            <g:link controller="gallery" action="viewExample">View an example gallery</g:link>
         </p>
     </div>
 </body>

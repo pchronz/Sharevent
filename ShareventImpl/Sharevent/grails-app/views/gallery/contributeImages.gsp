@@ -1,8 +1,6 @@
 <%--
-  User: peterandreaschronz
-  Date: 08.06.11
-  Time: 11:37
-  To change this template use File | Settings | File Templates.
+  Peter A. Chronz
+  Sat Jun 18 19:49:47 CEST 2011
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" %>
@@ -12,7 +10,7 @@
 	<uploader:head />
   	<g:javascript library="prototype" />
 	<g:javascript src="gallery-contribute-images.js" />
-	<g:if test="${session.isLoggedIn && session.galleryId == galleryInstance.id}">
+	<g:if test="${session.user != null && session.user?.contributedGallery.id == galleryInstance.id}">
 		<g:javascript>
 			var isLoggedIn = true;
 		</g:javascript>
@@ -33,8 +31,11 @@
             <g:if test="${flash.message}">
                 <div class="message">${flash.message}</div>
             </g:if>
-	    <g:if test="${session.isLoggedIn && session.galleryId == galleryInstance.id}">
-                <div class="message">You are logged in.</div>
+	    <g:if test="${session.user != null && session.user.contributedGallery.id == galleryInstance.id}">
+                <div class="message">
+		    You are logged in.
+		    <g:link controller="gallery" action="logout" id="${galleryInstance.id}">Logout</g:link>
+		</div>
             </g:if>
             <br />
             ${galleryInstance.location + ", " + galleryInstance.date.format("dd.MM.yyyy")}
@@ -42,30 +43,8 @@
             Creator: <a href="mailto:${galleryInstance.creatorEmail}">${galleryInstance.creatorFirstName + " " + galleryInstance.creatorLastName}</a>
         </p>
 
-
-		<div id="userCreationDiv">
-	<g:formRemote name="userCreationForm" url="${[controller: 'galleryUser', action: 'createNew', id: galleryInstance.id]}">
-            First name
-            <br/>
-            <g:textField name="firstName" />
-            <br/>
-
-            Last name
-            <br/>
-            <g:textField name="lastName" />
-            <br/>
-
-            e-mail
-            <br/>
-            <g:textField name="email" />
-            <br/>                  
-	
-            <g:submitButton id="userCreationButton" name="Create User" value="Create User" />
-        </g:formRemote>
-        </div>
-
 	<div id="divImageUpload">
-		<h3>Choose your images and upload them individually</h3>
+		<h3>Choose your images and upload them</h3>
 		<!-- TODO get rid of imageUpload, which is GPL code -->
 		<uploader:uploader id="${galleryInstance.id}" url="[controller: 'gallery', action: 'uploadImage']" multiple="true" />
 	</div>

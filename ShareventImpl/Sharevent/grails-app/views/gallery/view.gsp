@@ -1,8 +1,6 @@
 <%--
-  User: peterandreaschronz
-  Date: 21.05.11
-  Time: 11:37
-  To change this template use File | Settings | File Templates.
+  Peter A. Chronz
+  Sun Jun 19 19:32:20 CEST 2011
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" %>
@@ -21,10 +19,19 @@
             <g:if test="${flash.message}">
                 <div class="message">${flash.message}</div>
             </g:if>
-	    <g:if test="${session.isAdmin && session.galleryId == galleryInstance.id}">
-	    	<div class="message">${galleryInstance.creatorFirstName}, you are logged in as admin!</div>
+	    <g:if test="${session.user?.contributedGallery?.id == galleryInstance.id && session.user?.id == session.user.contributedGallery.adminKey}">
+	    	<div class="message">
+		    ${galleryInstance.creatorFirstName}, you are logged in as this gallery's admin!
+		    <g:link controller="gallery" action="logout" id="${galleryInstance.id}">Logout</g:link>
+		</div>
 	    </g:if>
-            <g:link controller="gallery" action="share"><img src="${resource(dir:'images',file:'Share.jpg')}" /></g:link>
+	    
+	    Participation Link: <g:link controller="gallery" action="view" id="${galleryInstance.id}" >${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id)}</g:link>
+	    <br />
+	    <g:if test="${session.user?.contributedGallery?.id == galleryInstance.id && session.user?.id == session.user.contributedGallery.adminKey}">
+	    Administration Link: <g:link controller="gallery" action="view" id="${galleryInstance.id}" params="${[key: galleryInstance.adminKey]}" >${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id, params: [key: galleryInstance.adminKey])}</g:link>
+	    </g:if>
+
             <br />
             ${galleryInstance.location + ", " + galleryInstance.date.format("dd.MM.yyyy")}
             <br />
@@ -37,12 +44,12 @@
 	<!-- only show the users contribution if it is not empty -->
 	<g:if test="${user.imageSet.images.size() > 0}">
             <div id="user_${user.id}">
-                <p><a href="mailto:${user.email}">${user.firstName} ${user.lastName}</a> <a class="selectAll" href="">all</a> <a class="selectNone" href="">none</a></p>
+                <p><a href="mailto:${user.email}">${user.firstName} ${user.lastName}</a> <a class="selectAll" href="#">all</a> <a class="selectNone" href="#">none</a></p>
                 <div id="userBoxView" >
 
                 <div class="galleryHidePhotosDiv">
                     <p>
-                        <a class="hide" href="">Hide</a>
+                        <a class="hide" href="#">Hide</a>
                     </p>
                 </div>
                 <g:each var="image" in="${user.imageSet?.images}" >
@@ -54,7 +61,7 @@
                 </g:each>
                 <div class="galleryHidePhotosDiv">
                     <p>
-                        <a class="hide" href="">Hide</a>
+                        <a class="hide" href="#">Hide</a>
                     </p>
                 </div>
         </div>
@@ -66,11 +73,11 @@
         </g:each>
 
         <p>
-            <g:link controller="gallery" action="contributeImages" id="${galleryInstance.id}"><img src="${resource(dir:'images',file:'UploadPhotos.jpg')}" alt="Upload Photos" /></g:link>
+            <g:link controller="gallery" action="contributeImages" id="${galleryInstance.id}">Upload photos</g:link>
 
             <!-- Addding a logout-link if logged in as admin might be a good idea -->
             <g:actionSubmit name="Download" value="Download" action="download" />
-            <g:if test="${session.isAdmin && session.galleryId == galleryInstance.id}">
+            <g:if test="${session.user?.contributedGallery?.id == galleryInstance.id && session.user?.id == session.user.contributedGallery.adminKey}">
                 <!-- TODO issue warning before deleting some images or even whole gallery -->
                 <g:actionSubmit name="RemoveSelection" value="Delete selection" action="deleteImages" />
                 <g:actionSubmit name="DeleteGallery" value="Delete gallery" action="deleteGallery" />

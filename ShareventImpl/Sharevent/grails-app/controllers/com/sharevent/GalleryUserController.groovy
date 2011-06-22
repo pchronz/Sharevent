@@ -1,26 +1,31 @@
 package com.sharevent
 
 import grails.converters.JSON
+import grails.plugins.springsecurity.Secured
 
 class GalleryUserController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def index = {
         redirect(action: "list", params: params)
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def list = {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [galleryUserInstanceList: GalleryUser.list(params), galleryUserInstanceTotal: GalleryUser.count()]
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def create = {
         def galleryUserInstance = new GalleryUser()
         galleryUserInstance.properties = params
         return [galleryUserInstance: galleryUserInstance]
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def save = {
         def galleryUserInstance = new GalleryUser(params)
         if (galleryUserInstance.save(flush: true)) {
@@ -32,6 +37,7 @@ class GalleryUserController {
         }
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def show = {
         def galleryUserInstance = GalleryUser.get(params.id)
         if (!galleryUserInstance) {
@@ -43,6 +49,7 @@ class GalleryUserController {
         }
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def edit = {
         def galleryUserInstance = GalleryUser.get(params.id)
         if (!galleryUserInstance) {
@@ -54,6 +61,7 @@ class GalleryUserController {
         }
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def update = {
         def galleryUserInstance = GalleryUser.get(params.id)
         if (galleryUserInstance) {
@@ -81,6 +89,7 @@ class GalleryUserController {
         }
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def delete = {
         def galleryUserInstance = GalleryUser.get(params.id)
         if (galleryUserInstance) {
@@ -103,22 +112,50 @@ class GalleryUserController {
 
     // USER DEFINED ACTIONS FOLLOW
     def createNew = {
+    	if(session.user != null) {
+	    def loggedInUser = session.user
+	    if(loggedInUser?.contributedGallery.id == params.id) {
+	        redirect(controller: 'gallery', action: 'view', params:[id: params.id])
+	        return
+	    }
+	    else {
+	        session.user = null
+	    }
+	}
+
+	def gallery = Gallery.get(params.id)
+	if(session.userCreationStarted == null) {
+	    session.userCreationStarted = true
+	    render(view: 'createNew', model: [galleryInstance: gallery])
+	    return
+	}
 	def user = new GalleryUser(params)
+	user.contributedGallery = gallery
+	if(!user.validate()) {
+		log.error "Could not create a new user. Errors follow."
+		user.errors.each {
+			log.error it.toString()
+		}
+		render(view: 'createNew', model: [galleryInstance: gallery, user: user])
+		return
+	}
 	user.imageSet = new ImageSet()
 	user.imageSet.galleryUser = user
-	def gallery = Gallery.get(params.id)
+	user.save(flush: true)
 	gallery.addToContributors(user)
-	user.contributedGallery = gallery
 	if(!gallery.save(flush:true)) {
+		log.error "Could not save new user. Errors follow."
 		gallery.errors.each{
 			log.error it
 		}
+		render(view: 'createNew', model: [galleryInstance: gallery, user: user])
+		return
 	}
 
-	session.userId = user.id
-	session.isLoggedIn = true
-	session.galleryId = gallery.id
+	session.user = user
 
-        render(text: [sucess: true] as JSON, contentType: 'text/JSON')
+	session.userCreationStarted = null
+
+    	redirect(controller: 'gallery', action: 'contributeImages', params: [id: gallery.id])
     }
 }

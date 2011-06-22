@@ -1,24 +1,30 @@
 package com.sharevent
 
+import grails.plugins.springsecurity.Secured
+
 class ImageSetController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def index = {
         redirect(action: "list", params: params)
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def list = {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [imageSetInstanceList: ImageSet.list(params), imageSetInstanceTotal: ImageSet.count()]
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def create = {
         def imageSetInstance = new ImageSet()
         imageSetInstance.properties = params
         return [imageSetInstance: imageSetInstance]
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def save = {
         def imageSetInstance = new ImageSet(params)
         if (imageSetInstance.save(flush: true)) {
@@ -30,6 +36,7 @@ class ImageSetController {
         }
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def show = {
         def imageSetInstance = ImageSet.get(params.id)
         if (!imageSetInstance) {
@@ -41,6 +48,7 @@ class ImageSetController {
         }
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def edit = {
         def imageSetInstance = ImageSet.get(params.id)
         if (!imageSetInstance) {
@@ -52,6 +60,7 @@ class ImageSetController {
         }
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def update = {
         def imageSetInstance = ImageSet.get(params.id)
         if (imageSetInstance) {
@@ -79,6 +88,7 @@ class ImageSetController {
         }
     }
 
+    @Secured(['IS_AUTHENTICATED_FULLY'])
     def delete = {
         def imageSetInstance = ImageSet.get(params.id)
         if (imageSetInstance) {

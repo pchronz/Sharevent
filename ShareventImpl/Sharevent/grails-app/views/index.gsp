@@ -1,3 +1,8 @@
+<!--
+  Peter A. Chronz
+  Sat Jun 18 20:24:27 CEST 2011
+-->
+
 <html>
     <head>
         <title>Welcome to Grails</title>

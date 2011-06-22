@@ -88,3 +88,8 @@ log4j = {
 
 sharevent = [imageDBPath: '/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/', maxImageWidth: 300, maxImageHeight: 300]
 
+
+// Added by the Spring Security Core plugin:
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'com.sharevent.SecUser'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'com.sharevent.SecUserSecRole'
+grails.plugins.springsecurity.authority.className = 'com.sharevent.SecRole'

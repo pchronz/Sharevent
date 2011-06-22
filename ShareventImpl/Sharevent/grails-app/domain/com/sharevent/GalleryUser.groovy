@@ -2,6 +2,8 @@ package com.sharevent
 
 class GalleryUser {
 
+    String id
+
     String firstName
     String lastName
     String email
@@ -20,5 +22,6 @@ class GalleryUser {
 
     static mapping = {
         imageSet cascade: "all-delete-orphan"
+	id generator: 'uuid'
     }
 }

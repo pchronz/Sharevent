@@ -1,8 +1,6 @@
 <%--
-  User: peterandreaschronz
-  Date: 21.05.11
-  Time: 11:08
-  To change this template use File | Settings | File Templates.
+  Peter A. Chronz
+  Sat Jun 18 20:09:54 CEST 2011
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" %>
@@ -19,28 +17,59 @@
           <p>
               Title
               <br />
-              <g:textField name="title" />
+	      <div class="${hasErrors(bean: galleryInstance, field: 'title', 'errors')}">
+                  <g:textField name="title"  value="${fieldValue(bean: galleryInstance, field: 'title')}"/>
+	          <g:hasErrors bean="${galleryInstance}" field="title">
+	              Please provide a title for your gallery.
+	          </g:hasErrors>
+	      </div>
               <br />
 
-              Location<br />
-              <g:textField name="location" />
+              Location
+	      <br />
+	      <div class="${hasErrors(bean: galleryInstance, field: 'location', 'errors')}">
+                  <g:textField name="location"  value="${fieldValue(bean: galleryInstance, field: 'location')}"/>
+	          <g:hasErrors bean="${galleryInstance}" field="location">
+	              Please provide a location for your gallery.
+	          </g:hasErrors>
+	      </div>
               <br />
 
               Date
-              <g:datePicker name="date" precision="day" ></g:datePicker>
+	      <div class="${hasErrors(bean: galleryInstance, field: 'date', 'errors')}">
+                  <g:datePicker name="date" precision="day" years="${1930..2015}"></g:datePicker>
+	          <g:hasErrors bean="${galleryInstance}" field="date">
+	              Please provide a valid date for your event.
+	          </g:hasErrors>
+	      </div>
               <br />
 
               Your first name
               <br />
-              <g:textField name="firstName" />
+	      <div class="${hasErrors(bean: galleryInstance, field: 'creatorFirstName', 'errors')}">
+                  <g:textField name="creatorFirstName"  value="${fieldValue(bean: galleryInstance, field: 'creatorFirstName')}" />
+	          <g:hasErrors bean="${galleryInstance}" field="creatorFirstName">
+	              Please provide your first name.
+	          </g:hasErrors>
+	      </div>
               <br />
               Your last name
               <br />
-              <g:textField name="lastName" />
+	      <div class="${hasErrors(bean: galleryInstance, field: 'creatorLastName', 'errors')}">
+                  <g:textField name="creatorLastName"  value="${fieldValue(bean: galleryInstance, field: 'creatorLastName')}" />
+	          <g:hasErrors bean="${galleryInstance}" field="creatorLastName">
+	              Please provide your last name.
+	          </g:hasErrors>
+	      </div>
               <br />
               Your e-mail address (Will be displayed in the gallery)
               <br />
-              <g:textField name="email" />
+	      <div class="${hasErrors(bean: galleryInstance, field: 'creatorEmail', 'errors')}">
+                  <g:textField name="creatorEmail" value="${fieldValue(bean: galleryInstance, field: 'creatorEmail')}" />
+	          <g:hasErrors bean="${galleryInstance}" field="creatorEmail">
+	              Please provide a valid e-mail address.
+	          </g:hasErrors>
+	      </div>
               <br />
 
               <g:submitButton name="create-button" value="Create!" />

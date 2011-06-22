@@ -1,8 +1,6 @@
 <%--
-  User: peterandreaschronz
-  Date: 21.05.11
-  Time: 11:32
-  To change this template use File | Settings | File Templates.
+  Peter A. Chronz
+  Mon Jun 20 19:50:51 CEST 2011
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" %>
