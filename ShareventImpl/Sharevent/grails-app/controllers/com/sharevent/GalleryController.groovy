@@ -313,7 +313,7 @@ class GalleryController {
 	}
 
 	def gallery = Gallery.get(params.id)
-        render(view: 'contributeImages', model: [galleryInstance: gallery])
+	render(view: 'contributeImages', model: [galleryInstance: gallery])
     }
 
     def uploadImage = {

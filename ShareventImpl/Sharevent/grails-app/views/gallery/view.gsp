@@ -53,11 +53,13 @@
                     </p>
                 </div>
                 <g:each var="image" in="${user.imageSet?.images}" >
-                    <div id="user_${user.id}_photo_${image.id}" class="galleryImageDiv" >
-                        <img src="${createLink(controller: 'image', action: 'viewImage', params: [id: image.id])}" width="250px"/>
-                        <br />
-                        <g:checkBox class="selectBox" name="image_${image.id}" value="${true}" /> Select me!
-                    </div>
+		    <g:if test="image != null">
+                        <div id="user_${user.id}_photo_${image.id}" class="galleryImageDiv" >
+                            <img src="${createLink(controller: 'image', action: 'viewImage', params: [id: image.id])}" width="250px"/>
+                            <br />
+                            <g:checkBox class="selectBox" name="image_${image.id}" value="${true}" /> Select me!
+                        </div>
+		    </g:if>
                 </g:each>
                 <div class="galleryHidePhotosDiv">
                     <p>

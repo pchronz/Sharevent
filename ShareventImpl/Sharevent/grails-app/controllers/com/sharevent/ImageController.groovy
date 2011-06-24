@@ -137,7 +137,24 @@ class ImageController {
 	            // scale the images before sending them
 	            def maxImageHeight = grailsApplication.config.sharevent.maxImageHeight as int
 
-	            BufferedImage bsrc = ImageIO.read(new File(imagePath.toString()));
+		    def imageFile = new File(imagePath.toString())
+	            BufferedImage bsrc = ImageIO.read(imageFile)
+
+		    // the image could not be read. probably a wrong type to begin with.
+		    // delete it
+		    if(bsrc == null) {
+		    	log.error "Could not read an image. Deleting it. Image.id== " + image.id
+		        if(imageFile.exists()) {
+			   if(imageFile.canWrite()) {
+                               if(!imageFile.isDirectory()) {
+			           imageFile.delete()
+			       }
+			   }
+			}
+		        image.delete(flush: true)
+			return
+		    }
+
 	            
 	            if(bsrc.getHeight() > maxImageHeight) {
 	                    int height = maxImageHeight 

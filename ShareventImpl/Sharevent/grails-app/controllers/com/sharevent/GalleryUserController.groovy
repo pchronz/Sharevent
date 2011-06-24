@@ -124,6 +124,10 @@ class GalleryUserController {
 	}
 
 	def gallery = Gallery.get(params.id)
+	if(gallery == null) {
+	    redirect(controller: 'main')
+	    return
+	}
 	if(session.userCreationStarted == null) {
 	    session.userCreationStarted = true
 	    render(view: 'createNew', model: [galleryInstance: gallery])
