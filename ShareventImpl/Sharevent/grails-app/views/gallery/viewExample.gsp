@@ -19,14 +19,14 @@
             
 	    
 	    
-	    <g:message code="userDef.participationLink" args="${[]}" /><a href="/Sharevent/gallery/viewExample">/Sharevent/gallery/viewExample</a>
+	    <span class="spanBold"><g:message code="userDef.participationLink" args="${[]}" /></span><a href="/Sharevent/gallery/viewExample">/Sharevent/gallery/viewExample</a>
 	    <br />
 	    
 
             <br />
             <g:message code="userDef.exampleGallery.location" args="${[]}" />,<g:message code="userDef.exampleGallery.date" args="${[]}" /> 
             <br />
-            <g:message code="userDef.creator" args="${[]}" />: <a href="mailto:${message(code:'userDef.exampleGallery.creatorEmail')}"><g:message code="userDef.exampleGallery.creator" args="${[]}" /></a>
+            <span class="spanBold"><g:message code="userDef.creator" args="${[]}" /></span>: <a href="mailto:${message(code:'userDef.exampleGallery.creatorEmail')}"><g:message code="userDef.exampleGallery.creator" args="${[]}" /></a>
         </p>
 
         <form action="/Sharevent/gallery/index/4028820a30a8a7110130a909856f001b" method="post" >

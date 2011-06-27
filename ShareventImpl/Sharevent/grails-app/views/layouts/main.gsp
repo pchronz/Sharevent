@@ -9,7 +9,7 @@
     </head>
     <body>
 	    <g:if test="${flash.message}">
-		<div class="message">${flash.message}</div>
+			<div class="message">${flash.message}</div>
 	    </g:if>
         <div id="spinner" class="spinner">
             <img src="${resource(dir:'images',file:'spinner.gif')}" alt="${message(code:'spinner.alt',default:'Loading...')}" />

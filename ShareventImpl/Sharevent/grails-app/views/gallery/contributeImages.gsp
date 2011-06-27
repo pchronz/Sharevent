@@ -19,9 +19,6 @@
 	<g:link controller="gallery" action="view" id="${galleryInstance.id}"><--<g:message code="userDef.goBack" args="${[]}" /></g:link>
         <h2><g:message code="userDef.contributeToGallery" args="${[galleryInstance.title]}" /></h2>
         <p>
-            <g:if test="${flash.message}">
-                <div class="message">${flash.message}</div>
-            </g:if>
 	    <g:if test="${session.user != null && session.user.contributedGallery.id == galleryInstance.id}">
                 <div class="message">
 			<g:message code="userDef.loggedIn" args="${[session.user?.firstName]}" /> 
@@ -37,7 +34,7 @@
 	<div id="divPostUpload">
 	    <g:message code="userDef.uploadMoreImagesQuestion" args="${[]}" /> 
 	    <br />
-	    <a id="aUploadMoreImages"><g:message code="userDef.uploadMoreImages" args="${[]}" /></a> | <g:link controller="gallery" action="view" id="${galleryInstance.id}"><g:message code="userDef.goBack" args="${[]}" /></g:link>
+	    <a id="aUploadMoreImages" class="buttons"><g:message code="userDef.uploadMoreImages" args="${[]}" /></a> | <g:link controller="gallery" action="view" id="${galleryInstance.id}" class="buttons"><g:message code="userDef.goBack" args="${[]}" /></g:link>
 	    <br />
 	</div>
 

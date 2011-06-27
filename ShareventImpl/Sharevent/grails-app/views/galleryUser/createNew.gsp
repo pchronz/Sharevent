@@ -14,9 +14,6 @@
     <div id="createUserViewport">
         <h2><g:message code="userDef.createNewUser" args="${[galleryInstance.title]}" /></h2>
         <p>
-            <g:if test="${flash.message}">
-                <div class="message">${flash.message}</div>
-            </g:if>
 	    <g:if test="${session.user != null && session.user?.contributedGallery == galleryInstance.id}">
                 <div class="message">
 		    <g:message code="userDef.loggedIn" args="${[]}" /> 

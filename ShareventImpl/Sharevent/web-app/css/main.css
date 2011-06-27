@@ -275,9 +275,11 @@ th.desc a {
 /* ******** CUSTOMIZED STYLES BELOW ************ */
 
 #mainViewport {
-	width: 500px;
+	width: 700px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 #spinner {
@@ -287,25 +289,33 @@ th.desc a {
 #shareventLogo {
 	margin-left: auto;
 	margin-right: auto;
-	width:330px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width:550px;
 }
 
 #contributeImagesViewport {
 	width: 850px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 #createFreeGalleryViewport {
 	width: 500px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 #downloadViewport {
 	width: 850px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 .popImage {
@@ -317,31 +327,44 @@ th.desc a {
 	width: 500px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 #sharePublicLinkDiv {
 	background-color: #C0C0C0;
 	border-style: solid;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 #shareAdminLinkDiv {
 	background-color: #C0C0C0;
 	border-style: solid;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 #viewGalleryViewport {
 	width: 850px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 10px;
 }
 
 #userBoxView {
 	border-style: solid;
+	padding: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 .galleryImageDiv {
 	float: left;
-	margin: 10px;
+	margin: 5px;
+	padding: 5px;
 }
 
 .galleryHidePhotosDiv {
@@ -358,8 +381,31 @@ th.desc a {
 	width: 850px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
+#divMainFooterLinks {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.messageAdminLoggedIn {
+    background: #ccffcc url(../images/skin/information.png) 8px 50% no-repeat;
+    border: 1px solid #99ffcc;
+    color: #006600;
+    margin: 10px 0 5px 0;
+    padding: 5px 5px 5px 30px
+}
+
+.spanBold {
+	font-weight: bold;
+}
+
+#shareventSteps {
+	font-size: 24px;
+	margin: 10px;
+}
 
 .qq-uploader { position:relative; width: 100%;}
 

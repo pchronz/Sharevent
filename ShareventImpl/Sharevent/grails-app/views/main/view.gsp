@@ -15,13 +15,24 @@
   <body>
     <div id="mainViewport">
 
-        <p>
-            <img src="${resource(dir:"images",file:"ThreeSteps.jpg")}" alt="3 steps to share photos" width="400" />
-        </p>
+		<ol id="shareventSteps">
+			<li>
+			<g:message code="userDef.firstStep" args="${[]}" />
+			</li>
+			<li>
+			<g:message code="userDef.secondStep" args="${[]}" />
+			</li>
+			<li>
+			<g:message code="userDef.thirdStep" args="${[]}" />
+			</li>
+		</ol>
 
         <p>
-            <g:link controller="gallery" action="createFree"><g:message code="userDef.createFreeGallery" args="${[]}" /></g:link>
-            <g:link controller="gallery" action="viewExample"><g:message code="userDef.viewExampleGallery" args="${[]}" /></g:link>
+			<div id="divMainFooterLinks">
+				<g:link controller="gallery" action="createFree" class="buttons"><g:message code="userDef.createFreeGallery" args="${[]}" /></g:link>
+				|
+				<g:link controller="gallery" action="viewExample" class="buttons"><g:message code="userDef.viewExampleGallery" args="${[]}" /></g:link>
+			</div>
         </p>
     </div>
 </body>

@@ -16,26 +16,23 @@
     <div id="viewGalleryViewport">
         <h2>${galleryInstance.title}</h2>
         <p>
-            <g:if test="${flash.message}">
-                <div class="message">${flash.message}</div>
-            </g:if>
 	    <g:if test="${session.user?.contributedGallery?.id == galleryInstance.id && session.user?.id == session.user.contributedGallery.adminKey}">
-	    	<div class="message">
-		    <g:message code="userDef.loggedInAdmin" args="${[session.user?.firstName]}" />
-		    <g:link controller="gallery" action="logout" id="${galleryInstance.id}">Logout</g:link>
-		</div>
+	    	<div class="messageAdminLoggedIn">
+				<g:message code="userDef.loggedInAdmin" args="${[session.user?.firstName]}" />
+				<g:link controller="gallery" action="logout" id="${galleryInstance.id}">Logout</g:link>
+			</div>
 	    </g:if>
 	    
-	    <g:message code="userDef.participationLink" args="${[]}" /><g:link controller="gallery" action="view" id="${galleryInstance.id}" >${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id)}</g:link>
+	    <span class="spanBold"><g:message code="userDef.participationLink" args="${[]}" /></span><g:link controller="gallery" action="view" id="${galleryInstance.id}" >${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id)}</g:link>
 	    <br />
 	    <g:if test="${session.user?.contributedGallery?.id == galleryInstance.id && session.user?.id == session.user.contributedGallery.adminKey}">
-	    <g:message code="userDef.administrationLink" args="${[]}" /><g:link controller="gallery" action="view" id="${galleryInstance.id}" params="${[key: galleryInstance.adminKey]}" >${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id, params: [key: galleryInstance.adminKey])}</g:link>
+	    <span class="spanBold"><g:message code="userDef.administrationLink" args="${[]}" /></span><g:link controller="gallery" action="view" id="${galleryInstance.id}" params="${[key: galleryInstance.adminKey]}" >${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id, params: [key: galleryInstance.adminKey])}</g:link>
 	    </g:if>
 
             <br />
             ${galleryInstance.location + ", " + galleryInstance.date.format("dd.MM.yyyy")}
             <br />
-            <g:message code="userDef.creator" args="${[]}" /><a href="mailto:${galleryInstance.creatorEmail}">${galleryInstance.creatorFirstName + " " + galleryInstance.creatorLastName}</a>
+            <span class="spanBold"><g:message code="userDef.creator" args="${[]}" /></span><a href="mailto:${galleryInstance.creatorEmail}">${galleryInstance.creatorFirstName + " " + galleryInstance.creatorLastName}</a>
         </p>
 
         <g:form controller="gallery" id="${galleryInstance.id}">
@@ -75,7 +72,7 @@
         </g:each>
 
         <p>
-            <g:link controller="gallery" action="contributeImages" id="${galleryInstance.id}"><g:message code="userDef.uploadImages" args="${[]}" /></g:link>
+            <g:link controller="gallery" action="contributeImages" id="${galleryInstance.id}" class="buttons"><g:message code="userDef.uploadImages" args="${[]}" /></g:link>
 
             <!-- Addding a logout-link if logged in as admin might be a good idea -->
             <g:actionSubmit name="Download" value="${message(code: 'userDef.downloadImages')}" action="download" />
