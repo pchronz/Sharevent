@@ -18,6 +18,8 @@
                
               <br />
 	      <div class="${hasErrors(bean: galleryInstance, field: 'title', 'errors')}">
+			 <g:message code="userDef.galleryTitle"  />
+			 <br />
                   <g:textField name="title"  value="${fieldValue(bean: galleryInstance, field: 'title')}"/>
 	          <g:hasErrors bean="${galleryInstance}" field="title">
 	              <g:message code="userDef.error.provideGalleryTitle" args="${[]}" /> 

@@ -19,14 +19,22 @@ environments {
     }
     test {
         dataSource {
+			pooled = false
             dbCreate = "update"
-            url = "jdbc:hsqldb:mem:testDb"
+            url = "jdbc:mysql://localhost:3306/shareventProduction"
+			driverClassName = "com.mysql.jdbc.Driver"
+			username = "grails"
+			password = "grails"
         }
     }
     production {
         dataSource {
+			pooled = false
             dbCreate = "update"
-            url = "jdbc:hsqldb:file:prodDb;shutdown=true"
+            url = "jdbc:mysql://shareventmain.cxzbjpiwkidf.us-east-1.rds.amazonaws.com:3306/shareventProduction"
+			driverClassName = "com.mysql.jdbc.Driver"
+			username = "grails"
+			password = "grails"
         }
     }
 }

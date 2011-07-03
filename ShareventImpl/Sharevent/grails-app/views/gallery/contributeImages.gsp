@@ -20,7 +20,7 @@
         <h2><g:message code="userDef.contributeToGallery" args="${[galleryInstance.title]}" /></h2>
         <p>
 	    <g:if test="${session.user != null && session.user.contributedGallery.id == galleryInstance.id}">
-                <div class="message">
+                <div class="messageAdminLoggedIn">
 			<g:message code="userDef.loggedIn" args="${[session.user?.firstName]}" /> 
 		    <g:link controller="gallery" action="logout" id="${galleryInstance.id}"><g:message code="userDef.logout" args="${[]}" /></g:link>
 		</div>
@@ -41,14 +41,31 @@
 	<div id="divImageUpload">
 		<h3><g:message code="userDef.chooseImages" args="${[]}" /></h3>
 		<!-- TODO get rid of imageUpload, which is GPL code -->
+		<div id="divContributeSpinner">
+			<g:message code="userDef.uploadingImages" args="${[]}" /><img src="${resource(dir: 'images', file: 'spinner.gif')}" />
+		</div>
 		<uploader:uploader id="${galleryInstance.id}" url="[controller: 'gallery', action: 'uploadImage']" multiple="true" sizeLimit="5000000">
+			<uploader:onSubmit>
+				$$('#divContributeSpinner').each(function(s) {
+					ongoingUploads += 1;
+					s.show();
+				});
+			</uploader:onSubmit>
 		    <uploader:onComplete>
-		    	$$('#divPostUpload').each(function(s) {
-				s.show();
-			});
-			$$('#divImageUpload').each(function(s){
-				s.hide();
-			});
+				$$('#divContributeSpinner').each(function(s) {
+					ongoingUploads -= 1;
+					if (ongoingUploads == 0) {
+						s.hide();
+						$$('#divPostUpload').each(function(s) {
+							s.show();
+						});
+
+						$$('#divImageUpload').each(function(s){
+							s.hide();
+						});
+					}
+				});
+
 		    </uploader:onComplete>
 		</uploader:uploader>
 	</div>

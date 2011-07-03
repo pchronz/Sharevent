@@ -1,4 +1,11 @@
+// global var for counting the ongoing uploads
+var ongoingUploads
+
 document.observe("dom:loaded", function() {
+	ongoingUploads = 0;
+	$$('#divContributeSpinner').each(function(s) {
+		s.hide();
+	});
 	$$('#divPostUpload').each(function(s) {
 		s.hide();
 	});
