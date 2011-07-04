@@ -27,7 +27,7 @@ class GalleryController {
 
     @Secured(['IS_AUTHENTICATED_FULLY'])
     def list = {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
+	params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [galleryInstanceList: Gallery.list(params), galleryInstanceTotal: Gallery.count()]
     }
 
@@ -38,12 +38,12 @@ class GalleryController {
         return [galleryInstance: galleryInstance]
     }
 
-    @Secured(['IS_AUTHENTICATED_FULLY'])
+	@Secured(['IS_AUTHENTICATED_FULLY'])
     def save = {
         def galleryInstance = new Gallery(params)
         if (galleryInstance.save(flush: true)) {
-            flash.message = "${message(code: 'default.created.message', args: [message(code: 'gallery.label', default: 'Gallery'), galleryInstance.id])}"
-            redirect(action: "show", id: galleryInstance.id)
+		flash.message = "${message(code: 'default.created.message', args: [message(code: 'gallery.label', default: 'Gallery'), galleryInstance.id])}"
+		redirect(action: "show", id: galleryInstance.id)
         }
         else {
             render(view: "create", model: [galleryInstance: galleryInstance])
