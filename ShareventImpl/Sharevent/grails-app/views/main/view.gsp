@@ -10,22 +10,29 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="layout" content="main" />
-    <title>Sharevent: Easy Photo Sharing</title>
+    <title><g:message code="userDef.companyName" args="${[]}" />: <g:message code="userDef.companySlogan" args="${[]}" /></title>
   </head>
   <body>
     <div id="mainViewport">
 
-        <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
-        </g:if>
+		<ol id="shareventSteps">
+			<li>
+			<g:message code="userDef.firstStep" args="${[]}" />
+			</li>
+			<li>
+			<g:message code="userDef.secondStep" args="${[]}" />
+			</li>
+			<li>
+			<g:message code="userDef.thirdStep" args="${[]}" />
+			</li>
+		</ol>
 
         <p>
-            <img src="${resource(dir:"images",file:"ThreeSteps.jpg")}" alt="3 steps to share photos" width="400" />
-        </p>
-
-        <p>
-            <g:link controller="gallery" action="createFree">Create a gallery</g:link>
-            <g:link controller="gallery" action="viewExample">View an example gallery</g:link>
+			<div id="divMainFooterLinks">
+				<g:link controller="gallery" action="createFree" class="buttons"><g:message code="userDef.createFreeGallery" args="${[]}" /></g:link>
+				|
+				<g:link controller="gallery" action="viewExample" class="buttons"><g:message code="userDef.viewExampleGallery" args="${[]}" /></g:link>
+			</div>
         </p>
     </div>
 </body>

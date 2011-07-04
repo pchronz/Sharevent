@@ -86,7 +86,7 @@ log4j = {
     warn   'org.mortbay.log'
 }
 
-sharevent = [imageDBPath: '/Users/peterandreaschronz/Documents/business/Sharevent/ImageDB/', maxImageWidth: 300, maxImageHeight: 300]
+sharevent = [imageDBPath: '/Users/peterachronz/Documents/business/Sharevent/ImageDB/', maxImageWidth: 300, maxImageHeight: 300]
 
 
 // Added by the Spring Security Core plugin:

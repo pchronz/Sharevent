@@ -82,8 +82,9 @@ class GalleryController {
                 def version = params.version.toLong()
                 if (galleryInstance.version > version) {
                     
-                    galleryInstance.errors.rejectValue("version", "default.optimistic.locking.failure", [message(code: 'gallery.label', default: 'Gallery')] as Object[], "Another user has updated this Gallery while you were editing")
+                    galleryInstance.errors.rejectValue("version", "default.optimistic.locking.failure", [message(code: 'gallery.label', default: 'Gallery')] as Object[], "${message(code: 'userDef.parallelAccess')}")
                     render(view: "edit", model: [galleryInstance: galleryInstance])
+            "${message(code: 'default.created.message', args: [message(code: 'gallery.label', default: 'Gallery'), galleryInstance.id])}"
                     return
                 }
             }
@@ -279,7 +280,7 @@ class GalleryController {
 
         // TODO finally delete the images from disk
 
-        flash.message = images.size() + " images have been deleted."
+        flash.message = "${message(code: 'userDef.deletedImages', args: ['images.size()'])}"
 
 
         // show the gallery again
@@ -290,7 +291,7 @@ class GalleryController {
     	// TODO secure this action for the admin user
         Gallery.get(params.id).delete(flush: true)
 
-        flash.message = "The gallery has been deleted. Would you maybe like to create a new one?"
+        flash.message = "${message(code: 'userDef.galleryDeleted')}"
 
         redirect(controller: "main", action: "index")
     }

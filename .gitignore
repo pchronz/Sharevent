@@ -1,6 +1,7 @@
 *.class
 */classes/*
-*/target/*
+*target*
 *.log
 *.swp
 *.DS_Store
+*ImageDB*
