@@ -93,3 +93,22 @@ sharevent = [imageDBPath: '/Users/peterachronz/Documents/business/Sharevent/Imag
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'com.sharevent.SecUser'
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'com.sharevent.SecUserSecRole'
 grails.plugins.springsecurity.authority.className = 'com.sharevent.SecRole'
+
+
+grails {
+	plugin {
+		aws {
+			credentials {
+				accessKey = "AKIAJTWMYZUPSGX6VEMQ"
+				secretKey = "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"
+			}
+			s3 {
+				bucket = 'com.sharevent.imagedb'
+				// TODO consider setting to private
+				acl = 'public'
+				// TODO set to reliable storage once live
+				rrs = true
+			}
+		}
+	}
+}

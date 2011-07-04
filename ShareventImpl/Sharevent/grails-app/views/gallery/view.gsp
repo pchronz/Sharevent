@@ -52,7 +52,7 @@
                 <g:each var="image" in="${user.imageSet?.images}" >
 		    <g:if test="image != null">
                         <div id="user_${user.id}_photo_${image.id}" class="galleryImageDiv" >
-                            <img src="${createLink(controller: 'image', action: 'viewImage', params: [id: image.id])}" width="250px"/>
+                            <img src="${urls[image.id.toString()]}" width="250px"/>
                             <br />
                             <g:checkBox class="selectBox" name="image_${image.id}" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
                         </div>

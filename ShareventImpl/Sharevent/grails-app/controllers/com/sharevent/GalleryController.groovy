@@ -11,7 +11,16 @@ import javax.servlet.http.HttpServletRequest
 import uk.co.desirableobjects.ajaxuploader.AjaxUploaderService
 import grails.converters.JSON
 import grails.plugins.springsecurity.Secured
-
+import javax.imageio.ImageIO 
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
+import java.io.ByteArrayInputStream
+import java.awt.*;
+import java.awt.geom.*;
+import java.awt.image.*;
+import javax.imageio.*;
+import javax.imageio.stream.MemoryCacheImageOutputStream
+import grails.plugins.springsecurity.Secured
 
 class GalleryController {
 
@@ -19,6 +28,8 @@ class GalleryController {
 
     // TODO get rid of the GPL code for imageUpload
     AjaxUploaderService ajaxUploaderService
+
+	def aws
 
     @Secured(['IS_AUTHENTICATED_FULLY'])
     def index = {
@@ -128,17 +139,33 @@ class GalleryController {
     def view = {
         def galleryInstance = Gallery.get(params.id)
 
-	if(params.containsKey('key')) {
-	    if(galleryInstance.adminKey == params.key) {
-		def user = GalleryUser.get(params.key)
-		if(user) {
-		    session.user = user
+		if(galleryInstance == null) {
+			redirect(controller: 'main')
+			return
 		}
-            }
-	}
+
+		if(params.containsKey('key')) {
+			if(galleryInstance.adminKey == params.key) {
+				def user = GalleryUser.get(params.key)
+				if(user) {
+					session.user = user
+				}
+			}
+		}
+		
+		// since we cannot use the AWS service in the gsp, we need to create the links
+		// to the images in S3 here and associate the images with those
+		def urls = [:]
+		galleryInstance.contributors?.each { contributor ->
+			contributor.imageSet.images?.each{ image ->
+				// TODO use the config for reading the bucket name
+				def url = aws.s3().on('com.sharevent.imagethumbs').url(image.id.toString() + '.jpg', contributor.id)
+				urls[image.id.toString()] = url
+			}
+		}
 
         if(galleryInstance)
-            render(view:"view", model:[galleryInstance:galleryInstance])
+            render(view:"view", model:[galleryInstance:galleryInstance, urls: urls])
         else
             redirect(controller:"main")
     }
@@ -189,44 +216,48 @@ class GalleryController {
 
     def download = {
     	// what happens if someone tries to upload and someone else tries to download at the same time?
-	// might not happen ever; even then only images would not be uploaded properly. no big deal!...?
+		// might not happen ever; even then only images would not be uploaded properly. no big deal!...?
 
         // first get the selected image ids
-        def images = []
+        def imageIds = []
         params.each {
             if(it.key instanceof java.lang.String) {
                 if(it.key.startsWith("image")) {
                     // Assuming that Grails is providing only selected checkboxes!
                     String imageId = it.key
-                    images.add(imageId.split("_")[1])
+                    imageIds.add(imageId.split("_")[1])
                 }
             }
         }
 
-	if(images.size() == 0) {
-		redirect(action: 'view', params: [id: params.id])
-		return
-	}
-	else {
-
-            // then build the paths for the image ids
-            def imagePaths = []
-            images.each {
-	        def userId = Image.get(it.toLong()).imageSet.galleryUser.id
-                String imagePath = "${grailsApplication.config.sharevent.imageDBPath}" + userId + "/" + it + ".jpg"
-                imagePaths.add(imagePath)
-            }
+			if(imageIds.size() == 0) {
+				redirect(action: 'view', params: [id: params.id])
+				return
+			}
+			else {
+				// get the corresponding images
+				def images = []
+				imageIds.each { imageId ->
+					images.add(Image.get(imageId))
+				}
 
             // now zip the selected images to the response stream
             ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(response.outputStream))
             def data = new byte[2048]
             def galleryInstance = Gallery.get(params.id)
-            imagePaths.each { imagePath ->
+            images.each { image ->
                 // check whether the gallery's path also works on windows
-                String imageId = imagePath.split("/")[-1]
-                String zipPath = galleryInstance.title + "/" + imageId
-                FileInputStream fi = new FileInputStream(imagePath)
-                BufferedInputStream origin = new BufferedInputStream(fi, 2048)
+				// TODO handle png and jpg properly
+                String zipPath = galleryInstance.title + "/" + image.id + ".jpg"
+				// get the input stream from S3
+				def s3Image = aws.s3().on('com.sharevent.imagedb').get(image.id.toString() + '.jpg', image.imageSet.galleryUser.id + '/')
+				def s3InputStream = s3Image.getDataInputStream()
+
+				if (s3InputStream == null) {
+					log.error "S3InputStream is null"
+				}
+
+                BufferedInputStream origin = new BufferedInputStream(s3InputStream, 2048)
                 ZipEntry entry = new ZipEntry(zipPath)
                 zos.putNextEntry(entry)
                 int count
@@ -271,20 +302,18 @@ class GalleryController {
         }
 
 
-        // then build the paths for the image ids
-        def imagePaths = []
-        images.each {
-            String imagePath = "${grailsApplication.config.sharevent.imageDBPath}" + params.id + "/" + it + ".jpg"
-            imagePaths.add(imagePath)
-        }
+		// then delete the images from S3
+		images.each {
+			aws.s3().on('com.sharevent.imagedb').delete(image.id.toString(), image.imageSet.galleryUser.id)
+		}
 
-        // TODO finally delete the images from disk
+        // then build the paths for the image ids
 
         flash.message = "${message(code: 'userDef.deletedImages', args: ['images.size()'])}"
 
 
         // show the gallery again
-        redirect(controller: "gallery", action: "view", params: [id: params.id])
+        redirect(controller: "gallery", action: "view", params: [id: params.id, urls: urls])
     }
 
     def deleteGallery = {
@@ -298,90 +327,130 @@ class GalleryController {
 
     def contributeImages = {
 
-	// check if the user is logged in
-	if(!session.user) {
-	    log.error "User not logged in! Redirecting to user creation."
-	    redirect(controller: 'galleryUser', action: 'createNew', params: [id: params.id])
-	    return
-	}
-	else {
-	    def loggedInUser = session.user
-	    if(loggedInUser.contributedGallery.id != params.id) {
-		session.user = null
-	        redirect(controller: 'galleryUser', action: 'createNew', params: [id: params.id])
-	        return
-	    }
-	}
+		// check if the user is logged in
+		if(!session.user) {
+			log.error "User not logged in! Redirecting to user creation."
+				redirect(controller: 'galleryUser', action: 'createNew', params: [id: params.id])
+				return
+		}
+		else {
+			def loggedInUser = session.user
+				if(loggedInUser.contributedGallery.id != params.id) {
+					session.user = null
+						redirect(controller: 'galleryUser', action: 'createNew', params: [id: params.id])
+						return
+				}
+		}
 
-	def gallery = Gallery.get(params.id)
-	render(view: 'contributeImages', model: [galleryInstance: gallery])
+		def gallery = Gallery.get(params.id)
+			render(view: 'contributeImages', model: [galleryInstance: gallery])
     }
 
     def uploadImage = {
 	synchronized(this.getClass()) {
-	def user = session.user.merge(flush: true)
+		def user = session.user.merge(flush: true)
     	try {
-	    def image = new Image()
-	    // locking image set to prevent conflicts due to optimistic locking
-	    // when upload multiple files at once
-	    // HSQLDB does not support pessimistic locking ==> synchronizing the whole procedure
-	    // this might be one of the first bottlenecks!
-	    // XXX BOTTLENECK!
+			def image = new Image()
+			// locking image set to prevent conflicts due to optimistic locking
+			// when upload multiple files at once
+			// HSQLDB does not support pessimistic locking ==> synchronizing the whole procedure
+			// this might be one of the first bottlenecks!
+			// XXX BOTTLENECK!
 	        Gallery galleryInstance = user.contributedGallery
-                user.imageSet.addToImages(image)
+			user.imageSet.addToImages(image)
 	        if(!galleryInstance.contributors.contains(user)) {
                 	galleryInstance.addToContributors(user)
 	        }
-                if(!galleryInstance.save(flush: true)) {
-	            log.error 'Errors while saving gallerInstance'
-                    galleryInstance.errors.each {
-                        // TODO use log4j for logging everywhere
-                        log.error it
-                    }
-                }
+			if(!galleryInstance.save(flush: true)) {
+				log.error 'Errors while saving gallerInstance'
+				galleryInstance.errors.each {
+					// TODO use log4j for logging everywhere
+					log.error it
+				}
+			}
 
-	    // create the directory for this user in our image database if it does not exist yet
-            if(!grailsApplication.config.sharevent.containsKey('imageDBPath')) {
-	    	// TODO throw an exception
-	    	log.error "Path to image DB not found in configuration!"
-	    	render(text: [success: false] as JSON, contentType: 'text/JSON')
+			InputStream inputStream = null
+			if (request instanceof MultipartHttpServletRequest) {
+					MultipartFile uploadedFile = ((MultipartHttpServletRequest) request).getFile('qqfile')
+					inputStream = uploadedFile.inputStream
+				}
+				else {
+				inputStream = request.inputStream
+			}
+
+
+			// read the image from inputstream
+			// if it does not work, post a flash message, log it and remove the image domain class instance
+
+			BufferedImage bsrc = ImageIO.read(inputStream)
+
+			// the image could not be read. probably a wrong type to begin with.
+			// delete it
+			if(bsrc == null) {
+				log.error "Could not read an image. Deleting it. Image.id== " + image.id
+				image.delete(flush: true)
+				flash.message = "${message(code: 'userdef.couldNotReadImage')}"
+				render(text: [success: false] as JSON, contentType: 'text/JSON')
+				return
+			}
+
+			int maxImageHeight = grailsApplication.config.sharevent.maxImageHeight
+			int maxImageWidth = grailsApplication.config.sharevent.maxImageWidth
+
+			// resize the images
+			def bais = null
+			if(bsrc.getHeight() > maxImageHeight) {
+				int height = maxImageHeight 
+				int width = ((double)bsrc.getWidth()) * ((double)height)/((double)bsrc.getHeight())
+				BufferedImage bdest = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+				Graphics2D g = bdest.createGraphics();
+				AffineTransform at = AffineTransform.getScaleInstance((double)width/bsrc.getWidth(), (double)height/bsrc.getHeight());
+				g.drawRenderedImage(bsrc,at);
+				def baos = new ByteArrayOutputStream()
+				ImageIO.write(bdest, "JPG", new MemoryCacheImageOutputStream(baos))
+				def byteArray = baos.toByteArray()
+				bais = new ByteArrayInputStream(byteArray)
+			}
+			else {
+				def baos = new ByteArrayOutputStream()
+				ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(baos))
+				def byteArray = baos.toByteArray()
+				bais = new ByteArrayInputStream(byteArray)
+			}
+			// TODO upload thumbs and images separately
+
+			// uploading the scaled image
+			bais.s3upload(image.id + '.jpg') {
+				bucket 'com.sharevent.imagethumbs'
+				path user.id + '/'
+			}
+			bais.close()
+
+			// uploading the original image
+			def baos = new ByteArrayOutputStream()
+			ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(baos))
+			def byteArray = baos.toByteArray()
+			bais = new ByteArrayInputStream(byteArray)
+			bais.s3upload(image.id + '.jpg') {
+				bucket 'com.sharevent.imagedb'
+				path user.id + '/'
+			}
+			bais.close()
+		}
+		catch(Exception e) {
+			e.printStackTrace()
+			log.error e.toString()
+			render(text: [success: false] as JSON, contentType: 'text/JSON')
+			return
+		}
+		catch(e) {
+			log.error e.toString()
+			render(text: [success: false] as JSON, contentType: 'text/JSON')
+			return
+		}
+		render(text: [success: true] as JSON, contentType: 'text/JSON')
 		return
-	    }
-            File dir = new File("${grailsApplication.config.sharevent.imageDBPath}" + user.id + "/" )
-            if(!dir.exists()) {
-	        log.info 'Directory for user ${user.id} does not yet exist. Creating.'
-                dir.mkdir()
-            }
-
-	    // create the image file handle itself
-	    File imageFile = new File("${grailsApplication.config.sharevent.imageDBPath}" + user.id + "/" + image.id + ".jpg")
-
-	    InputStream inputStream = null
-	    if (request instanceof MultipartHttpServletRequest) {
-                MultipartFile uploadedFile = ((MultipartHttpServletRequest) request).getFile('qqfile')
-                inputStream = uploadedFile.inputStream
-            }
-            else {
-	    	inputStream = request.inputStream
-	    }
-
-            ajaxUploaderService.upload(inputStream, imageFile)
-	}
-	catch(Exception e) {
-		e.printStackTrace()
-		log.error e.toString()
-		render(text: [success: false] as JSON, contentType: 'text/JSON')
-		return
-	}
-	catch(e) {
-		log.error e.toString()
-		render(text: [success: false] as JSON, contentType: 'text/JSON')
-		return
-	}
-
-	render(text: [success: true] as JSON, contentType: 'text/JSON')
-	return
-	}
+		}
     }
 
     def logout ={
