@@ -27,9 +27,8 @@ class GalleryController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     // TODO get rid of the GPL code for imageUpload
-    AjaxUploaderService ajaxUploaderService
+	def imageDBService
 
-	def aws
 
     @Secured(['IS_AUTHENTICATED_FULLY'])
     def index = {
@@ -159,7 +158,7 @@ class GalleryController {
 		galleryInstance.contributors?.each { contributor ->
 			contributor.imageSet.images?.each{ image ->
 				// TODO use the config for reading the bucket name
-				def url = aws.s3().on('com.sharevent.imagethumbs').url(image.id.toString() + '.jpg', contributor.id)
+				def url = imageDBService.getImageURL(image)
 				urls[image.id.toString()] = url
 			}
 		}
@@ -246,25 +245,20 @@ class GalleryController {
             def data = new byte[2048]
             def galleryInstance = Gallery.get(params.id)
             images.each { image ->
-                // check whether the gallery's path also works on windows
-				// TODO handle png and jpg properly
-                String zipPath = galleryInstance.title + "/" + image.id + ".jpg"
-				// get the input stream from S3
-				def s3Image = aws.s3().on('com.sharevent.imagedb').get(image.id.toString() + '.jpg', image.imageSet.galleryUser.id + '/')
-				def s3InputStream = s3Image.getDataInputStream()
+				def inputStream = imageDBService.getImageInputStream(image)
 
-				if (s3InputStream == null) {
+				if (inputStream == null) {
 					log.error "S3InputStream is null"
 				}
 
-                BufferedInputStream origin = new BufferedInputStream(s3InputStream, 2048)
-                ZipEntry entry = new ZipEntry(zipPath)
-                zos.putNextEntry(entry)
-                int count
-                while((count = origin.read(data, 0, 2048)) != -1) {
-                   zos.write(data, 0, count);
-                }
-                origin.close();
+				BufferedInputStream origin = new BufferedInputStream(inputStream, 2048)
+				ZipEntry entry = new ZipEntry(zipPath)
+				zos.putNextEntry(entry)
+				int count
+				while((count = origin.read(data, 0, 2048)) != -1) {
+				   zos.write(data, 0, count);
+				}
+				origin.close();
             }
             zos.close()
 	}
@@ -304,7 +298,7 @@ class GalleryController {
 
 		// then delete the images from S3
 		images.each {
-			aws.s3().on('com.sharevent.imagedb').delete(image.id.toString(), image.imageSet.galleryUser.id)
+			imageDBService.delete(image)
 		}
 
         // then build the paths for the image ids
@@ -348,6 +342,12 @@ class GalleryController {
 
     def uploadImage = {
 	synchronized(this.getClass()) {
+		if(session.user == null) {
+			flash.message = "${message(code: 'userDef.expiredSession')}"
+			redirect(controller: 'main')
+			return
+		}
+
 		def user = session.user.merge(flush: true)
     	try {
 			def image = new Image()
@@ -417,25 +417,16 @@ class GalleryController {
 				def byteArray = baos.toByteArray()
 				bais = new ByteArrayInputStream(byteArray)
 			}
-			// TODO upload thumbs and images separately
 
 			// uploading the scaled image
-			bais.s3upload(image.id + '.jpg') {
-				bucket 'com.sharevent.imagethumbs'
-				path user.id + '/'
-			}
-			bais.close()
+			imageDBService.storeImageThumbnail(bais, image, user)
 
 			// uploading the original image
 			def baos = new ByteArrayOutputStream()
 			ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(baos))
 			def byteArray = baos.toByteArray()
 			bais = new ByteArrayInputStream(byteArray)
-			bais.s3upload(image.id + '.jpg') {
-				bucket 'com.sharevent.imagedb'
-				path user.id + '/'
-			}
-			bais.close()
+			imageDBService.storeImage(bais, image, user)
 		}
 		catch(Exception e) {
 			e.printStackTrace()

@@ -71,6 +71,18 @@ log4j = {
     //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
     //}
 
+    info  'org.codehaus.groovy.grails.web.servlet',  //  controllers
+           'org.codehaus.groovy.grails.web.pages', //  GSP
+           'org.codehaus.groovy.grails.web.sitemesh', //  layouts
+           'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
+           'org.codehaus.groovy.grails.web.mapping', // URL mapping
+           'org.codehaus.groovy.grails.commons', // core / classloading
+           'org.codehaus.groovy.grails.plugins', // plugins
+           'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
+           'org.springframework',
+           'org.hibernate',
+           'net.sf.ehcache.hibernate'
+
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
            'org.codehaus.groovy.grails.web.pages', //  GSP
            'org.codehaus.groovy.grails.web.sitemesh', //  layouts
@@ -86,7 +98,7 @@ log4j = {
     warn   'org.mortbay.log'
 }
 
-sharevent = [imageDBPath: '/Users/peterachronz/Documents/business/Sharevent/ImageDB/', maxImageWidth: 300, maxImageHeight: 300]
+sharevent = [imageThumbsDBPath: '/usr/local/sharevent/ImageThumbsDB/', imageDBPath: '/usr/local/sharevent/ImageDB/', maxImageWidth: 300, maxImageHeight: 300, imageDBBucket: 'com.sharevent.imagedb', imageThumbsDBBucket: 'com.sharevent.imagethumbs']
 
 
 // Added by the Spring Security Core plugin:
