@@ -119,8 +119,10 @@ class ImageController {
     // *************** CUSTOM ACTIONS FOLLOW *******************
 	def viewImageThumbnail = {
 
+		println "showing image: ${params.id}"
+
 		synchronized(this.getClass()) {	
-			def image = Image.get(params.id)
+			def image = Image.get(params.id.toLong())
 				try {
 					// synchronizing because else this lead to problems when many images were loaded concurrently
 					// TODO analyse this code properly to minimize the synchronized block
@@ -138,6 +140,7 @@ class ImageController {
 						def maxImageHeight = grailsApplication.config.sharevent.maxImageHeight as int
 
 						def imageFile = new File(imagePath.toString())
+						println 'reading image file: ' + imageFile.toString()
 						BufferedImage bsrc = ImageIO.read(imageFile)
 
 						// the image could not be read. probably a wrong type to begin with.

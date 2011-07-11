@@ -31,10 +31,11 @@ environments {
         dataSource {
 			pooled = false
             dbCreate = "update"
-            url = "jdbc:mysql://shareventmain.cxzbjpiwkidf.us-east-1.rds.amazonaws.com:3306/shareventProduction"
+            url = "jdbc:mysql://localhost:3306/sharevent"
 			driverClassName = "com.mysql.jdbc.Driver"
 			username = "grails"
 			password = "grails"
+            dbCreate = "update"
         }
     }
 }

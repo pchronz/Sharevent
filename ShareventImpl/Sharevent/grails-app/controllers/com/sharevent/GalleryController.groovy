@@ -238,7 +238,7 @@ class GalleryController {
 				def images = []
 				imageIds.each { imageId ->
 					images.add(Image.get(imageId))
-				}
+			}
 
             // now zip the selected images to the response stream
             ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(response.outputStream))
@@ -252,6 +252,7 @@ class GalleryController {
 				}
 
 				BufferedInputStream origin = new BufferedInputStream(inputStream, 2048)
+				String zipPath = image.imageSet.galleryUser.contributedGallery.title + '/' + image.id + '.jpg'
 				ZipEntry entry = new ZipEntry(zipPath)
 				zos.putNextEntry(entry)
 				int count
@@ -261,13 +262,14 @@ class GalleryController {
 				origin.close();
             }
             zos.close()
-	}
+		}
     }
 
     def deleteImages = {
-	// TODO secure this action for the admin user
+		// TODO secure this action for the admin user
         // first get the selected image ids
         def images = []
+		log.error 'getting ids for images to delete'
         params.each {
             if(it.key instanceof java.lang.String) {
                 if(it.key.startsWith("image")) {
@@ -278,36 +280,43 @@ class GalleryController {
             }
         }
 
+		// then delete the images from storage
+		log.error 'deleting images from storage'
+		images.each {
+            Image image = Image.get(it.toString().toLong())
+			imageDBService.delete(image)
+		}
+
         // remove the corresponding entries in the database
+		log.error 'removing image instances from db'
         images.each {
             Image image = Image.get(it.toString().toLong())
             image.imageSet.removeFromImages(image)
         }
 
         // if some user does not have anymore images, delete the user as well
+		log.error 'deleting users who do not have any more images'
         def galleryInstance = Gallery.get(params.id)
         def contributorsCopy = []
         contributorsCopy += galleryInstance.contributors
         contributorsCopy.each {
-            if(it.imageSet.images.size() == 0) {
-                galleryInstance.removeFromContributors(it)
-                it.delete(flush:true)
+            if(it.imageSet.images.size() == 0 ) {
+				if(it.id != galleryInstance.adminKey) {
+					log.debug 'Removing user after deleting all of his images. user.id==' + it.id
+					galleryInstance.removeFromContributors(it)
+					it.delete(flush:true)
+				}
+				else {
+					log.debug 'Keeping user since it is the gallery admin'
+				}
             }
         }
 
-
-		// then delete the images from S3
-		images.each {
-			imageDBService.delete(image)
-		}
-
-        // then build the paths for the image ids
-
-        flash.message = "${message(code: 'userDef.deletedImages', args: ['images.size()'])}"
+        flash.message = "${message(code: 'userDef.deletedImages', args: [images.size()])}"
 
 
         // show the gallery again
-        redirect(controller: "gallery", action: "view", params: [id: params.id, urls: urls])
+        redirect(controller: "gallery", action: "view", params: [id: params.id])
     }
 
     def deleteGallery = {
