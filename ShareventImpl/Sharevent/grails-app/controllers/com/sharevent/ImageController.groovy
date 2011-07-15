@@ -118,8 +118,9 @@ class ImageController {
 
     // *************** CUSTOM ACTIONS FOLLOW *******************
 	def viewImageThumbnail = {
+		// TODO transform this to run with mongo/imagedb service
 
-		println "showing image: ${params.id}"
+		log.info "showing image: ${params.id}"
 
 		synchronized(this.getClass()) {	
 			def image = Image.get(params.id.toLong())
@@ -128,35 +129,35 @@ class ImageController {
 					// TODO analyse this code properly to minimize the synchronized block
 					// XXX this might be another bottleneck
 					BufferedImage bufferedImage = null
-						File file = new File("")
-						// XXX use the thumbnail path instead of the image path
-						String imageDBPath = "${grailsApplication.config.sharevent.imageDBPath}"
-						String imagePath = imageDBPath + image.imageSet.galleryUser.id + "/" + Long.toString(image.id) + ".jpg"
-						// TODO lose assumption that we are dealing with JPEGs!
+					File file = new File("")
+					// XXX use the thumbnail path instead of the image path
+					String imageDBPath = "${grailsApplication.config.sharevent.imageDBPath}"
+					String imagePath = imageDBPath + image.imageSet.galleryUser.id + "/" + Long.toString(image.id) + ".jpg"
+					// TODO lose assumption that we are dealing with JPEGs!
 
-						// TODO use asceticImages for high-quality scaling
-						// TODO scale and cache images on upload or with an asynchronous job
-						// scale the images before sending them
-						def maxImageHeight = grailsApplication.config.sharevent.maxImageHeight as int
+					// TODO use asceticImages for high-quality scaling
+					// TODO scale and cache images on upload or with an asynchronous job
+					// scale the images before sending them
+					def maxImageHeight = grailsApplication.config.sharevent.maxImageHeight as int
 
-						def imageFile = new File(imagePath.toString())
-						println 'reading image file: ' + imageFile.toString()
-						BufferedImage bsrc = ImageIO.read(imageFile)
+					def imageFile = new File(imagePath.toString())
+					println 'reading image file: ' + imageFile.toString()
+					BufferedImage bsrc = ImageIO.read(imageFile)
 
-						// the image could not be read. probably a wrong type to begin with.
-						// delete it
-						if(bsrc == null) {
-							log.error "Could not read an image. Deleting it. Image.id== " + image.id
-								if(imageFile.exists()) {
-									if(imageFile.canWrite()) {
-										if(!imageFile.isDirectory()) {
-											imageFile.delete()
-										}
+					// the image could not be read. probably a wrong type to begin with.
+					// delete it
+					if(bsrc == null) {
+						log.error "Could not read an image. Deleting it. Image.id== " + image.id
+							if(imageFile.exists()) {
+								if(imageFile.canWrite()) {
+									if(!imageFile.isDirectory()) {
+										imageFile.delete()
 									}
 								}
-							image.delete(flush: true)
-								return
-						}
+							}
+						image.delete(flush: true)
+							return
+					}
 
 
 					if(bsrc.getHeight() > maxImageHeight) {

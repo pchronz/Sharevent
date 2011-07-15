@@ -22,12 +22,6 @@ import java.awt.image.*;
 import javax.imageio.*;
 import javax.imageio.stream.MemoryCacheImageOutputStream
 import grails.plugins.springsecurity.Secured
-import com.mongodb.Mongo
-import com.mongodb.DB
-import com.mongodb.DBCollection
-import com.mongodb.BasicDBObject
-import com.mongodb.DBObject
-import com.mongodb.DBCursor
 
 
 class GalleryController {
@@ -144,55 +138,6 @@ class GalleryController {
     // ********* OWN ACTIONS BELOW *******
 
     def view = {
-		// XXX BYPASSING THE NORMAL FLOW FOR EXPERIMENTING WITH MONGODB
-		// TODO only create one instance of Mongo
-		Mongo mongo = new Mongo('localhost', 27017)
-		DB db = mongo.getDB('sharevent')
-
-		DBCollection dbCollection = db.getCollection('images')
-
-
-		// XXX BYPASS
-
-
-		// methods required by the imdage db service
-		// store image
-		BufferedImage bImage = ImageIO.read(new File('/Users/peterachronz/Desktop/ai.jpg'))
-		ByteArrayOutputStream baos = new ByteArrayOutputStream()
-		ImageIO.write(bImage, 'jpg', baos)
-		
-
-		BasicDBObject dbObject = new BasicDBObject()
-		dbObject.put('imageKey', '42')
-		byte[] imageBytesIn = baos.toByteArray()
-		dbObject.put('imageBytes', imageBytesIn)
-		println 'inserted image with image.bytes[].length==' + imageBytesIn.length 
-		dbCollection.insert(dbObject)
-
-		// retrieve image
-		BasicDBObject query = new BasicDBObject()
-		query.put('imageKey', '42')
-		DBCursor cursor = dbCollection.find(query)
-		while(cursor.hasNext()) {
-			def nextObject = cursor.next()
-			byte[] imageBytes = nextObject.get("imageBytes") as byte[]
-			println 'got the image with byte[].length==' + imageBytes.length
-		}
-
-		// delete image
-		query = new BasicDBObject()
-		query.put('imageKey', '42')
-		cursor = dbCollection.find(query)
-		if(!cursor.hasNext())
-			log.error 'could not find image with image.id==' + '42'
-		DBObject imageDocObject = cursor.next()
-		println 'before: db.collection.find().count()==' + dbCollection.find().size()
-		dbCollection.remove(imageDocObject)
-		println 'after: db.collection.find().count()==' + dbCollection.find().size()
-		
-		// XXX BYPASS
-
-
         def galleryInstance = Gallery.get(params.id)
 
 		if(galleryInstance == null) {
