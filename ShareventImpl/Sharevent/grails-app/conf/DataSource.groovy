@@ -19,12 +19,8 @@ environments {
     }
     test {
         dataSource {
-			pooled = false
-            dbCreate = "update"
-            url = "jdbc:mysql://localhost:3306/shareventProduction"
-			driverClassName = "com.mysql.jdbc.Driver"
-			username = "grails"
-			password = "grails"
+			dbCreate= "create-drop"
+            url = "jdbc:hsqldb:mem:devDB"
         }
     }
     production {

@@ -15,12 +15,20 @@ import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 import javax.imageio.*;
 import javax.imageio.stream.MemoryCacheImageOutputStream
 import grails.plugins.springsecurity.Secured
+import com.mongodb.Mongo
+import com.mongodb.DB
+import com.mongodb.DBCollection
+import com.mongodb.BasicDBObject
+import com.mongodb.DBObject
+import com.mongodb.DBCursor
+
 
 class GalleryController {
 
@@ -136,6 +144,55 @@ class GalleryController {
     // ********* OWN ACTIONS BELOW *******
 
     def view = {
+		// XXX BYPASSING THE NORMAL FLOW FOR EXPERIMENTING WITH MONGODB
+		// TODO only create one instance of Mongo
+		Mongo mongo = new Mongo('localhost', 27017)
+		DB db = mongo.getDB('sharevent')
+
+		DBCollection dbCollection = db.getCollection('images')
+
+
+		// XXX BYPASS
+
+
+		// methods required by the imdage db service
+		// store image
+		BufferedImage bImage = ImageIO.read(new File('/Users/peterachronz/Desktop/ai.jpg'))
+		ByteArrayOutputStream baos = new ByteArrayOutputStream()
+		ImageIO.write(bImage, 'jpg', baos)
+		
+
+		BasicDBObject dbObject = new BasicDBObject()
+		dbObject.put('imageKey', '42')
+		byte[] imageBytesIn = baos.toByteArray()
+		dbObject.put('imageBytes', imageBytesIn)
+		println 'inserted image with image.bytes[].length==' + imageBytesIn.length 
+		dbCollection.insert(dbObject)
+
+		// retrieve image
+		BasicDBObject query = new BasicDBObject()
+		query.put('imageKey', '42')
+		DBCursor cursor = dbCollection.find(query)
+		while(cursor.hasNext()) {
+			def nextObject = cursor.next()
+			byte[] imageBytes = nextObject.get("imageBytes") as byte[]
+			println 'got the image with byte[].length==' + imageBytes.length
+		}
+
+		// delete image
+		query = new BasicDBObject()
+		query.put('imageKey', '42')
+		cursor = dbCollection.find(query)
+		if(!cursor.hasNext())
+			log.error 'could not find image with image.id==' + '42'
+		DBObject imageDocObject = cursor.next()
+		println 'before: db.collection.find().count()==' + dbCollection.find().size()
+		dbCollection.remove(imageDocObject)
+		println 'after: db.collection.find().count()==' + dbCollection.find().size()
+		
+		// XXX BYPASS
+
+
         def galleryInstance = Gallery.get(params.id)
 
 		if(galleryInstance == null) {
@@ -177,41 +234,43 @@ class GalleryController {
         render(view: 'createFree', model: [galleryInstance: params.galleryInstance])
     }
 
-    def share = {
-        def gallery = new Gallery(params)
-        gallery.adminKey = 0
+	def share = {
+		def gallery = new Gallery(params)
+		gallery.adminKey = 0
 
-	if(!gallery.validate()) {
-		render(view: 'createFree', model: [galleryInstance: gallery])
-		return
-	}
 
-	// actually also create a user
-	def user = new GalleryUser()
-	user.firstName = params.creatorFirstName
-	user.lastName = params.creatorLastName
-	user.email = params.creatorEmail
-
-	user.imageSet = new ImageSet()
-	user.imageSet.galleryUser = user
-	gallery.addToContributors(user)
-	user.contributedGallery = gallery
-	if(!gallery.save(flush:true)) {
-		log.error "Could not create a new gallery. Errors follow."
-		gallery.errors.each{
-			log.error it
+		if(!gallery.validate()) {
+			render(view: 'createFree', model: [galleryInstance: gallery])
+			log.error 'Could not validate the gallery'
+			return
 		}
-		redirect(action: 'createFree', params: [galleryInstance: gallery])
-		return
+
+		// actually also create a user
+		def user = new GalleryUser()
+		user.firstName = params.creatorFirstName
+		user.lastName = params.creatorLastName
+		user.email = params.creatorEmail
+
+		user.imageSet = new ImageSet()
+		user.imageSet.galleryUser = user
+		gallery.addToContributors(user)
+		user.contributedGallery = gallery
+		if(!gallery.save(flush:true)) {
+			log.error "Could not create a new gallery. Errors follow."
+			gallery.errors.each{
+				log.error it
+			}
+			redirect(action: 'createFree', params: [galleryInstance: gallery])
+			return
+		}
+
+		// set the gallery's key to the user's id
+		gallery.adminKey = user.id
+
+		session.user = user
+
+		render(view:"share", model:[galleryInstance:gallery])
 	}
-
-	// set the gallery's key to the user's id
-	gallery.adminKey = user.id
-
-	session.user = user
-
-        render(view:"share", model:[galleryInstance:gallery])
-    }
 
     def download = {
     	// what happens if someone tries to upload and someone else tries to download at the same time?
