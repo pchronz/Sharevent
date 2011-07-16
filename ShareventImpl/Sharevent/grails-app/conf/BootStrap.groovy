@@ -5,11 +5,13 @@ import com.sharevent.Image
 import com.sharevent.SecRole
 import com.sharevent.SecUser
 import com.sharevent.SecUserSecRole
+import com.mongodb.Mongo
 
 
 class BootStrap {
 
     def springSecurityService
+	def imageDBService
 
     def init = { servletContext ->
 	    // for spring security create an admin role
@@ -21,8 +23,8 @@ class BootStrap {
 			SecUserSecRole.create adminUser, adminRole
 	    }
 
-
     }
+
     def destroy = {
     }
 }

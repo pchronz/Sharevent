@@ -165,6 +165,8 @@ class GalleryController {
 			}
 		}
 
+		println 'About to render following images: ' + urls
+
         if(galleryInstance)
             render(view:"view", model:[galleryInstance:galleryInstance, urls: urls])
         else
