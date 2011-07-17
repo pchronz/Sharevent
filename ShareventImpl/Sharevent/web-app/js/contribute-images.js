@@ -10,12 +10,12 @@ document.observe("dom:loaded", function() {
 		s.hide();
 	});
 
-	$$('#aUploadMoreImages').each(function(s){
-		s.observe('click', function(event) {
-			$$('#divImageUpload').each(function(s){
-				s.show();
-			});
-		});
-	});
+	//$$('#aUploadMoreImages').each(function(s){
+	//	s.observe('click', function(event) {
+	//		$$('#divImageUpload').each(function(s){
+	//			s.show();
+	//		});
+	//	});
+	//});
 });
 

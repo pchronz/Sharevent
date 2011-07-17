@@ -339,16 +339,16 @@ class GalleryController {
 		// check if the user is logged in
 		if(!session.user) {
 			log.error "User not logged in! Redirecting to user creation."
-				redirect(controller: 'galleryUser', action: 'createNew', params: [id: params.id])
-				return
+			redirect(controller: 'galleryUser', action: 'createNew', params: [id: params.id])
+			return
 		}
 		else {
 			def loggedInUser = session.user
-				if(loggedInUser.contributedGallery.id != params.id) {
-					session.user = null
-						redirect(controller: 'galleryUser', action: 'createNew', params: [id: params.id])
-						return
-				}
+			if(loggedInUser.contributedGallery.id != params.id) {
+				session.user = null
+				redirect(controller: 'galleryUser', action: 'createNew', params: [id: params.id])
+				return
+			}
 		}
 
 		def gallery = Gallery.get(params.id)
