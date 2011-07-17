@@ -352,7 +352,7 @@ class GalleryController {
 		}
 
 		def gallery = Gallery.get(params.id)
-			render(view: 'contributeImages', model: [galleryInstance: gallery])
+		render(view: 'contributeImages', model: [galleryInstance: gallery])
     }
 
     def uploadImage = {
@@ -388,9 +388,16 @@ class GalleryController {
 			if (request instanceof MultipartHttpServletRequest) {
 					MultipartFile uploadedFile = ((MultipartHttpServletRequest) request).getFile('qqfile')
 					inputStream = uploadedFile.inputStream
+			} 
+			else {
+				// need to do this for integration tests
+				try {
+					MultipartFile uploadedFile = request.getFile('qqfile')
+					inputStream = uploadedFile.inputStream
 				}
-				else {
-				inputStream = request.inputStream
+				catch(e) {
+					inputStream = request.inputStream
+				}
 			}
 
 
@@ -403,7 +410,7 @@ class GalleryController {
 			// delete it
 			if(bsrc == null) {
 				log.error "Could not read an image. Deleting it. Image.id== " + image.id
-				image.delete(flush: true)
+				image.imageSet.removeFromImages(image)
 				flash.message = "${message(code: 'userdef.couldNotReadImage')}"
 				render(text: [success: false] as JSON, contentType: 'text/JSON')
 				return
@@ -460,8 +467,8 @@ class GalleryController {
     }
 
     def logout ={
-	session.user = null
-	redirect(action: "view", params: params)
+		session.user = null
+		redirect(action: "view", params: params)
     }
 
 }
