@@ -138,6 +138,7 @@ class GalleryController {
     // ********* OWN ACTIONS BELOW *******
 
     def view = {
+		println params
         def galleryInstance = Gallery.get(params.id)
 
 		if(galleryInstance == null) {
