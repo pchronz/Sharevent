@@ -11,6 +11,12 @@ import java.awt.geom.*;
 import java.awt.image.*;
 import javax.imageio.*;
 import javax.imageio.stream.MemoryCacheImageOutputStream
+import com.mongodb.Mongo
+import com.mongodb.DB
+import com.mongodb.DBCollection
+import com.mongodb.BasicDBObject
+import com.mongodb.DBObject
+import com.mongodb.DBCursor
 
 import org.codehaus.groovy.grails.web.context.ServletContextHolder 
 
@@ -44,7 +50,7 @@ class GalleryControllerTests extends GroovyTestCase {
 		createNewGallery()
 		def galleryList = Gallery.list()
 		def beforeSize = galleryList.size()
-		assertEquals beforeSize, 1
+		assertEquals 1, beforeSize
 
 		// view the gallery first
 		def galleryController = new GalleryController()
@@ -71,7 +77,7 @@ class GalleryControllerTests extends GroovyTestCase {
 		clearAll()
 		createNewGallery()
 		def galleries = Gallery.list()
-		assertEquals galleries.size(), 1
+		assertEquals 1, galleries.size()
 		def gc = new GalleryController()
 		gc.params.id = galleries[0].id
 		// TODO params.key, session.user incl. null
@@ -116,15 +122,15 @@ class GalleryControllerTests extends GroovyTestCase {
 		clearAll()
 		createNewGallery()
 		def galleries = Gallery.list()
-		assertEquals galleries.size(), 1
+		assertEquals 1, galleries.size()
 
 		def galleryController = new GalleryController()
 		def userId = galleries[0].adminKey
 		def users = GalleryUser.list()
-		assertEquals users.size(), 2
+		assertEquals 2, users.size()
 		def user = GalleryUser.get(galleries[0].adminKey)
 		assertNotNull user
-		assertEquals user.id, galleries[0].adminKey
+		assertEquals galleries[0].adminKey, user.id
 		galleryController.session.user = user
 
 		// render contributeImages
@@ -135,61 +141,120 @@ class GalleryControllerTests extends GroovyTestCase {
 		assertNotNull galleryController.response.contentAsString
 
 		// upload images
-		galleryController.params.clear()
-		def imgContentType = 'image/jpeg'
-		Enumeration enu = this.getClass().getClassLoader().getResources("image.jpg")
-		// TODO upload multiple images in sequence
-		File imageFile
-		if(enu.hasMoreElements()) {
-			imageFile = new File(enu.nextElement().toURI())
-		}
-		def inImage = ImageIO.read(imageFile)
-		def baos = new ByteArrayOutputStream()
-		ImageIO.write(inImage, 'jpg', baos)
-        byte[] imgContentBytes =  baos.toByteArray()
-        galleryController.metaClass.request = new MockMultipartHttpServletRequest()
-        galleryController.request.addFile(new MockMultipartFile('qqfile', 'myImage.jpg', imgContentType, imgContentBytes))
-        galleryController.uploadImage()
-        assertEquals HttpServletResponse.SC_OK, galleryController.response.status
+		def inImage = uploadOneImage(galleryController)
 		// retrieve the image and verify it is the same as the one before
 		def images = Image.list()
-		assertEquals images.size(), 5
+		assertEquals 1, images.size()
 		Image image = null
-		// assuming that the freshly added image is the one with the highest id
+		// TODO check for right associations and right order
 		images.each {
-			if(image?.id < it?.id) {
-				image = it
-			}
+			println 'image == ' + it
+			println 'imageDBService == ' + imageDBService
+			def imageInputStream = imageDBService.getImageInputStream(it)
+			println 'imageInputStream == ' + imageInputStream
+			def storedImage = ImageIO.read(imageInputStream)
+			// just a quick check for the same size
+			assertEquals inImage.getWidth(), storedImage.getWidth()
+			assertEquals inImage.getHeight(), storedImage.getHeight()
 		}
-		println 'image == ' + image
-		println 'imageDBService == ' + imageDBService
-		def imageInputStream = imageDBService.getImageInputStream(image)
-		println 'imageInputStream == ' + imageInputStream
-		def storedImage = ImageIO.read(imageInputStream)
-		// just a quick check for the same size
-		assertEquals storedImage.getWidth(), inImage.getWidth()
-		assertEquals storedImage.getHeight(), inImage.getHeight()
 	}
 
 	void testDeleteImages() {
+		clearAll()
+		createNewGallery()
 		// first upload some images
+		def gc = new GalleryController()
+		DB db = imageDBService.mongo.getDB('sharevent')
+		DBCollection dbCollection = db.getCollection('images')
+		DBCollection thumbCollection = db.getCollection('imageThumbs')
+		
+		def image = uploadOneImageBackdoors()
 
+		// find the upload image in mongodb
+		def query = new BasicDBObject()
+		query.put('imageKey', image.id)
+		DBCursor cursor = dbCollection.find(query)
+		if(!cursor.hasNext()) {
+			log.error 'could not find image with image.id==' + image.id 
+			fail()
+		}
+		else {
+			println 'found image.id == ' + image.id + ' in mongodb.'
+		}
+
+		// find the uploaded image thumb in mongodb
+		query = new BasicDBObject()
+		query.put('imageKey', image.id)
+		cursor = dbCollection.find(query)
+		if(!cursor.hasNext()) {
+			log.error 'could not find image thumb with image.id==' + image.id 
+			fail()
+		}
+		else {
+			println 'found thumb with image.id == ' + image.id + ' in mongodb.'
+		}
+
+		imageDBService.delete(image)
+
+
+		// try to locate the delete image in mongodb
+		query = new BasicDBObject()
+		query.put('imageKey', image.id)
+		cursor = dbCollection.find(query)
+		if(cursor.hasNext()) {
+			log.error 'image.id == ' + image.id + ' has not been deleted'
+			fail()
+			return
+		}
+		else {
+			println 'found thumb with image.id == ' + image.id
+		}
+
+		// try to locate the delete image thumb in mongodb
+		query = new BasicDBObject()
+		query.put('imageKey', image.id)
+		cursor = thumbCollection.find(query)
+		if(cursor.hasNext()) {
+			log.error 'thumb with image.id == ' + image.id + ' has not been deleted'
+			fail()
+			return
+		}
+		else {
+			println 'found thumb with image.id == ' + image.id
+		}
 	}
 
 	void testDeleteGallery() {
-
+		// TODO
 	}
 
 	void testContributeImages() {
-
+		clearAll()
+		createNewGallery()
+		def gc = new GalleryController()
+		def gallery = Gallery.list()[0]
+		gc.session.user = GalleryUser.get(gallery.adminKey)
+		gc.params.id = gallery.id
+		assertNotNull gc.session.user
+		gc.contributeImages()
+		assertNull gc.response.redirectedUrl
+		assertNotNull gc.response.contentAsString
 	}
 
 	void testUploadImage() {
-
+		// TODO
 	}
 
 	void testLogout() {
+		clearAll()
+		createNewGallery()
 
+		def gc = new GalleryController()
+		gc.session.user = GalleryUser.list()[0]
+		gc.logout()
+		assertNull gc.session.user
+		assertNotNull gc.response.redirectedUrl
+		assertEquals '', gc.response.contentAsString
 	}
 
 	protected void createNewGallery() {
@@ -200,8 +265,6 @@ class GalleryControllerTests extends GroovyTestCase {
 		gallery.addToContributors(user)
 
 		ImageSet imageSet = new ImageSet()
-		imageSet.addToImages(new Image())
-		imageSet.addToImages(new Image())
 		imageSet.images.each { image ->
 			image.imageSet = imageSet
 		}
@@ -211,8 +274,6 @@ class GalleryControllerTests extends GroovyTestCase {
 		gallery.addToContributors(user)
 
 		imageSet = new ImageSet()
-		imageSet.addToImages(new Image())
-		imageSet.addToImages(new Image())
 		imageSet.images.each { image ->
 			image.imageSet = imageSet
 		}
@@ -242,6 +303,82 @@ class GalleryControllerTests extends GroovyTestCase {
 		Gallery.list().each {
 			it.delete(flush: true)
 		}
+
+		// collections in mongodb
+		DB db = imageDBService.mongo.getDB('sharevent')
+		DBCollection dbCollection = db.getCollection('images')
+		DBCollection thumbCollection = db.getCollection('imageThumbs')
+		dbCollection.drop()
+		thumbCollection.drop()
+	}
+
+	protected def uploadOneImage(def galleryController) {
+		galleryController.params.clear()
+		def imgContentType = 'image/jpeg'
+		Enumeration enu = this.getClass().getClassLoader().getResources("image.jpg")
+		// TODO upload multiple images in sequence
+		File imageFile
+		if(enu.hasMoreElements()) {
+			imageFile = new File(enu.nextElement().toURI())
+		}
+		def inImage = ImageIO.read(imageFile)
+		def baos = new ByteArrayOutputStream()
+		ImageIO.write(inImage, 'jpg', baos)
+        byte[] imgContentBytes =  baos.toByteArray()
+        galleryController.metaClass.request = new MockMultipartHttpServletRequest()
+        galleryController.request.addFile(new MockMultipartFile('qqfile', 'myImage.jpg', imgContentType, imgContentBytes))
+        galleryController.uploadImage()
+        assertEquals HttpServletResponse.SC_OK, galleryController.response.status
+		return inImage
+	}
+
+	protected def uploadOneImageBackdoors() {
+		def gallery = Gallery.list()[0]
+		def newImage = new Image()
+		def user = GalleryUser.list()[0]
+		user.imageSet.addToImages(newImage)
+		if(!gallery.save(flush: true)) {
+			log.error 'Could not save image during test'
+			gallery.errors.each {
+				log.error it.toString()
+			}
+			fail()
+			return
+		}
+
+		Enumeration enu = this.getClass().getClassLoader().getResources("image.jpg")
+		File imageFile
+		if(enu.hasMoreElements()) {
+			imageFile = new File(enu.nextElement().toURI())
+		}
+		def renderedImage = ImageIO.read(imageFile)
+		def baos = new ByteArrayOutputStream()
+		ImageIO.write(renderedImage, 'jpg', baos)
+		def imageBytes = baos.toByteArray()
+		def bais = new ByteArrayInputStream(imageBytes)
+		println 'uploading image backdoors...'
+		println 'bais == ' + bais
+		println 'newImage == ' + newImage
+		println 'user == ' + user
+		imageDBService.storeImage(bais, newImage, user)
+
+		// also uplaod the thumbnail
+		enu = this.getClass().getClassLoader().getResources("image.jpg")
+		imageFile
+		if(enu.hasMoreElements()) {
+			imageFile = new File(enu.nextElement().toURI())
+		}
+		renderedImage = ImageIO.read(imageFile)
+		baos = new ByteArrayOutputStream()
+		ImageIO.write(renderedImage, 'jpg', baos)
+		imageBytes = baos.toByteArray()
+		bais = new ByteArrayInputStream(imageBytes)
+		println 'uploading image thumb backdoors...'
+		println 'bais == ' + bais
+		println 'newImage == ' + newImage
+		println 'user == ' + user
+		imageDBService.storeImageThumbnail(bais, newImage, user)
+		return newImage
 	}
 
 }
