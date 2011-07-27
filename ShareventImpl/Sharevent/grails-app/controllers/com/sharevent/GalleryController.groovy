@@ -327,8 +327,17 @@ class GalleryController {
     }
 
     def deleteGallery = {
+		// also delete all stored images and thumbnails
+		Gallery.get(params.id).contributors.each {
+			it.imageSet.images.each {
+				imageDBService.delete(it)
+			}
+		}
+
     	// TODO secure this action for the admin user
         Gallery.get(params.id).delete(flush: true)
+
+
 
         flash.message = "${message(code: 'userDef.galleryDeleted')}"
 
@@ -361,11 +370,13 @@ class GalleryController {
 		if(session.user == null) {
 			flash.message = "${message(code: 'userDef.expiredSession')}"
 			redirect(controller: 'main')
+			println 'No user to upload image for. Redirecting.'
 			return
 		}
 
 		def user = session.user.merge(flush: true)
     	try {
+			println 'Creating new Image instance' 
 			def image = new Image()
 			// locking image set to prevent conflicts due to optimistic locking
 			// when upload multiple files at once
@@ -379,9 +390,11 @@ class GalleryController {
 	        }
 			if(!galleryInstance.save(flush: true)) {
 				log.error 'Errors while saving gallerInstance'
+				println 'Error while saving Gallery with new image.' 
 				galleryInstance.errors.each {
 					// TODO use log4j for logging everywhere
 					log.error it
+					println it 
 				}
 			}
 

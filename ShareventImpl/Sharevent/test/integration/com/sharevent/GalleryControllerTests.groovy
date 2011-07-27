@@ -127,7 +127,7 @@ class GalleryControllerTests extends GroovyTestCase {
 		def galleryController = new GalleryController()
 		def userId = galleries[0].adminKey
 		def users = GalleryUser.list()
-		assertEquals 2, users.size()
+		assertEquals 1, users.size()
 		def user = GalleryUser.get(galleries[0].adminKey)
 		assertNotNull user
 		assertEquals galleries[0].adminKey, user.id
@@ -160,6 +160,9 @@ class GalleryControllerTests extends GroovyTestCase {
 	}
 
 	void testDeleteImages() {
+		// this test does not really comply with the DRY-principle...
+		// it is mostly a copy of various other code snippets
+		// also this test is contained by other more elaborate tests
 		clearAll()
 		createNewGallery()
 		// first upload some images
@@ -168,64 +171,106 @@ class GalleryControllerTests extends GroovyTestCase {
 		DBCollection dbCollection = db.getCollection('images')
 		DBCollection thumbCollection = db.getCollection('imageThumbs')
 		
-		def image = uploadOneImageBackdoors()
+		def inImage = uploadOneImageBackdoors()
 
-		// find the upload image in mongodb
-		def query = new BasicDBObject()
-		query.put('imageKey', image.id)
-		DBCursor cursor = dbCollection.find(query)
-		if(!cursor.hasNext()) {
-			log.error 'could not find image with image.id==' + image.id 
-			fail()
-		}
-		else {
-			println 'found image.id == ' + image.id + ' in mongodb.'
-		}
+		// get the domain created domain instance for the image
+		def images = Image.list()
+		assertEquals 1, images.size()
 
-		// find the uploaded image thumb in mongodb
-		query = new BasicDBObject()
-		query.put('imageKey', image.id)
-		cursor = dbCollection.find(query)
-		if(!cursor.hasNext()) {
-			log.error 'could not find image thumb with image.id==' + image.id 
-			fail()
-		}
-		else {
-			println 'found thumb with image.id == ' + image.id + ' in mongodb.'
-		}
+		def image = images[0]
 
-		imageDBService.delete(image)
+		assertEquals 2, findImageInMongo(image.id)
 
+		// TODO actually delete the images and check again
+		def galleries = Gallery.list()
+		assertEquals 1, galleries.size()
+		gc.params['image_' + image.id] = ''
+		gc.params.id = galleries[0].id
+		gc.deleteImages()
 
-		// try to locate the delete image in mongodb
-		query = new BasicDBObject()
-		query.put('imageKey', image.id)
-		cursor = dbCollection.find(query)
-		if(cursor.hasNext()) {
-			log.error 'image.id == ' + image.id + ' has not been deleted'
-			fail()
-			return
-		}
-		else {
-			println 'found thumb with image.id == ' + image.id
-		}
+		assertNotNull gc.response.redirectedUrl
+		assertEquals '', gc.response.contentAsString
 
-		// try to locate the delete image thumb in mongodb
-		query = new BasicDBObject()
-		query.put('imageKey', image.id)
-		cursor = thumbCollection.find(query)
-		if(cursor.hasNext()) {
-			log.error 'thumb with image.id == ' + image.id + ' has not been deleted'
-			fail()
-			return
-		}
-		else {
-			println 'found thumb with image.id == ' + image.id
-		}
+		assertEquals 0, findImageInMongo(image.id)
+
 	}
 
 	void testDeleteGallery() {
-		// TODO
+		clearAll()
+		createNewGallery()
+		def gc = new GalleryController()
+		def newImage = uploadOneImageBackdoors()
+		def imageId = newImage.id
+		// retrieve the image and verify it is the same as the one before
+		def images = Image.list()
+		assertEquals 1, images.size()
+		images.each {
+			println 'image == ' + it
+			println 'imageDBService == ' + imageDBService
+			def imageInputStream = imageDBService.getImageInputStream(it)
+			println 'imageInputStream == ' + imageInputStream
+			def storedImage = ImageIO.read(imageInputStream)
+			// just a quick check for the same size
+			assertNotNull storedImage
+			assertEquals 2, findImageInMongo(it.id)
+		}
+
+		// delete the gallery
+		def galleries = Gallery.list()
+		assertEquals 1, galleries.size()
+		gc.params.id = galleries[0].id
+		galleries[0].contributors.each {
+			println it.validate()
+		}
+
+		gc.deleteGallery()
+		assertNotNull gc.response.redirectedUrl
+		assertEquals gc.response.contentAsString, ""
+
+		// make sure all traces of the gallery are gone
+		galleries = Gallery.list()
+		assertEquals 0, galleries.size()
+		def users = GalleryUser.list()
+		assertEquals 0, users.size()
+		images = Image.list()
+		assertEquals 0, images.size()
+		def imageSets = ImageSet.list()
+		assertEquals 0, imageSets.size()
+
+		// also check mongodb
+		assertEquals 0, findImageInMongo(imageId)
+
+	}
+
+	def findImageInMongo(def imageId) {
+		int amount = 0
+		def query = new BasicDBObject()
+		query.put('imageKey', imageId)
+		DB db = imageDBService.mongo.getDB('sharevent')
+		DBCollection dbCollection = db.getCollection('images')
+		DBCursor cursor = dbCollection.find(query)
+		if(!cursor.hasNext()) {
+			println 'could not find image with image.id==' + imageId as String
+		}
+		else {
+			println 'found image.id == ' + imageId + ' in mongodb.'
+			amount++
+		}
+
+		// find the uploaded image thumb in mongodb
+		dbCollection = db.getCollection('imageThumbs')
+		query = new BasicDBObject()
+		query.put('imageKey', imageId)
+		cursor = dbCollection.find(query)
+		if(!cursor.hasNext()) {
+			println 'could not find image thumb with image.id==' + imageId 
+		}
+		else {
+			println 'found thumb with imageId == ' + imageId + ' in mongodb.'
+			amount++
+		}
+
+		return amount
 	}
 
 	void testContributeImages() {
@@ -242,7 +287,26 @@ class GalleryControllerTests extends GroovyTestCase {
 	}
 
 	void testUploadImage() {
-		// TODO
+		clearAll()
+		createNewGallery()
+		def gc = new GalleryController()
+		def users = GalleryUser.list()
+		assertEquals 1, users.size()
+		gc.session.user = users[0]
+		def inImage = uploadOneImage(gc)
+		
+		// retrieve the image and verify it is the same as the one before
+		def images = Image.list()
+		assertEquals 1, images.size()
+		def image = images[0]
+		println 'image == ' + image
+		println 'imageDBService == ' + imageDBService
+		def imageInputStream = imageDBService.getImageInputStream(image)
+		println 'imageInputStream == ' + imageInputStream
+		def storedImage = ImageIO.read(imageInputStream)
+		// just a quick check for the same size
+		assertEquals inImage.getWidth(), storedImage.getWidth()
+		assertEquals inImage.getHeight(), storedImage.getHeight()
 	}
 
 	void testLogout() {
@@ -269,22 +333,14 @@ class GalleryControllerTests extends GroovyTestCase {
 			image.imageSet = imageSet
 		}
 		user.imageSet = imageSet
-
-		user = new GalleryUser(firstName:"Chew", lastName:"Bakka", email:"chewie@hardwood.xxx", contributedGallery:gallery)
-		gallery.addToContributors(user)
-
-		imageSet = new ImageSet()
-		imageSet.images.each { image ->
-			image.imageSet = imageSet
-		}
-
-		user.imageSet = imageSet
+		imageSet.galleryUser = user
 
 		if(!gallery.save(flush:true)) {
 			gallery.errors.each {
 				println it
 			}
 			fail()
+			return
 		}
 
 		gallery.adminKey = user.id
@@ -294,6 +350,7 @@ class GalleryControllerTests extends GroovyTestCase {
 				println it
 			}
 			fail()
+			return
 		}
 
 	}
@@ -303,6 +360,11 @@ class GalleryControllerTests extends GroovyTestCase {
 		Gallery.list().each {
 			it.delete(flush: true)
 		}
+
+		assertEquals 0, GalleryUser.list().size()
+		assertEquals 0, Gallery.list().size()
+		assertEquals 0, ImageSet.list().size()
+		assertEquals 0, Image.list().size()
 
 		// collections in mongodb
 		DB db = imageDBService.mongo.getDB('sharevent')
@@ -336,11 +398,14 @@ class GalleryControllerTests extends GroovyTestCase {
 		def gallery = Gallery.list()[0]
 		def newImage = new Image()
 		def user = GalleryUser.list()[0]
-		user.imageSet.addToImages(newImage)
-		if(!gallery.save(flush: true)) {
-			log.error 'Could not save image during test'
+		def imageSet = ImageSet.get(user.imageSet.id)
+		imageSet.addToImages(newImage)
+		newImage.setImageSet(imageSet)
+
+		if(!imageSet.save(flush: true)) {
+			println "Could not save image during test"
 			gallery.errors.each {
-				log.error it.toString()
+				println it.toString()
 			}
 			fail()
 			return
