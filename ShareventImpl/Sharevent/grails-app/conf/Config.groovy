@@ -51,7 +51,7 @@ grails.spring.bean.packages = []
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
-        grails.serverURL = "http://www.sharevent.com"
+        grails.serverURL = "http://sharevent.cloudfoundry.com"
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
@@ -88,7 +88,7 @@ log4j = {
 	debug 'com.sharevent'
 }
 
-sharevent = [imageThumbsDBPath: '/usr/local/sharevent/ImageThumbsDB/', imageDBPath: '/usr/local/sharevent/ImageDB/', maxImageWidth: 300, maxImageHeight: 300, imageDBBucket: 'com.sharevent.imagedb', imageThumbsDBBucket: 'com.sharevent.imagethumbs']
+sharevent = [maxImageWidth: 300, maxImageHeight: 300, imageDBCollection: "images", imageDBThumbsCollection: "imageThumbs", imageDB: "${appName}".toLowerCase(), imageDBImageId: "imageKey"]
 
 
 // Added by the Spring Security Core plugin:
