@@ -3,5 +3,5 @@
 *target*
 *.log
 *.swp
-*ImageDB*
-*DS_Store
+*/ImageDB/*
+*DS*Store
