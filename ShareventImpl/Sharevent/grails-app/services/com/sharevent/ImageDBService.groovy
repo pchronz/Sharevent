@@ -15,6 +15,7 @@ import javax.imageio.*;
 import javax.imageio.stream.MemoryCacheImageOutputStream
 import grails.plugins.springsecurity.Secured
 import org.springframework.beans.factory.InitializingBean
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 
 
 class ImageDBService implements InitializingBean {
@@ -29,7 +30,7 @@ class ImageDBService implements InitializingBean {
     def getImageURL(image) {
 		// return the url for the image thumbnail
 		// TODO fix this in Grails 1.4/2.0 with refactored TagLib and LinkManager
-		return "${grailsApplication.config.sharevent.serverURL}" + "/image/viewImageThumbnail/${image.id}"
+		return CH.config.grails.serverURL + "/image/viewImageThumbnail/${image.id}"
     }
 
 	def delete(image) {
