@@ -15,7 +15,8 @@ import javax.imageio.*;
 import javax.imageio.stream.MemoryCacheImageOutputStream
 import grails.plugins.springsecurity.Secured
 import org.springframework.beans.factory.InitializingBean
-
+import grails.converters.*
+import org.codehaus.groovy.grails.web.json.*
 
 class ImageDBService implements InitializingBean {
 
@@ -24,7 +25,7 @@ class ImageDBService implements InitializingBean {
 	def aws
 	def grailsApplication
 	def ajaxUploaderService
-	def mongo
+	def db
 
     def getImageURL(image) {
 		// return the url for the image thumbnail
@@ -33,11 +34,9 @@ class ImageDBService implements InitializingBean {
     }
 
 	def delete(image) {
-		// TODO read mongo settings from config
-		DB db = mongo.getDB("${grailsApplication.config.sharevent.imageDB}")
 
 		// delete the image
-		DBCollection dbCollection = db.getCollection("${grailsApplication.config.sharevent.imageDBCollection}")
+		DBCollection dbCollection = this.db.getCollection("${grailsApplication.config.sharevent.imageDBCollection}")
 		def query = new BasicDBObject()
 		query.put("${grailsApplication.config.sharevent.imageDBImageId}", image.id)
 		DBCursor cursor = dbCollection.find(query)
@@ -54,7 +53,8 @@ class ImageDBService implements InitializingBean {
 		}
 
 		// delete the thumbnail
-		dbCollection = db.getCollection("imageThumbs")
+		// TODO replace string from value from configuration
+		dbCollection = this.db.getCollection("imageThumbs")
 		query = new BasicDBObject()
 		query.put("${grailsApplication.config.sharevent.imageDBImageId}", image.id)
 		cursor = dbCollection.find(query)
@@ -75,8 +75,7 @@ class ImageDBService implements InitializingBean {
 	def getImageThumbInputStream(image) {
 		println "starting getImageThumbInputStream"
 		println image
-		DB db = mongo.getDB("${grailsApplication.config.sharevent.imageDB}")
-		DBCollection dbCollection = db.getCollection("imageThumbs")
+		DBCollection dbCollection = this.db.getCollection("imageThumbs")
 		BasicDBObject query = new BasicDBObject()
 		query.put("${grailsApplication.config.sharevent.imageDBImageId}", image.id)
 		DBCursor cursor = dbCollection.find(query)
@@ -102,9 +101,8 @@ class ImageDBService implements InitializingBean {
 			println "starting getImageInputStream"
 			println "getting mongodb"
 			println "getting mongodb"
-			DB db = mongo.getDB("${grailsApplication.config.sharevent.imageDB}")
 			println "getting collection"
-			DBCollection dbCollection = db.getCollection("${grailsApplication.config.sharevent.imageDBCollection}")
+			DBCollection dbCollection = this.db.getCollection("${grailsApplication.config.sharevent.imageDBCollection}")
 			BasicDBObject query = new BasicDBObject()
 			query.put("${grailsApplication.config.sharevent.imageDBImageId}", image.id)
 			println "executing query for image.id == " + image.id
@@ -136,8 +134,7 @@ class ImageDBService implements InitializingBean {
 	}
 
 	def storeImageThumbnail(bais, image, user) {
-		DB db = mongo.getDB("${grailsApplication.config.sharevent.imageDB}")
-		DBCollection dbCollection = db.getCollection("imageThumbs")
+		DBCollection dbCollection = this.db.getCollection("imageThumbs")
 		BufferedImage bImage = ImageIO.read(bais)
 		ByteArrayOutputStream baos = new ByteArrayOutputStream()
 		// TODO handle pngs properly
@@ -154,8 +151,7 @@ class ImageDBService implements InitializingBean {
 	}
 
 	def storeImage(bais, image, user) {
-		DB db = mongo.getDB("${grailsApplication.config.sharevent.imageDB}")
-		DBCollection dbCollection = db.getCollection("${grailsApplication.config.sharevent.imageDBCollection}")
+		DBCollection dbCollection = this.db.getCollection("${grailsApplication.config.sharevent.imageDBCollection}")
 		BufferedImage bImage = ImageIO.read(bais)
 		ByteArrayOutputStream baos = new ByteArrayOutputStream()
 		// TODO handle pngs properly
@@ -173,8 +169,44 @@ class ImageDBService implements InitializingBean {
 
 	void afterPropertiesSet() {
 		// "injecting" mongo client instance into imagedb service
-		this.mongo = new Mongo("localhost", 27017)
+		def vcapEnv = parseVcapEnv()
+		def mongo = new Mongo(vcapEnv.hostname, vcapEnv.port)
+		// TODO read mongo settings from config
+		this.db = mongo.getDB(vcapEnv.db)
+		if(vcapEnv.containsKey('username')) {
+			this.db.authenticate(vcapEnv.username, vcapEnv.password as char[])
+		}
 		return
+	}
+
+	def parseVcapEnv() {
+		def results = [:]
+		try {
+			def env = System.getenv()
+			def vcap = env['VCAP_SERVICES']
+			println 'VCAP_SERVICES == ' + vcap
+
+			def vcapJSON = JSON.parse(vcap)
+			println vcapJSON['mongodb-1.8']
+			def mongoJSON = vcapJSON['mongodb-1.8']
+			def credentials = mongoJSON.credentials
+			results['hostname'] = credentials.hostname.get(0)
+			results['port'] = credentials.port.get(0)
+			results['db'] = credentials.db.get(0)
+			results['username'] = credentials.username.get(0)
+			results['name'] = credentials.name.get(0)
+			results['password'] = credentials.password.get(0)
+			println results
+		}
+		catch(e) {
+			println 'could not read VCAP_SERVICES completely... falling back to default values'
+			results['hostname'] = 'localhost'
+			results['port'] = 27017
+			results['db'] = 'db'
+			println results
+		}
+
+		results
 	}
 
 }
