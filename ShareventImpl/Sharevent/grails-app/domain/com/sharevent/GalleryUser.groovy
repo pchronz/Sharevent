@@ -10,18 +10,18 @@ class GalleryUser {
 
     ImageSet imageSet
 
-    static belongsTo = [contributedGallery:Gallery]
+    static hasMany = [galleries:Gallery]
 
     static constraints = {
         firstName(blank:false)
         lastName(blank:false)
         email(email:true, blank:false, nullable:false)
-        contributedGallery(nullable:false)
         imageSet(nullable:true)
+		galleries(nullable: true)
     }
 
     static mapping = {
-        imageSet cascade: "all-delete-orphan"
-	id generator: 'uuid'
+		id generator: 'uuid'
     }
 }
+

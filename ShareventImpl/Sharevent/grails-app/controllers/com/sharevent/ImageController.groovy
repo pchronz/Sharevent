@@ -133,6 +133,7 @@ class ImageController {
 				InputStream imageInputStream = imageDBService.getImageThumbInputStream(image)
 				def imageThumb = ImageIO.read(imageInputStream)
 				ImageIO.write(imageThumb, "JPG", new MemoryCacheImageOutputStream(response.outputStream))
+				response.outputStream.flush()
 			}
 			catch(javax.imageio.IIOException ioEx) {
 				// delete the image if the file cannot be read

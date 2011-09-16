@@ -9,25 +9,24 @@ class Gallery {
     String title
     String location
 
-    String creatorFirstName
-    String creatorLastName
-    String creatorEmail
+	String creatorId
 
-    String adminKey
-
-    static hasMany = [contributors:GalleryUser]
+    static hasMany = [users:GalleryUser]
+	static belongsTo = GalleryUser
 
     static constraints = {
         date(nullable:false)
         title(blank:false)
         location(blank:false)
-        creatorFirstName(blank:false)
-        creatorLastName(blank: false)
-        creatorEmail(blank: false, email: true)
-        adminKey(nullable: false)
+		creatorId(nullable: false, blank: false)
+		users(validator: { val, obj ->
+			if(obj.users == null) return false
+			return obj.users.size() > 0
+		})
     }
 
     static mapping = {
-	id generator: 'uuid'
+		id generator: 'uuid'
     }
 }
+

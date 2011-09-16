@@ -97,7 +97,7 @@ class GalleryControllerTests extends GroovyTestCase {
 	void testShare() {
 		clearAll()
 		def beforeSize = Gallery.list().size()
-		assert(beforeSize == 0)
+		assertEquals 0, beforeSize
 		GalleryController galleryController = new GalleryController()
 		galleryController.params.date_day = '17'
 		galleryController.params.title = 'Gallery Title'
@@ -112,10 +112,10 @@ class GalleryControllerTests extends GroovyTestCase {
 		assertNull galleryController.response.redirectedUrl
 		assertNotNull galleryController.response.contentAsString
 		def afterSize = Gallery.list().size()
-		assert(afterSize == 1)
+		assertEquals 1, afterSize
 		def users = GalleryUser.list()
-		assert(users.size() == 1)
-		assert(galleryController.session.user.id == users[0].id)
+		assertEquals 1, users.size()
+		assertEquals galleryController.session.user.id, users[0].id
 	}
 
 	void testDownload() {
@@ -125,17 +125,21 @@ class GalleryControllerTests extends GroovyTestCase {
 		assertEquals 1, galleries.size()
 
 		def galleryController = new GalleryController()
-		def userId = galleries[0].adminKey
+		def userId = galleries[0].creatorId
 		def users = GalleryUser.list()
 		assertEquals 1, users.size()
-		def user = GalleryUser.get(galleries[0].adminKey)
+		def user = GalleryUser.get(galleries[0].creatorId)
 		assertNotNull user
-		assertEquals galleries[0].adminKey, user.id
+		assertEquals galleries[0].creatorId, user.id
 		galleryController.session.user = user
 
 		// render contributeImages
 		galleryController.params.clear()
-		galleryController.params.id = galleryController.session.user.contributedGallery.id
+		def userGalleries = galleryController.session.user.galleries
+		assertEquals 1, userGalleries.size()
+		userGalleries.each {
+			galleryController.params.id = it.id
+		}
 		galleryController.contributeImages()
 		assertNull galleryController.response.redirectedUrl
 		assertNotNull galleryController.response.contentAsString
@@ -167,7 +171,7 @@ class GalleryControllerTests extends GroovyTestCase {
 		createNewGallery()
 		// first upload some images
 		def gc = new GalleryController()
-		DB db = imageDBService.mongo.getDB('sharevent')
+		DB db = imageDBService.db
 		DBCollection dbCollection = db.getCollection('images')
 		DBCollection thumbCollection = db.getCollection('imageThumbs')
 		
@@ -219,9 +223,9 @@ class GalleryControllerTests extends GroovyTestCase {
 		def galleries = Gallery.list()
 		assertEquals 1, galleries.size()
 		gc.params.id = galleries[0].id
-		galleries[0].contributors.each {
-			println it.validate()
-		}
+		//galleries[0].users.each {
+		//	println it.validate()
+		//}
 
 		gc.deleteGallery()
 		assertNotNull gc.response.redirectedUrl
@@ -246,7 +250,7 @@ class GalleryControllerTests extends GroovyTestCase {
 		int amount = 0
 		def query = new BasicDBObject()
 		query.put('imageKey', imageId)
-		DB db = imageDBService.mongo.getDB('sharevent')
+		DB db = imageDBService.db
 		DBCollection dbCollection = db.getCollection('images')
 		DBCursor cursor = dbCollection.find(query)
 		if(!cursor.hasNext()) {
@@ -278,7 +282,7 @@ class GalleryControllerTests extends GroovyTestCase {
 		createNewGallery()
 		def gc = new GalleryController()
 		def gallery = Gallery.list()[0]
-		gc.session.user = GalleryUser.get(gallery.adminKey)
+		gc.session.user = GalleryUser.get(gallery.creatorId)
 		gc.params.id = gallery.id
 		assertNotNull gc.session.user
 		gc.contributeImages()
@@ -322,18 +326,38 @@ class GalleryControllerTests extends GroovyTestCase {
 	}
 
 	protected void createNewGallery() {
-		// create a gallery
-		gallery = new Gallery(date:new Date(), title:"Super cool event", location:"Dortmund", creatorFirstName: "Cook", creatorLastName: "Poo", creatorEmail: "cook@poo.ie", adminKey: 1234);
+		// create a gallery and its creator
+		GalleryUser creator = new GalleryUser(firstName: "Cook", lastName: "Poo", email: "cook@poo.ie")
 
-		GalleryUser user = new GalleryUser(firstName:"Lance", lastName:"Hardwood", email:"lance@hardwood.xxx")
-		gallery.addToContributors(user)
-
+		Gallery gallery = new Gallery(date:new Date(), title:"Super cool event", location:"Dortmund")
+		gallery.creatorId = "placeholder"
+		gallery.addToUsers creator
+		creator.addToGalleries gallery
+		if(!gallery.save(flush:true)) {
+			gallery.errors.each {
+				println it
+			}
+			fail()
+		}
+		if(!creator.save(flush:true)) {
+			creator.errors.each {
+				println it
+			}
+			fail()
+		}
+		gallery.creatorId = creator.id
+		if(!gallery.save(flush:true)) {
+			gallery.errors.each {
+				println it
+			}
+			fail()
+		}
 		ImageSet imageSet = new ImageSet()
 		imageSet.images.each { image ->
 			image.imageSet = imageSet
 		}
-		user.imageSet = imageSet
-		imageSet.galleryUser = user
+		creator.imageSet = imageSet
+		imageSet.galleryUser = creator
 
 		if(!gallery.save(flush:true)) {
 			gallery.errors.each {
@@ -342,17 +366,6 @@ class GalleryControllerTests extends GroovyTestCase {
 			fail()
 			return
 		}
-
-		gallery.adminKey = user.id
-
-		if(!gallery.save(flush:true)) {
-			gallery.errors.each {
-				println it
-			}
-			fail()
-			return
-		}
-
 	}
 
 	protected void clearAll() {
@@ -367,7 +380,7 @@ class GalleryControllerTests extends GroovyTestCase {
 		assertEquals 0, Image.list().size()
 
 		// collections in mongodb
-		DB db = imageDBService.mongo.getDB('sharevent')
+		DB db = imageDBService.db
 		DBCollection dbCollection = db.getCollection('images')
 		DBCollection thumbCollection = db.getCollection('imageThumbs')
 		dbCollection.drop()
