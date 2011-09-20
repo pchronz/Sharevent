@@ -23,7 +23,6 @@ class ImageDBService implements InitializingBean {
 
     static transactional = true
 
-	def aws
 	def grailsApplication
 	def ajaxUploaderService
 	def db

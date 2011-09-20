@@ -2,22 +2,21 @@ package com.sharevent
 
 class GalleryUser {
 
+    // need to add the id explicitly as String for the UUID-generator to work
     String id
 
     String firstName
     String lastName
     String email
 
-    ImageSet imageSet
-
-    static hasMany = [galleries:Gallery]
+    static hasMany = [galleries:Gallery, images:Image]
 
     static constraints = {
         firstName(blank:false)
         lastName(blank:false)
         email(email:true, blank:false, nullable:false)
-        imageSet(nullable:true)
 		galleries(nullable: true)
+		images(nullable: true)
     }
 
     static mapping = {

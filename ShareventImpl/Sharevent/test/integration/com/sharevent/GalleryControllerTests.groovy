@@ -328,9 +328,14 @@ class GalleryControllerTests extends GroovyTestCase {
 	protected void createNewGallery() {
 		// create a gallery and its creator
 		GalleryUser creator = new GalleryUser(firstName: "Cook", lastName: "Poo", email: "cook@poo.ie")
+		if(!creator.save(flush:true)) {
+			creator.errors.each {
+				println it
+			}
+			fail()
+		}
 
-		Gallery gallery = new Gallery(date:new Date(), title:"Super cool event", location:"Dortmund")
-		gallery.creatorId = "placeholder"
+		Gallery gallery = new Gallery(date:new Date(), title:"Super cool event", location:"Dortmund", creatorId:creator.id)
 		gallery.addToUsers creator
 		creator.addToGalleries gallery
 		if(!gallery.save(flush:true)) {
@@ -345,38 +350,15 @@ class GalleryControllerTests extends GroovyTestCase {
 			}
 			fail()
 		}
-		gallery.creatorId = creator.id
-		if(!gallery.save(flush:true)) {
-			gallery.errors.each {
-				println it
-			}
-			fail()
-		}
-		ImageSet imageSet = new ImageSet()
-		imageSet.images.each { image ->
-			image.imageSet = imageSet
-		}
-		creator.imageSet = imageSet
-		imageSet.galleryUser = creator
-
-		if(!gallery.save(flush:true)) {
-			gallery.errors.each {
-				println it
-			}
-			fail()
-			return
-		}
 	}
 
 	protected void clearAll() {
-		// galleries
-		Gallery.list().each {
+		GalleryUser.list().each {
 			it.delete(flush: true)
 		}
 
 		assertEquals 0, GalleryUser.list().size()
 		assertEquals 0, Gallery.list().size()
-		assertEquals 0, ImageSet.list().size()
 		assertEquals 0, Image.list().size()
 
 		// collections in mongodb
@@ -409,13 +391,21 @@ class GalleryControllerTests extends GroovyTestCase {
 
 	protected def uploadOneImageBackdoors() {
 		def gallery = Gallery.list()[0]
+		def galleryUser = GalleryUser.list()[0]
 		def newImage = new Image()
-		def user = GalleryUser.list()[0]
-		def imageSet = ImageSet.get(user.imageSet.id)
-		imageSet.addToImages(newImage)
-		newImage.setImageSet(imageSet)
+		gallery.addToImages newImage
+		galleryUser.addToImages newImage
 
-		if(!imageSet.save(flush: true)) {
+		if(!newImage.save(flush: true)) {
+			println "Could not save image during test"
+			newImage.errors.each {
+				println it.toString()
+			}
+			fail()
+			return
+		}
+
+		if(!gallery.save(flush: true)) {
 			println "Could not save image during test"
 			gallery.errors.each {
 				println it.toString()
@@ -423,6 +413,16 @@ class GalleryControllerTests extends GroovyTestCase {
 			fail()
 			return
 		}
+
+		if(!galleryUser.save(flush: true)) {
+			println "Could not save image during test"
+			galleryUser.errors.each {
+				println it.toString()
+			}
+			fail()
+			return
+		}
+
 
 		Enumeration enu = this.getClass().getClassLoader().getResources("image.jpg")
 		File imageFile
@@ -437,8 +437,8 @@ class GalleryControllerTests extends GroovyTestCase {
 		println 'uploading image backdoors...'
 		println 'bais == ' + bais
 		println 'newImage == ' + newImage
-		println 'user == ' + user
-		imageDBService.storeImage(bais, newImage, user)
+		println 'user == ' + galleryUser
+		imageDBService.storeImage(bais, newImage, galleryUser)
 
 		// also uplaod the thumbnail
 		enu = this.getClass().getClassLoader().getResources("image.jpg")
@@ -454,8 +454,8 @@ class GalleryControllerTests extends GroovyTestCase {
 		println 'uploading image thumb backdoors...'
 		println 'bais == ' + bais
 		println 'newImage == ' + newImage
-		println 'user == ' + user
-		imageDBService.storeImageThumbnail(bais, newImage, user)
+		println 'user == ' + galleryUser
+		imageDBService.storeImageThumbnail(bais, newImage, galleryUser)
 		return newImage
 	}
 

@@ -11,7 +11,7 @@ class Gallery {
 
 	String creatorId
 
-    static hasMany = [users:GalleryUser]
+    static hasMany = [users:GalleryUser, images:Image]
 	static belongsTo = GalleryUser
 
     static constraints = {
@@ -22,6 +22,15 @@ class Gallery {
 		users(validator: { val, obj ->
 			if(obj.users == null) return false
 			return obj.users.size() > 0
+		})
+		creatorId(validator: {val, obj ->
+			boolean found = false
+			obj.users.each { user ->
+				if(user.id == val) {
+					found =  true
+				}
+			}
+			return found
 		})
     }
 

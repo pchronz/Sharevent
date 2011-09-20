@@ -30,6 +30,7 @@ class GalleryController {
 
     // TODO get rid of the GPL code for imageUpload
 	def imageDBService
+	def imageService
 	def galleryService
 
 
@@ -159,12 +160,9 @@ class GalleryController {
 		// since we cannot use the AWS service in the gsp, we need to create the links
 		// to the images in S3 here and associate the images with those
 		def urls = [:]
-		galleryInstance.users?.each { contributor ->
-			contributor.imageSet.images?.each{ image ->
-				// TODO use the config for reading the bucket name
-				def url = imageDBService.getImageURL(image)
-				urls[image.id.toString()] = url
-			}
+		galleryInstance.images?.each { image ->
+			def url = imageDBService.getImageURL(image)
+			urls[image.id.toString()] = url
 		}
 
 		println 'About to render following images: ' + urls
@@ -184,31 +182,11 @@ class GalleryController {
     }
 
 	def share = {
-		def gallery = new Gallery(params)
-		gallery.creatorId = "placeholder"
-
-		// TODO check whether the user is already logged in
-		// this makes sense once it is possible to create multiple galleries
-
-		// actually also create a user
+		// actually create a user
 		def user = new GalleryUser()
 		user.firstName = params.creatorFirstName
 		user.lastName = params.creatorLastName
 		user.email = params.creatorEmail
-
-		user.imageSet = new ImageSet()
-		user.imageSet.galleryUser = user
-		gallery.addToUsers(user)
-		user.addToGalleries gallery
-		if(!gallery.save(flush:true)) {
-			println "Could not create a new gallery. Errors follow."
-			gallery.errors.each{
-				println it
-			}
-			redirect(action: 'createFree', params: [galleryInstance: gallery])
-			return
-		}
-
 		if(!user.save(flush:true)) {
 			println "Could not create a new user. Errors follow."
 			user.errors.each{
@@ -218,15 +196,28 @@ class GalleryController {
 			return
 		}
 
-		// set the gallery's key to the user's id
-		gallery.creatorId = user.id
+		// TODO check whether the user is already logged in
+		// this makes sense once it is possible to create multiple galleries
 
-		if(!gallery.save()) {
-			gallery.errors.each {
+		def gallery = new Gallery(params)
+		gallery.creatorId = user.id
+		gallery.addToUsers(user)
+		user.addToGalleries gallery
+
+		if(!gallery.save(flush:true)) {
+			println "Could not create a new gallery. Errors follow."
+			gallery.errors.each{
 				println it
 			}
-			println 'Could not validate the gallery'
-			render(view: 'createFree', model: [galleryInstance: gallery])
+			redirect(action: 'createFree', params: [galleryInstance: gallery])
+			return
+		}
+		if(!user.save(flush:true)) {
+			println "Could not create a new user. Errors follow."
+			user.errors.each{
+				println it
+			}
+			redirect(action: 'createFree', params: [galleryInstance: gallery])
 			return
 		}
 
@@ -311,27 +302,8 @@ class GalleryController {
 
         // remove the corresponding entries in the database
 		log.error 'removing image instances from db'
-        images.each {
-            Image image = Image.get(it.toString().toLong())
-            image.imageSet.removeFromImages(image)
-        }
-
-        // if some user does not have anymore images, delete the user as well
-		log.error 'deleting users who do not have any more images'
-        def galleryInstance = Gallery.get(params.id)
-        def contributorsCopy = []
-        contributorsCopy += galleryInstance.users
-        contributorsCopy.each {
-            if(it.imageSet.images.size() == 0 ) {
-				if(it.id != galleryInstance.creatorId) {
-					log.debug 'Removing user after deleting all of his images. user.id==' + it.id
-					galleryInstance.removeFromContributors(it)
-					it.delete(flush:true)
-				}
-				else {
-					log.debug 'Keeping user since it is the gallery admin'
-				}
-            }
+        images.each { image ->
+            imageService.deleteImage(Image.get(image.toString().toLong()))
         }
 
         flash.message = "${message(code: 'userDef.deletedImages', args: [images.size()])}"

@@ -2,7 +2,7 @@ package com.sharevent
 
 import grails.test.*
 
-class ImageSetControllerTests extends ControllerUnitTestCase {
+class ImageServiceTests extends GrailsUnitTestCase {
     protected void setUp() {
         super.setUp()
     }
