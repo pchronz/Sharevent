@@ -22,3 +22,4 @@ class ImageService {
 		image.delete(flush: true)
 	}
 }
+

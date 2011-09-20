@@ -140,7 +140,7 @@ class GalleryController {
     // ********* OWN ACTIONS BELOW *******
 
     def view = {
-		println params
+		println  'VIEW'
         def galleryInstance = Gallery.get(params.id)
 
 		if(galleryInstance == null) {
@@ -174,14 +174,17 @@ class GalleryController {
     }
 
     def viewExample = {
-	
+		println  'view example'
     }
 
     def createFree = {
+		println  'create free'
         render(view: 'createFree', model: [galleryInstance: params.galleryInstance])
     }
 
 	def share = {
+		println  'share'
+		
 		// actually create a user
 		def user = new GalleryUser()
 		user.firstName = params.creatorFirstName
@@ -227,6 +230,7 @@ class GalleryController {
 	}
 
     def download = {
+		println  'DOWNLOAD'
     	// what happens if someone tries to upload and someone else tries to download at the same time?
 		// might not happen ever; even then only images would not be uploaded properly. no big deal!...?
 
@@ -265,7 +269,7 @@ class GalleryController {
 				}
 
 				BufferedInputStream origin = new BufferedInputStream(inputStream, 2048)
-				String zipPath = image.imageSet.galleryUser.contributedGallery.title + '/' + image.id + '.jpg'
+				String zipPath = image.gallery.title + '/' + image.id + '.jpg'
 				ZipEntry entry = new ZipEntry(zipPath)
 				zos.putNextEntry(entry)
 				int count
@@ -279,6 +283,7 @@ class GalleryController {
     }
 
     def deleteImages = {
+		println  'DELETE IMAGES'
 		// TODO secure this action for the admin user
         // first get the selected image ids
         def images = []
@@ -314,6 +319,7 @@ class GalleryController {
     }
 
     def deleteGallery = {
+		println  'DELETE GALLERY'
 		galleryService.deleteGallery(params.id)
 
         flash.message = "${message(code: 'userDef.galleryDeleted')}"
@@ -322,6 +328,7 @@ class GalleryController {
     }
 
     def contributeImages = {
+		println  'CONTRIBUTE IMAGES'
 		def gallery = Gallery.get(params.id)
 
 		// check if the user is logged in
@@ -343,6 +350,7 @@ class GalleryController {
     }
 
     def uploadImage = {
+		println  'UPLOAD IMAGES'
 	synchronized(this.getClass()) {
 		if(session.user == null) {
 			flash.message = "${message(code: 'userDef.expiredSession')}"
@@ -361,12 +369,14 @@ class GalleryController {
 			// this might be one of the first bottlenecks!
 			// XXX BOTTLENECK!
 			// TODO update once multiple contributions are allowed
-			assert user.galleries.size() == 1
+			if(user.galleries.size() > 1)
+				throw new Exception('multiple galleries per user not yet implemented')
 	        Gallery galleryInstance = null
 			user.galleries.each {
 				galleryInstance = it
 			}
-			user.imageSet.addToImages(image)
+			user.addToImages(image)
+			galleryInstance.addToImages image
 	        if(!galleryInstance.users.contains(user)) {
                 	galleryInstance.addToUsers(user)
 	        }
@@ -406,7 +416,7 @@ class GalleryController {
 			// delete it
 			if(bsrc == null) {
 				log.error "Could not read an image. Deleting it. Image.id== " + image.id
-				image.imageSet.removeFromImages(image)
+				imageService.deleteImage(image)
 				flash.message = "${message(code: 'userdef.couldNotReadImage')}"
 				render(text: [success: false] as JSON, contentType: 'text/JSON')
 				return
@@ -463,6 +473,7 @@ class GalleryController {
     }
 
     def logout ={
+		println  'LOGOUT'
 		session.user = null
 		redirect(action: "view", params: params)
     }

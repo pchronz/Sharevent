@@ -3,6 +3,9 @@ package com.sharevent
 import grails.test.*
 
 class DomainTests extends GroovyTestCase {
+
+	def imageService
+
     protected void setUp() {
         super.setUp()
     }
@@ -45,7 +48,7 @@ class DomainTests extends GroovyTestCase {
 			images.each { image ->
 				def galleryUser = image.galleryUser
 				def gallery = image.gallery
-				if(image.deleteImage()) {
+				if(imageService.deleteImage(image)) {
 					image.errors.each {
 						println it
 					}

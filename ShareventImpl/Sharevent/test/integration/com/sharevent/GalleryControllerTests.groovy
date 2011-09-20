@@ -220,26 +220,37 @@ class GalleryControllerTests extends GroovyTestCase {
 		}
 
 		// delete the gallery
-		def galleries = Gallery.list()
-		assertEquals 1, galleries.size()
-		gc.params.id = galleries[0].id
-		//galleries[0].users.each {
-		//	println it.validate()
-		//}
+		def gallerias = Gallery.list()
+		assertEquals 1, gallerias.size()
+		gc.params.id = gallerias[0].id
+
+		def c = GalleryUser.createCriteria()
+		def users = c {
+			galleries {
+				eq('id', gc.params.id)
+			}
+		}
+		assertEquals 1, users.size()
 
 		gc.deleteGallery()
 		assertNotNull gc.response.redirectedUrl
 		assertEquals gc.response.contentAsString, ""
 
 		// make sure all traces of the gallery are gone
-		galleries = Gallery.list()
-		assertEquals 0, galleries.size()
-		def users = GalleryUser.list()
-		assertEquals 0, users.size()
+		gallerias = Gallery.list()
+		assertEquals 0, gallerias.size()
+		users = GalleryUser.list()
+		assertEquals 1, users.size()
 		images = Image.list()
 		assertEquals 0, images.size()
-		def imageSets = ImageSet.list()
-		assertEquals 0, imageSets.size()
+
+		c = GalleryUser.createCriteria()
+		users = c {
+			galleries {
+				eq('id', gc.params.id)
+			}
+		}
+		assertEquals 0, users.size()
 
 		// also check mongodb
 		assertEquals 0, findImageInMongo(imageId)

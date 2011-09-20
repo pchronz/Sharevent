@@ -23,16 +23,6 @@ class GalleryService {
 		def gallery = Gallery.get(galleryId)
 		if(!gallery) return
 
-		// remove the gallery from all users
-		gallery.users.each { user ->
-			user.removeFromGalleries gallery
-			if(!user.save(flush: true)) {
-				user.errors.each {
-					println  it
-				}
-			}
-		}
-
 		// delete all images associated with this gallery
 		def images = []
 		images += gallery.images
@@ -40,11 +30,30 @@ class GalleryService {
 			imageDBService.delete(image)
 			imageService.deleteImage(image)
 		}
+		
+		def galleryUsers = []
+		galleryUsers += gallery.users
 
+		// remove the gallery from all users
+		galleryUsers.each { user ->
+			user.removeFromGalleries gallery
+		}
+
+		session = SessionFactoryUtils.getSession(sessionFactory, true);
+		session.setFlushMode(FlushMode.COMMIT)
+		// delete the gallery itself
 		if(!gallery.delete(flush: true)) {
 			log.error 'Could not delete gallery'
 			gallery.errors.each {
 				println it
+			}
+		}
+
+		galleryUsers.each { user ->
+			if(!user.save(flush: true)) {
+				user.errors.each {
+					println  it
+				}
 			}
 		}
     }
