@@ -472,10 +472,224 @@ class GalleryController {
 		}
     }
 
-    def logout ={
+    def logout = {
 		println  'LOGOUT'
 		session.user = null
 		redirect(action: "view", params: params)
     }
+
+	def createDirect = {
+		// TODO check whether a user is logged in
+		def user = null
+		GalleryUser.findByFirstName('direct').each { gUser ->
+			if(user != null)
+				println 'There exist more than one incognito users!'
+			user = gUser
+		}
+		if(!user.save(flush: true)) {
+			user.errors.each { error ->
+				println  error
+			}
+			flash.message = 'Something went wrong when you we tried to create a new gallery'
+			redirect(controller: 'main')
+			return
+		}
+		def gallery = new Gallery(date: new Date(), title: params['gallery_title'], location: 'direct', creatorId: user.id)
+		user.addToGalleries gallery
+		gallery.addToUsers user
+
+		if(!user.save(flush: true)) {
+			user.errors.each { error ->
+				println  error
+			}
+			flash.message = 'Something went wrong when you we tried to create a new gallery'
+			redirect(controller: 'main')
+			return
+		}
+
+		if(!gallery.save(flush: true)) {
+			gallery.errors.each { error ->
+				println  error
+			}
+			flash.message = 'Something went wrong when you we tried to create a new gallery'
+			redirect(controller: 'main')
+			return
+		}
+
+		redirect(action: 'viewDirect', params: [id: gallery.id])
+	}
+
+	def viewDirect = {
+		println  'VIEWDIRECT'
+        def galleryInstance = Gallery.get(params.id)
+
+		if(galleryInstance == null) {
+			flash.message = 'Something went wrong when we tried to access your gallery'
+			redirect(controller: 'main')
+			return
+		}
+
+		// TODO check whether the key matches the creator id
+		if(params.containsKey('key')) {
+			if(galleryInstance.creatorId == params.key) {
+				def user = GalleryUser.get(params.key)
+				if(user) {
+					session.user = user
+				}
+			}
+		}
+		
+		// since we cannot use the AWS service in the gsp, we need to create the links
+		// to the images in S3 here and associate the images with those
+		def urls = [:]
+		galleryInstance.images?.each { image ->
+			def url = imageDBService.getImageURL(image)
+			urls[image.id.toString()] = url
+		}
+
+		println 'About to render following images: ' + urls
+
+
+        if(galleryInstance)
+            render(view:"viewDirect", model:[galleryInstance:galleryInstance, urls: urls])
+        else {
+			flash.message = 'Something went wrong while we tried to access your gallery'
+            redirect(controller:"main")
+		}
+	}
+
+	def uploadImageDirect = {
+		println  'UPLOAD IMAGES DIRECT'
+	synchronized(this.getClass()) {
+		def image = null
+		// TODO check whether the user is logged in
+
+    	try {
+			println 'Creating new Image instance' 
+			image = new Image()
+			// locking image set to prevent conflicts due to optimistic locking
+			// when upload multiple files at once
+			// HSQLDB does not support pessimistic locking ==> synchronizing the whole procedure
+			// this might be one of the first bottlenecks!
+			// XXX BOTTLENECK!
+			// TODO update once multiple contributions are allowed
+	        Gallery galleryInstance = Gallery.get(params.id)
+			def user = null
+			GalleryUser.findByFirstName('direct').each { gUser ->
+				if(user != null)
+					println  'There are more than one incognito users!'
+				user = gUser
+			}
+			user.addToGalleries galleryInstance
+			galleryInstance.addToUsers user
+
+			//if(user.galleries.size() > 1)
+			//	throw new Exception('multiple galleries per user not yet implemented')
+
+			user.addToImages(image)
+			galleryInstance.addToImages image
+
+			if(!user.save(flush: true)) {
+				user.errors.each {
+					println  it
+				}
+				flash.message = 'something went wrong while uploading your images'
+				redirect(controller:'main')
+				return
+			}
+			if(!galleryInstance.save(flush: true)) {
+				println 'Error while saving Gallery with new image.' 
+				galleryInstance.errors.each {
+					println it 
+				}
+				flash.message = 'something went wrong while uploading your images'
+				redirect(controller:'main')
+				return
+			}
+
+			InputStream inputStream = null
+			if (request instanceof MultipartHttpServletRequest) {
+					MultipartFile uploadedFile = ((MultipartHttpServletRequest) request).getFile('qqfile')
+					inputStream = uploadedFile.inputStream
+			} 
+			else {
+				// need to do this for integration tests
+				try {
+					MultipartFile uploadedFile = request.getFile('qqfile')
+					inputStream = uploadedFile.inputStream
+				}
+				catch(e) {
+					inputStream = request.inputStream
+				}
+			}
+
+
+			// read the image from inputstream
+			// if it does not work, post a flash message, log it and remove the image domain class instance
+
+			BufferedImage bsrc = ImageIO.read(inputStream)
+
+			// the image could not be read. probably a wrong type to begin with.
+			// delete it
+			if(bsrc == null) {
+				log.error "Could not read an image. Deleting it. Image.id== " + image.id
+				imageService.deleteImage(image)
+				flash.message = "${message(code: 'userdef.couldNotReadImage')}"
+				render(text: [success: false] as JSON, contentType: 'text/JSON')
+				return
+			}
+
+			int maxImageHeight = grailsApplication.config.sharevent.maxImageHeight
+			int maxImageWidth = grailsApplication.config.sharevent.maxImageWidth
+
+			// resize the images
+			def bais = null
+			if(bsrc.getHeight() > maxImageHeight) {
+				int height = maxImageHeight 
+				int width = ((double)bsrc.getWidth()) * ((double)height)/((double)bsrc.getHeight())
+				BufferedImage bdest = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+				Graphics2D g = bdest.createGraphics();
+				AffineTransform at = AffineTransform.getScaleInstance((double)width/bsrc.getWidth(), (double)height/bsrc.getHeight());
+				g.drawRenderedImage(bsrc,at);
+				def baos = new ByteArrayOutputStream()
+				ImageIO.write(bdest, "JPG", new MemoryCacheImageOutputStream(baos))
+				def byteArray = baos.toByteArray()
+				bais = new ByteArrayInputStream(byteArray)
+			}
+			else {
+				def baos = new ByteArrayOutputStream()
+				ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(baos))
+				def byteArray = baos.toByteArray()
+				bais = new ByteArrayInputStream(byteArray)
+			}
+
+			// uploading the scaled image
+			imageDBService.storeImageThumbnail(bais, image, user)
+
+			// uploading the original image
+			def baos = new ByteArrayOutputStream()
+			ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(baos))
+			def byteArray = baos.toByteArray()
+			bais = new ByteArrayInputStream(byteArray)
+			imageDBService.storeImage(bais, image, user)
+			println 'image upload successfull'
+		}
+		catch(Exception e) {
+			e.printStackTrace()
+			log.error e.toString()
+			render(text: [success: false] as JSON, contentType: 'text/JSON')
+			return
+		}
+		catch(e) {
+			log.error e.toString()
+			render(text: [success: false] as JSON, contentType: 'text/JSON')
+			return
+		}
+		def imageURL = imageDBService.getImageURL(image)
+		println  'imageURL == ' + imageURL
+		render(text: [success: true, imageURL: imageURL] as JSON, contentType: 'text/JSON')
+		return
+		}
+	}
 
 }

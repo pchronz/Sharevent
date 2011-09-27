@@ -28,5 +28,12 @@ document.observe("dom:loaded", function() {
 		});
 	});
 	
+	// $$('#upload_div').invoke('hide');
+
+	//$$('#upload_button').each(function(s) {
+	//	s.observe('click', function(event) {
+	//		$$('#upload_div').invoke('show');
+	//	});
+	//});
 });
 

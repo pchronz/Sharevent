@@ -143,8 +143,8 @@ class GalleryUserController {
 		render(view: 'createNew', model: [galleryInstance: gallery, user: user])
 		return
 	}
-	user.imageSet = new ImageSet()
-	user.imageSet.galleryUser = user
+	//user.imageSet = new ImageSet()
+	//user.imageSet.galleryUser = user
 	user.save(flush: true)
 	gallery.addToContributors(user)
 	if(!gallery.save(flush:true)) {

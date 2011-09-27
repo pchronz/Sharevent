@@ -1,6 +1,5 @@
 import com.sharevent.Gallery
 import com.sharevent.GalleryUser
-import com.sharevent.ImageSet
 import com.sharevent.Image
 import com.sharevent.SecRole
 import com.sharevent.SecUser
@@ -22,6 +21,16 @@ class BootStrap {
 		if (!adminUser.authorities.contains(adminRole)) {
 			SecUserSecRole.create adminUser, adminRole
 	    }
+
+
+		// special user for incognito image uploads
+		GalleryUser incognitoUser = new GalleryUser(firstName: 'direct', lastName: 'direct', email: 'direct@direct.com')
+		if(!incognitoUser.save(flush: true)) {
+			println  'Errors while saving the special incognito user'
+			incognitoUser.errors.each { error ->
+				println  error
+			}
+		}
 
     }
 
