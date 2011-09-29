@@ -132,7 +132,7 @@ class ImageController {
 				// XXX this might be another bottleneck
 				InputStream imageInputStream = imageDBService.getImageThumbInputStream(image)
 				def imageThumb = ImageIO.read(imageInputStream)
-				ImageIO.write(imageThumb, "JPG", new MemoryCacheImageOutputStream(response.outputStream))
+				ImageIO.write(imageThumb, image.type, new MemoryCacheImageOutputStream(response.outputStream))
 				response.outputStream.flush()
 			}
 			catch(javax.imageio.IIOException ioEx) {
