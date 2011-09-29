@@ -2,7 +2,6 @@
   User: peterandreaschronz
   Date: 21.05.11
   Time: 10:18
-  To change this template use File | Settings | File Templates.
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" %>
@@ -15,25 +14,12 @@
   <body>
     <div id="mainViewport">
 
-		<ol id="shareventSteps">
-			<li>
-			<g:message code="userDef.firstStep" args="${[]}" />
-			</li>
-			<li>
-			<g:message code="userDef.secondStep" args="${[]}" />
-			</li>
-			<li>
-			<g:message code="userDef.thirdStep" args="${[]}" />
-			</li>
-		</ol>
-
-        <p>
-			<div id="divMainFooterLinks">
-				<g:link controller="gallery" action="createFree" class="buttons"><g:message code="userDef.createFreeGallery" args="${[]}" /></g:link>
-				|
-				<g:link controller="gallery" action="viewExample" class="buttons"><g:message code="userDef.viewExampleGallery" args="${[]}" /></g:link>
-			</div>
-        </p>
+		<g:form controller="gallery" action="createDirect">
+			<label for="gallery_title_input" style="display: block;">Title</label>
+			<input type="text" id="gallery_title_input" name="gallery_title" style="width: 70%;" /> 
+			<input type="submit" value="Create"  style="width: 20%;"/>
+		</g:form>
+		<g:link controller="gallery" action="viewExample"><g:message code="userDef.viewExampleGallery" args="${[]}" /></g:link>
     </div>
 </body>
 </html>
