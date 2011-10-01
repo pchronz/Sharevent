@@ -1,6 +1,9 @@
 package com.sharevent
 
 class GalleryUser {
+	
+	static String INCOGNITO = 'INCOGNITO'
+	static String INCOGNITO_MAIL = 'INCOGNITO@INCOGNITO.COM'
 
     // need to add the id explicitly as String for the UUID-generator to work
     String id

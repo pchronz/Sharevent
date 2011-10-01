@@ -14,7 +14,7 @@
   <body>
     <div id="mainViewport">
 
-		<g:form controller="gallery" action="createDirect">
+		<g:form controller="gallery" action="createNew">
 			<label for="gallery_title_input" style="display: block;">Title</label>
 			<input type="text" id="gallery_title_input" name="gallery_title" style="width: 70%;" /> 
 			<input type="submit" value="Create"  style="width: 20%;"/>

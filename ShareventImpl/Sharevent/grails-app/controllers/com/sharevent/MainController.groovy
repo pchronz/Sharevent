@@ -13,6 +13,5 @@ class MainController {
     }
 
     def view = {
-		log.info 'info'
     }
 }

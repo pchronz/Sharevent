@@ -1,0 +1,2 @@
+- display the admin and public urls in a message box (JS)
+
