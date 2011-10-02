@@ -4,23 +4,9 @@ import java.util.zip.ZipOutputStream
 import org.apache.tools.ant.taskdefs.Zip
 import java.util.zip.ZipEntry
 import org.springframework.http.HttpStatus
-import org.springframework.web.multipart.MultipartHttpServletRequest
-import org.springframework.web.multipart.commons.CommonsMultipartFile
-import org.springframework.web.multipart.MultipartFile
-import javax.servlet.http.HttpServletRequest
 import uk.co.desirableobjects.ajaxuploader.AjaxUploaderService
 import grails.converters.JSON
 import grails.plugins.springsecurity.Secured
-import javax.imageio.ImageIO 
-import java.awt.image.BufferedImage
-import javax.imageio.ImageIO
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.image.*;
-import javax.imageio.*;
-import javax.imageio.stream.MemoryCacheImageOutputStream
 import grails.plugins.springsecurity.Secured
 
 
@@ -628,4 +614,89 @@ class GalleryController {
             redirect controller:"main" 
 		}
     }
+
+	def uploadImage= {
+		synchronized(this.getClass()) {
+			def image = null
+			// TODO check whether the user is logged in
+
+			try {
+				log.info 'Creating new Image instance' 
+				image = new Image()
+				// locking image set to prevent conflicts due to optimistic locking
+				// when upload multiple files at once
+				// HSQLDB does not support pessimistic locking ==> synchronizing the whole procedure
+				// this might be one of the first bottlenecks!
+				// XXX BOTTLENECK!
+				// TODO update once multiple contributions are allowed
+				Gallery galleryInstance = Gallery.get(params.id)
+				if(!galleryInstance) {
+					log.info 'Could not retrieve gallery to upload image to'
+					render status: 500
+					return
+				}
+
+				def user = null
+				def c = GalleryUser.createCriteria()
+				def users = c {
+					eq('firstName', GalleryUser.INCOGNITO)
+					galleries {
+						eq('id', galleryInstance.id)
+					}
+				}
+				if(users.size() > 0)
+					log.info 'Found multiples incognito users for one gallery. Taking the first one.'
+				if(users.size() == 0) {
+					log.info "Did not find any incognito users for gallery ${galleryInstance.id}"
+					render status: 500
+					return
+				}
+				user = users[0]
+
+				if(!user.galleries.contains(galleryInstance))
+					user.addToGalleries galleryInstance
+				if(!galleryInstance.users.contains(user))
+					galleryInstance.addToUsers user
+
+				user.addToImages(image)
+				galleryInstance.addToImages image
+
+				if(!user.save(flush: true)) {
+					user.errors.each {
+						log.info  it
+					}
+					flash.message = 'something went wrong while uploading your images'
+					redirect(controller:'main')
+					return
+				}
+				if(!galleryInstance.save(flush: true)) {
+					log.info 'Error while saving Gallery with new image.' 
+					galleryInstance.errors.each {
+						log.info it 
+					}
+					flash.message = 'something went wrong while uploading your images'
+					redirect(controller:'main')
+					return
+				}
+
+				imageService.uploadImage(request, image, user)
+			}
+			catch(Exception e) {
+				e.printStackTrace()
+				log.error e.toString()
+				flash.message = e.getMessage()
+				render(text: [success: false] as JSON, contentType: 'text/JSON')
+				return
+			}
+			catch(e) {
+				log.error e.toString()
+				render(text: [success: false] as JSON, contentType: 'text/JSON')
+				return
+			}
+			def imageURL = imageDBService.getImageURL(image)
+			log.info  'imageURL == ' + imageURL
+			render(text: [success: true, imageURL: imageURL] as JSON, contentType: 'text/JSON')
+		}
+	}
+
 }

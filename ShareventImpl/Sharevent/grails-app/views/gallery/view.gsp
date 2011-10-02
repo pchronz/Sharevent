@@ -24,7 +24,7 @@
 			<g:if test="${urls.size() > 0}">
 				<div id="user_${user.id}">
 					<div id="userBoxView" >
-						<div class="galleryHidePhotosDiv">
+						<div class="galleryHidePhotosDiv" id="galleryHidePhotosDivTop">
 							<p>
 								<a class="hide" href="#"><g:message code="userDef.hide" args="${[]}" /></a>
 							</p>
@@ -36,7 +36,7 @@
 								<%-- <g:checkBox class="selectBox" name="image_${id}" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> --%>
 							</div>
 						</g:each>
-						<div class="galleryHidePhotosDiv">
+						<div class="galleryHidePhotosDiv" id="galleryHidePhotosDivBottom">
 							<p>
 								<a class="hide" href="#"><g:message code="userDef.hide" args="${[]}" /></a>
 							</p>
@@ -47,13 +47,7 @@
 		</g:each>
 
         <p>
-			<!-- Addding a logout-link if logged in as admin might be a good idea -->
-
-            <g:if test="${session.user?.contributedGallery?.id == galleryInstance.id && session.user?.id == session.user.contributedGallery.adminKey}">
-                <!-- TODO issue warning before deleting some images or even whole gallery -->
-                <g:actionSubmit name="RemoveSelection" value="${message(code: 'userDef.deleteSelection')}" action="deleteImages" />
-                <g:actionSubmit name="DeleteGallery" value="${message(code: 'userDef.deleteGallery')}" action="deleteGallery" />
-            </g:if>
+		<!-- TODO add the delete gallery and remove images buttons -->
         </p>
 
             <g:actionSubmit name="Download" value="${message(code: 'userDef.downloadImages')}" action="download" class="buttons" />
@@ -63,7 +57,7 @@
 
 			<!-- upload div -->
 			<div id="upload_div">
-				<uploader:uploader id="${galleryInstance.id}" url="${[controller: 'gallery', action: 'uploadImageDirect', id: galleryInstance.id]}" multiple="true" sizeLimit="5000000">
+				<uploader:uploader id="${galleryInstance.id}" url="${[controller: 'gallery', action: 'uploadImage', id: galleryInstance.id]}" multiple="true" sizeLimit="5000000">
 					<uploader:onSubmit>
 						$$('#divContributeSpinner').each(function(s) {
 							ongoingUploads += 1;
@@ -71,8 +65,22 @@
 						});
 					</uploader:onSubmit>
 					<uploader:onComplete>
-						$$('.galleryHidePhotosDiv').each(function(s) {
-							Element.insert(s, {before: "<div id='all_images' class='galleryImageDiv'><img src='" + responseJSON.imageURL + "' width='250px'>"});
+						$$('#galleryHidePhotosDivBottom').each(function(s) {
+							console.log('inserting');
+							var divEl = document.createElement('div');
+							Element.extend(divEl);
+							// TODO ids have to be unique!
+							divEl.writeAttribute('id', 'all_images');
+							divEl.addClassName('galleryImageDiv');
+							
+							var divImg = document.createElement('img');
+							Element.extend(divImg);
+							divImg.writeAttribute('src', responseJSON.imageURL);
+							divImg.writeAttribute('width', '250px');
+							Element.insert(divEl, divImg);
+
+							Element.insert(s, {before: divEl});
+							// Element.insert(s, {before: "<div id='all_images' class='galleryImageDiv'><img src='" + responseJSON.imageURL + "' width='250px'>"});
 							Element.update(s);
 						});
 						$$('#divContributeSpinner').each(function(s) {

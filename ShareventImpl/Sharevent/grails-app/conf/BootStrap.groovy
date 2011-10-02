@@ -22,16 +22,8 @@ class BootStrap {
 			SecUserSecRole.create adminUser, adminRole
 	    }
 
-
-		// special user for incognito image uploads
-		GalleryUser incognitoUser = new GalleryUser(firstName: 'direct', lastName: 'direct', email: 'direct@direct.com')
-		if(!incognitoUser.save(flush: true)) {
-			println  'Errors while saving the special incognito user'
-			incognitoUser.errors.each { error ->
-				println  error
-			}
-		}
-
+		// remove all orphaned image ids from the imagedb
+		imageDBService.synchronizeImageDB()
     }
 
     def destroy = {

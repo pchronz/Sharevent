@@ -34,41 +34,11 @@ class ImageDBService implements InitializingBean {
     }
 
 	def delete(image) {
-
 		// delete the image
-		DBCollection dbCollection = this.db.getCollection("${grailsApplication.config.sharevent.imageDBCollection}")
-		def query = new BasicDBObject()
-		query.put("${grailsApplication.config.sharevent.imageDBImageId}", image.id)
-		DBCursor cursor = dbCollection.find(query)
-		if(!cursor.hasNext())
-			log.error "could not find image with image.id==" + image.id 
-		DBObject imageDocObject = cursor.next()
-		dbCollection.remove(imageDocObject)
-		if(cursor.hasNext()) {
-			log.error "multiple images found for one id. deleting all of them"
-		}
-		while(cursor.hasNext()) {
-			def dbObject = cursor.next()
-			dbCollection.remove(dbObject)
-		}
+		removeImage(image.id, ${grailsApplication.config.sharevent.imageDBCollection})
 
 		// delete the thumbnail
-		// TODO replace string from value from configuration
-		dbCollection = this.db.getCollection("imageThumbs")
-		query = new BasicDBObject()
-		query.put("${grailsApplication.config.sharevent.imageDBImageId}", image.id)
-		cursor = dbCollection.find(query)
-		if(!cursor.hasNext())
-			log.error "could not find imageThumb with image.id==" + image.id 
-		imageDocObject = cursor.next()
-		dbCollection.remove(imageDocObject)
-		if(cursor.hasNext()) {
-			log.error "multiple images found for one id. deleting all of them"
-		}
-		while(cursor.hasNext()) {
-			def dbObject = cursor.next()
-			dbCollection.remove(dbObject)
-		}
+		removeImage(image.id, "imageThumbs")
 	}
 
 
@@ -209,4 +179,63 @@ class ImageDBService implements InitializingBean {
 		results
 	}
 
+	// remove all entries from imageDB, which have no counterpart in the main data source
+	def synchronizeImageDB() {
+		// get all image ids in mongo
+		def mongoKeys = []
+		DBCollection dbCollection = this.db.getCollection("images")
+		BasicDBObject query = new BasicDBObject()
+		//query.put("", )
+		DBCursor cursor = dbCollection.find(query)
+		try {
+			while(cursor.hasNext()) {
+				def nextObject = cursor.next()
+				// TODO get rid of all string references to collections etc
+				def imageId = nextObject.get("imageKey") as Long
+				mongoKeys += imageId
+			}
+		}
+		catch(Exception e) {
+			log.error "could not open image.id==" + image?.id
+			return null
+		}
+
+		println  'Found the following keys in mongo'
+		println  mongoKeys
+
+
+		// remove all image ids also available in the local data source
+		Image.list().each { image ->
+			if(mongoKeys.contains(image.id)) {
+				mongoKeys.remove(image.id)
+			}
+		}
+
+
+		// delete all remaining image ids from the image collection
+		// delete all remaining image ids from the thumbs collection
+		mongoKeys.each { key ->
+			removeImage(key, grailsApplication.config.sharevent.imageDBCollection)
+			removeImage(key, "imageThumbs")
+		}
+	}
+
+	private void removeImage(def imageId, def collection) {
+		DBCollection dbCollection = this.db.getCollection(collection)
+		BasicDBObject query = new BasicDBObject()
+		query.put("${grailsApplication.config.sharevent.imageDBImageId}", imageId)
+		DBCursor cursor = dbCollection.find(query)
+		try {
+			// TODO log the number of removed objects
+			while(cursor.hasNext()) {
+				def nextObject = cursor.next()
+				dbCollection.remove(nextObject)
+			}
+		}
+		catch(Exception e) {
+			log.error e
+			log.error "could not open image.id==" + imageId
+		}
+	}
 }
+
