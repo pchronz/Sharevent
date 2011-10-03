@@ -21,14 +21,14 @@
             <g:actionSubmit name="Download" value="${message(code: 'userDef.downloadImages')}" action="download" class="buttons" />
 	<!-- only show the users contribution if it is not empty -->
 		<g:each var="user" in="${galleryInstance.users}">
-			<g:if test="${urls.size() > 0}">
-				<div id="user_${user.id}">
-					<div id="userBoxView" >
-						<div class="galleryHidePhotosDiv" id="galleryHidePhotosDivTop">
-							<p>
-								<a class="hide" href="#"><g:message code="userDef.hide" args="${[]}" /></a>
-							</p>
-						</div>
+			<div id="user_${user.id}">
+				<div id="userBoxView" >
+					<div class="galleryHidePhotosDiv" id="galleryHidePhotosDivTop">
+						<p>
+							<a class="hide" href="#"><g:message code="userDef.hide" args="${[]}" /></a>
+						</p>
+					</div>
+					<g:if test="${urls.size() > 0}">
 						<g:each var="imageUrl" in="${urls}" >
 							<div id="all_images" class="galleryImageDiv" >
 								<img src="${imageUrl.value}" width="250px" />
@@ -36,14 +36,17 @@
 								<%-- <g:checkBox class="selectBox" name="image_${id}" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> --%>
 							</div>
 						</g:each>
-						<div class="galleryHidePhotosDiv" id="galleryHidePhotosDivBottom">
-							<p>
-								<a class="hide" href="#"><g:message code="userDef.hide" args="${[]}" /></a>
-							</p>
-						</div>
+					</g:if>
+					<g:else>
+						<p id='emptyGalleryWarningDiv'>This gallery is empty.</p>
+					</g:else>
+					<div class="galleryHidePhotosDiv" id="galleryHidePhotosDivBottom">
+						<p>
+							<a class="hide" href="#"><g:message code="userDef.hide" args="${[]}" /></a>
+						</p>
 					</div>
 				</div>
-			</g:if>
+			</div>
 		</g:each>
 
         <p>
@@ -66,7 +69,6 @@
 					</uploader:onSubmit>
 					<uploader:onComplete>
 						$$('#galleryHidePhotosDivBottom').each(function(s) {
-							console.log('inserting');
 							var divEl = document.createElement('div');
 							Element.extend(divEl);
 							// TODO ids have to be unique!
@@ -75,13 +77,22 @@
 							
 							var divImg = document.createElement('img');
 							Element.extend(divImg);
-							divImg.writeAttribute('src', responseJSON.imageURL);
-							divImg.writeAttribute('width', '250px');
+							if(responseJSON.success == true) {
+								divImg.writeAttribute('src', responseJSON.imageURL);
+								divImg.writeAttribute('width', '250px');
+							}
+							else {
+								divImg.writeAttribute('src', "${resource(dir: 'images', file: 'error.png')}");
+								divImg.writeAttribute('alt', 'Something went wrong while uploading your image.');
+							}
 							Element.insert(divEl, divImg);
 
 							Element.insert(s, {before: divEl});
-							// Element.insert(s, {before: "<div id='all_images' class='galleryImageDiv'><img src='" + responseJSON.imageURL + "' width='250px'>"});
 							Element.update(s);
+
+							$$('#emptyGalleryWarningDiv').each(function(s) {
+								Element.remove(s);
+							});
 						});
 						$$('#divContributeSpinner').each(function(s) {
 							ongoingUploads -= 1;
@@ -90,10 +101,6 @@
 								$$('#divPostUpload').each(function(s) {
 									s.show();
 								});
-
-						//		$$('#divImageUpload').each(function(s){
-						//			s.hide();
-						//		});
 							}
 						});
 					</uploader:onComplete>

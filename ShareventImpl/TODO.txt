@@ -1,17 +1,18 @@
 ### OPEN ###
-- display the admin and public urls in a message box (JS)
-- extend integration test to incorporate synchronizeImageDB()
-- refactor integration tests for new domain model
-- extend integration tests to better cover new domain model
-- asynchronous image loading needs also to work for the first images of the gallery
-- display 'empty gallery'
-- display loading gif onimagesubmit
-- display error message onimagesubmitfailed
 - download image gallery
 - deleting of images for admin
 - deleting of gallery for admin
+- admin link
+
+- extend integration test to incorporate synchronizeImageDB()
+- refactor integration tests for new domain model
+- extend integration tests to better cover new domain model
+- integrate S3 for imageDBService
 
 ### DONE ###
 - implement proper asynchronous update after upload --> has been added twice befoe because there were 2 divs with the targeted name
 - make sure no overlapping in mongo (clear before, after application restart) --> synchronization with mongo in bootstrap
-
+- display 'empty gallery' -> displaying 'empty gallery' message in the incognito-user's gallery
+- asynchronous image loading needs also to work for the first images of the gallery -> the box for the incognito user needs to be always available. Once more users are allowed, this will require some more thought.
+- display loading gif onimagesubmit -> image was missing. added from original plugin sources
+- display error message onimagesubmitfailed -> using JSONResponse.success == false; showing error image

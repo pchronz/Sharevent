@@ -616,6 +616,11 @@ class GalleryController {
     }
 
 	def uploadImage= {
+		if(true) {
+			render text: [success: false] as JSON
+			return
+		}
+		else
 		synchronized(this.getClass()) {
 			def image = null
 			// TODO check whether the user is logged in
