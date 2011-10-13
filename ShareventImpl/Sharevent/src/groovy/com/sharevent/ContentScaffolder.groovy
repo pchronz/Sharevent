@@ -116,7 +116,6 @@ class ContentScaffolder{
 		ImageIO.write(bdest, "JPG", new MemoryCacheImageOutputStream(baos))
 		def byteArray = baos.toByteArray()
 
-		bais = new ByteArrayInputStream(byteArray)
-		return bais
+		return new ByteArrayInputStream(byteArray)
     }
 }

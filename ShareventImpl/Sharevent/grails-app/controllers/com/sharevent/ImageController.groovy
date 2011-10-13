@@ -138,7 +138,7 @@ class ImageController {
 			catch(javax.imageio.IIOException ioEx) {
 				// delete the image if the file cannot be read
 				image.delete(flush: true)
-				log.error "Some images could not be read and have been deleted from the database: Image.id " + image.id + " User.id == " + image.imageSet.galleryUser.id
+				log.error "Some images could not be read and have been deleted from the database: Image.id " + image.id + " User.id == " + image.galleryUser.id
 				// TODO provide a fail-over image
 			}
 			catch(IOException e) {
@@ -147,7 +147,7 @@ class ImageController {
 			catch(Exception e) {
 				// delete the image if the file cannot be read
 				image.delete(flush: true)
-				log.error "Some images could not be read and have been deleted from the database: Image.id " + image.id + " User.id == " + image.imageSet.galleryUser.id
+				log.error "Some images could not be read and have been deleted from the database: Image.id " + image.id + " User.id == " + image.galleryUser.id
 				log.error "Caught an exception: " + e.toString()
 				// TODO provide a fail-over image
 			}

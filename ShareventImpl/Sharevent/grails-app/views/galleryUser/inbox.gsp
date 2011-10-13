@@ -11,9 +11,9 @@
       Hello ${galUser.email}, ${galUser.galleries.size()}
       <br /><br />
       <g:each in="${galUser.galleries}" var="gallery" status="galCount">
-        Gallery ${gallery.title}: loopCount ${galCount} <br/>
+        Gallery ${gallery.title}: loopCount ${galCount} , amount of images: ${gallery.images.size()}<br/> 
         <g:each in="${gallery.images}" var="image" status="imgCount">
-          <img src="<g:createLink controller='image' action='viewImageThumbnail' id='${image.id}'/>" />
+            <img src="<g:createLink controller='image' action='viewImageThumbnail' id='${image.id}'/>" />
           ${imgCount},
         </g:each>
         <br />
