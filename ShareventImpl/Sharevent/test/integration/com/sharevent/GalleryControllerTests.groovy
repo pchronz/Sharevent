@@ -387,9 +387,7 @@ class GalleryControllerTests extends GroovyTestCase {
 		// TODO upload multiple images in sequence
 		File imageFile
 		if(enu.hasMoreElements()) {
-			def imgf = enu.nextElement().toURI()
-			println ">>>> "+imgf
-			imageFile = new File(imgf)
+			imageFile = new File(enu.nextElement().toURI())
 		}
 		def inImage = ImageIO.read(imageFile)
 		def baos = new ByteArrayOutputStream()

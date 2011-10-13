@@ -17,6 +17,8 @@ import grails.plugins.springsecurity.Secured
 import org.springframework.beans.factory.InitializingBean
 import grails.converters.*
 import org.codehaus.groovy.grails.web.json.*
+import java.io.ByteArrayOutputStream
+import java.io.ByteArrayInputStream
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 
 class ImageDBService implements InitializingBean {
@@ -138,8 +140,7 @@ class ImageDBService implements InitializingBean {
 		BufferedImage bImage = ImageIO.read(bais)
 		ByteArrayOutputStream baos = new ByteArrayOutputStream()
 		// TODO handle pngs properly
-		ImageIO.write(bImage, "jpg", baos)
-		
+		ImageIO.write(bImage, "JPG", baos)
 
 		BasicDBObject dbObject = new BasicDBObject()
 		dbObject.put("${grailsApplication.config.sharevent.imageDBImageId}", image.id)
@@ -151,12 +152,14 @@ class ImageDBService implements InitializingBean {
 	}
 
 	def storeImage(bais, image, user) {
+		println "storeImage..."
+		println db
 		DBCollection dbCollection = this.db.getCollection("${grailsApplication.config.sharevent.imageDBCollection}")
+
 		BufferedImage bImage = ImageIO.read(bais)
 		ByteArrayOutputStream baos = new ByteArrayOutputStream()
 		// TODO handle pngs properly
 		ImageIO.write(bImage, "jpg", baos)
-		
 
 		BasicDBObject dbObject = new BasicDBObject()
 		dbObject.put("${grailsApplication.config.sharevent.imageDBImageId}", image.id)
