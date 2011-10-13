@@ -13,7 +13,7 @@
       <g:each in="${galUser.galleries}" var="gallery" status="galCount">
         Gallery ${gallery.title}: loopCount ${galCount} <br/>
         <g:each in="${gallery.images}" var="image" status="imgCount">
-          <%-- <img src="<g:createLink controller='image' action='viewImageThumbnail' id='${image.id}'/>" /> --%>
+          <img src="<g:createLink controller='image' action='viewImageThumbnail' id='${image.id}'/>" />
           ${imgCount},
         </g:each>
         <br />

@@ -162,4 +162,12 @@ class GalleryUserController {
 
     	redirect(controller: 'gallery', action: 'contributeImages', params: [id: gallery.id])
     }
+
+    def inbox = {
+        def galUser = GalleryUser.findByEmail('cook@poo.com')
+        println galUser
+        println galUser.galleries.size()
+        [galUser:galUser]
+    }
+
 }
