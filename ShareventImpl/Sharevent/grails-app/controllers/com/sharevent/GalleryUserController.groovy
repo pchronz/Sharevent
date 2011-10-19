@@ -162,4 +162,29 @@ class GalleryUserController {
 
     	redirect(controller: 'gallery', action: 'contributeImages', params: [id: gallery.id])
     }
+
+    /**
+    * TODO: wait for real authentification
+    */
+    def inbox = {
+        def galUser = GalleryUser.findByEmail('cook@poo.com')
+        def ownGalleries = Gallery.findAllByCreatorId(galUser.id)
+
+        println "${ownGalleries} : ${galUser.galleries.size()}"
+        [galUser:galUser,ownGalleries:ownGalleries]
+    }
+
+    /**
+    * TODO: only for allowed user, and should be a service method
+    */
+    def loadGalleryImages = {
+        println "loadGalleryImages: ${params.id}"
+        def gallery = Gallery.get(params.id)
+        render(template:"gImages", model:[gImages: gallery.images])
+    }
+
+    def viewOwner = {
+        def galUser = GalleryUser.get(params.id)
+        render "<a href=\"mailto:${galUser.email}\">owned by ${galUser.firstName} ${galUser.lastName}</a>"
+    }
 }

@@ -119,45 +119,43 @@ class ImageController {
     }
 
     // *************** CUSTOM ACTIONS FOLLOW *******************
-	def viewImageThumbnail = {
-		// TODO transform this to run with mongo/imagedb service
+    def synchronized viewImageThumbnail = {
 
-		log.info "showing image: ${params.id}"
-
-		synchronized(this.getClass()) {	
-			def image = Image.get(params.id.toLong())
-			try {
-				// synchronizing because else this lead to problems when many images were loaded concurrently
-				// TODO analyse this code properly to minimize the synchronized block
-				// XXX this might be another bottleneck
-				InputStream imageInputStream = imageDBService.getImageThumbInputStream(image)
-				def imageThumb = ImageIO.read(imageInputStream)
-				ImageIO.write(imageThumb, "JPG", new MemoryCacheImageOutputStream(response.outputStream))
-				response.outputStream.flush()
-			}
-			catch(javax.imageio.IIOException ioEx) {
-				// delete the image if the file cannot be read
-				image.delete(flush: true)
-				log.error "Some images could not be read and have been deleted from the database: Image.id " + image.id + " User.id == " + image.imageSet.galleryUser.id
-				// TODO provide a fail-over image
-			}
-			catch(IOException e) {
-				log.error "Caught an IOException: " + e.toString()
-			}
-			catch(Exception e) {
-				// delete the image if the file cannot be read
-				image.delete(flush: true)
-				log.error "Some images could not be read and have been deleted from the database: Image.id " + image.id + " User.id == " + image.imageSet.galleryUser.id
-				log.error "Caught an exception: " + e.toString()
-				// TODO provide a fail-over image
-			}
-			catch(Throwable t) {
-				log.error "Caught a throwable: " + t
-			}
-			catch(e) {
-				log.error "Caught an e: " + e.toString()
-			}
-		}
-	}
+	    println "showing image: ${params.id}"
+        synchronized(this.getClass()) { 
+            def image = Image.get(params.id.toLong())
+            try {
+                // synchronizing because else this lead to problems when many images were loaded concurrently
+                // TODO analyse this code properly to minimize the synchronized block
+                // XXX this might be another bottleneck
+                InputStream imageInputStream = imageDBService.getImageThumbInputStream(image)
+                def imageThumb = ImageIO.read(imageInputStream)
+                ImageIO.write(imageThumb, "JPG", new MemoryCacheImageOutputStream(response.outputStream))
+                response.outputStream.flush()
+            }
+            catch(javax.imageio.IIOException ioEx) {
+                // delete the image if the file cannot be read
+                image.delete(flush: true)
+                log.error "Some images could not be read and have been deleted from the database: Image.id " + image.id + " User.id == " + image.galleryUser.id
+                // TODO provide a fail-over image
+            }
+            catch(IOException e) {
+                log.error "Caught an IOException: " + e.toString()
+            }
+            catch(Exception e) {
+                // delete the image if the file cannot be read
+                image.delete(flush: true)
+                log.error "Some images could not be read and have been deleted from the database: Image.id " + image.id + " User.id == " + image.galleryUser.id
+                log.error "Caught an exception: " + e.toString()
+                // TODO provide a fail-over image
+            }
+            catch(Throwable t) {
+                log.error "Caught a throwable: " + t
+            }
+            catch(e) {
+                log.error "Caught an e: " + e.toString()
+            }
+        }
+    }
 }
 

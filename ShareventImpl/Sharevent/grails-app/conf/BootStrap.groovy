@@ -11,6 +11,7 @@ class BootStrap {
 
     def springSecurityService
 	def imageDBService
+	def contentScaffolder
 
     def init = { servletContext ->
 	    // for spring security create an admin role
@@ -24,6 +25,10 @@ class BootStrap {
 
 		// remove all orphaned image ids from the imagedb
 		imageDBService.synchronizeImageDB()
+
+		//creates content for designing the inbox view
+		contentScaffolder.createContent()
+
     }
 
     def destroy = {
