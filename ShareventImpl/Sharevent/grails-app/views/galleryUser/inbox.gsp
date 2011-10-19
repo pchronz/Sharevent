@@ -65,9 +65,9 @@
   <body>
 
     <div class="galHeader">
-        Hello ${galUser.firstName}, you own ${ownGalleries.size()} galleries
-      <g:if test="${galUser.galleries.size()-ownGalleries.size() > 0}">
-        and you are involved in addional ${galUser.galleries.size()-ownGalleries.size()}.
+        Hello ${galUser.firstName}, you own ${ownGalleriesCount} galleries
+      <g:if test="${galUser.galleries.size() - ownGalleriesCount > 0}">
+        and you are involved in addional ${galUser.galleries.size()-ownGalleriesCount}.
       </g:if>
       <g:else>
       .
@@ -79,12 +79,21 @@
         <div>
 
           <div class="gLabel">
-            <g:remoteLink action="loadGalleryImages" update="gI_${gallery.id}" id="${gallery.id}">
-              <img  src="${resource(dir:'images', file:'arrow-round-down.png')}" />
-              Gallery ${gallery.title},  
-              <g:formatDate date="${gallery.date}" type="datetime" style="MEDIUM"/>, 
-              ${gallery.location}
-            </g:remoteLink>  
+            <table border="0">
+              <tr>
+                <td>
+                    <g:remoteLink action="loadGalleryImages" update="gI_${gallery.id}" id="${gallery.id}">
+                      <img  src="${resource(dir:'images', file:'arrow-round-down.png')}" />
+                      Gallery ${gallery.title}  &#160;&#160;
+                      <g:formatDate date="${gallery.date}" type="datetime" style="MEDIUM"/> &#160;&#160;
+                      ${gallery.location}
+                    </g:remoteLink>
+                </td>
+                <td align="right" style="vertical-align:bottom">
+                    <span >${gallery.images.size()} pics</span>
+                </td>
+              </tr>
+            </table>
           </div>
           
           <div id="gI_${gallery?.id}" class="gBody">
@@ -96,8 +105,7 @@
               <a href="mailto:${galUser.email}">owned by ${galUser.firstName} ${galUser.lastName}</a>
             </g:if>
             <g:else>
-                <%--<g:createLink action='viewOwner' id='${gallery.creatorId}'/> --%>
-                ${createLink(action:'viewOwner', id:gallery.creatorId)}
+              <sv:galleryOwner id="${gallery.creatorId}" />
             </g:else>
             <g:remoteLink action="loadGalleryImages" update="gI_${gallery.id}" id="${gallery.id}" >
               <img src="${resource(dir:'images', file:'arrow-round-down.png')}"/>

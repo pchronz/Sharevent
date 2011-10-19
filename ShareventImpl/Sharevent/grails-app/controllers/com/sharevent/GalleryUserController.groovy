@@ -168,10 +168,13 @@ class GalleryUserController {
     */
     def inbox = {
         def galUser = GalleryUser.findByEmail('cook@poo.com')
-        def ownGalleries = Gallery.findAllByCreatorId(galUser.id)
-
-        println "${ownGalleries} : ${galUser.galleries.size()}"
-        [galUser:galUser,ownGalleries:ownGalleries]
+        def ownGalleriesCount = Gallery.findAllByCreatorId(galUser.id).size()
+        //def galleries = Gallery.findAllByUser(galUser, [sort:"date", order:"desc"])
+        def galleries = Gallery.createCriteria().list{
+            eq("creatorId",galUser.id)
+            order("date", "desc")
+        }
+        [galUser:galUser, ownGalleriesCount:ownGalleriesCount, galleries:galleries]
     }
 
     /**
@@ -181,10 +184,5 @@ class GalleryUserController {
         println "loadGalleryImages: ${params.id}"
         def gallery = Gallery.get(params.id)
         render(template:"gImages", model:[gImages: gallery.images])
-    }
-
-    def viewOwner = {
-        def galUser = GalleryUser.get(params.id)
-        render "<a href=\"mailto:${galUser.email}\">owned by ${galUser.firstName} ${galUser.lastName}</a>"
     }
 }
