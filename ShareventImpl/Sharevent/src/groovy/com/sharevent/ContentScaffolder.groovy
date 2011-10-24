@@ -107,8 +107,6 @@ class ContentScaffolder{
 		return true
 	}
 
-	private def create
-
 	private def loadImageAsBais(int index){
         println "loadImageAsBais beginn ${index}.jpg" 
         
