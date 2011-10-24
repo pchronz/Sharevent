@@ -71,7 +71,7 @@ log4j = {
     //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
     //}
 
-    info  'org.codehaus.groovy.grails.web.servlet',  //  controllers
+    error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
            'org.codehaus.groovy.grails.web.pages', //  GSP
            'org.codehaus.groovy.grails.web.sitemesh', //  layouts
            'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
@@ -81,11 +81,15 @@ log4j = {
            'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
            'org.springframework',
            'org.hibernate',
-           'net.sf.ehcache.hibernate'
+           'net.sf.ehcache.hibernate',
+		   'com.sharevent.GalleryController'
 
     warn   'org.mortbay.log'
 
-	debug 'com.sharevent'
+	debug  'com.sharevent.GalleryController'
+
+	info  'com.sharevent.GalleryController'
+
 }
 
 sharevent = [maxImageWidth: 300, maxImageHeight: 300, imageDBCollection: "images", imageDBThumbsCollection: "imageThumbs", imageDB: "${appName}".toLowerCase(), imageDBImageId: "imageKey"]
