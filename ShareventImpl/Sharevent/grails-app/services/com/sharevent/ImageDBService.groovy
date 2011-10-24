@@ -187,16 +187,17 @@ class ImageDBService implements InitializingBean {
 		BasicDBObject query = new BasicDBObject()
 		//query.put("", )
 		DBCursor cursor = dbCollection.find(query)
+		def imageId
 		try {
 			while(cursor.hasNext()) {
 				def nextObject = cursor.next()
 				// TODO get rid of all string references to collections etc
-				def imageId = nextObject.get("imageKey") as Long
+				imageId = nextObject.get("imageKey") as Long
 				mongoKeys += imageId
 			}
 		}
 		catch(Exception e) {
-			log.error "could not open image.id==" + image?.id
+			log.error "could not open image.id==" + imageId
 			return null
 		}
 
