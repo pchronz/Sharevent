@@ -616,11 +616,6 @@ class GalleryController {
     }
 
 	def uploadImage= {
-		if(true) {
-			render text: [success: false] as JSON
-			return
-		}
-		else
 		synchronized(this.getClass()) {
 			def image = null
 			// TODO check whether the user is logged in
@@ -683,7 +678,7 @@ class GalleryController {
 					redirect(controller:'main')
 					return
 				}
-
+				
 				imageService.uploadImage(request, image, user)
 			}
 			catch(Exception e) {
@@ -704,4 +699,66 @@ class GalleryController {
 		}
 	}
 
+    def download = {
+    	// TODO what happens if someone tries to upload and someone else tries to download at the same time?
+		// might not happen ever; even then only images would not be uploaded properly. no big deal!...?
+
+        // first get the selected image ids
+        def imageIds = []
+		println params
+        params.each {
+            if(it.key instanceof java.lang.String) {
+                if(it.key.startsWith("image")) {
+                    // Assuming that Grails is providing only selected checkboxes!
+                    String imageId = it.key
+                    imageIds.add(imageId.split("_")[1])
+                }
+            }
+        }
+
+		if(imageIds.size() == 0) {
+			log.info "No image to show, redirecting to gallery with id ${params.id}"
+			flash.message = "There are no images selected to download."
+			redirect(action: 'view', params: [id: params.id])
+			return
+		}
+		else {
+			// get the corresponding images
+			def images = []
+			imageIds.each { imageId ->
+				def image = Image.get(imageId)
+				if(!image) {
+					log.error "Could not retrieve image w/ id ${imageId} for downloading."
+					flash.message = "Some of the selected images could not be downloaded."
+				}
+				else 
+					images.add(image)
+			}
+		}
+
+		// now zip the selected images to the response stream
+		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(response.outputStream))
+		def data = new byte[2048]
+		def galleryInstance = Gallery.get(params.id)
+		images.each { image ->
+			def inputStream = imageDBService.getImageInputStream(image)
+
+			if (inputStream == null) {
+				log.error "ImageDB is null"
+				flash.message = "Some of the selected images could not be downloaded."
+				return
+			}
+
+			BufferedInputStream origin = new BufferedInputStream(inputStream, 2048)
+			String zipPath = image.gallery.title + '/' + image.id + '.jpg'
+			ZipEntry entry = new ZipEntry(zipPath)
+			zos.putNextEntry(entry)
+			int count
+			while((count = origin.read(data, 0, 2048)) != -1) {
+			   zos.write(data, 0, count);
+			}
+			origin.close();
+		}
+		zos.close()
+    }
 }

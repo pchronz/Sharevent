@@ -43,10 +43,12 @@ class ImageService {
 		if (request instanceof MultipartHttpServletRequest) {
 				MultipartFile uploadedFile = ((MultipartHttpServletRequest) request).getFile('qqfile')
 				inputStream = uploadedFile.inputStream
+				log.info 'Handling MultipartHttpServletRequest'
 		} 
 		else {
 			// TODO check whether this gets called anytime at all
 			// need to do this for integration tests
+			log.info 'Handling MultiPartHttpServerRequestMock'
 			try {
 				MultipartFile uploadedFile = request.getFile('qqfile')
 				inputStream = uploadedFile.inputStream

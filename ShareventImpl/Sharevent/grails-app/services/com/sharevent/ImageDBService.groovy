@@ -43,8 +43,8 @@ class ImageDBService implements InitializingBean {
 
 
 	def getImageThumbInputStream(image) {
-		println "starting getImageThumbInputStream"
-		println image
+		log.info "starting getImageThumbInputStream"
+		log.info image
 		DBCollection dbCollection = this.db.getCollection("imageThumbs")
 		BasicDBObject query = new BasicDBObject()
 		query.put("${grailsApplication.config.sharevent.imageDBImageId}", image.id)
@@ -56,7 +56,7 @@ class ImageDBService implements InitializingBean {
 					log.warn "Query returned multiple images for supposedly unique images. Returning only the first image."
 				}
 				byte[] imageBytes = nextObject.get("imageBytes") as byte[]
-				println "returning imageInputStream"
+				log.info "returning imageInputStream"
 				return new ByteArrayInputStream(imageBytes)
 			}
 		}
@@ -68,37 +68,37 @@ class ImageDBService implements InitializingBean {
 
 	def getImageInputStream(image) {
 		try {
-			println "starting getImageInputStream"
-			println "getting mongodb"
-			println "getting mongodb"
-			println "getting collection"
+			log.info "starting getImageInputStream"
+			log.info "getting mongodb"
+			log.info "getting mongodb"
+			log.info "getting collection"
 			DBCollection dbCollection = this.db.getCollection("${grailsApplication.config.sharevent.imageDBCollection}")
 			BasicDBObject query = new BasicDBObject()
 			query.put("${grailsApplication.config.sharevent.imageDBImageId}", image.id)
-			println "executing query for image.id == " + image.id
-			println "query == " + query.toString()
-			println "collection == " + dbCollection.toString()
-			println "db == " + db.toString()
+			log.info "executing query for image.id == " + image.id
+			log.info "query == " + query.toString()
+			log.info "collection == " + dbCollection.toString()
+			log.info "db == " + db.toString()
 			DBCursor cursor = dbCollection.find(query)
 			if(cursor.hasNext()) {
-				println "found a result from query"
+				log.info "found a result from query"
 				def nextObject = cursor.next()
 				if(cursor.hasNext()) {
-					println "found more than one result from query!"
+					log.info "found more than one result from query!"
 					log.warn "Query returned multiple images for supposedly unique images. Returning only the first image."
 				}
 				byte[] imageBytes = nextObject.get("imageBytes") as byte[]
-				println "returning byte[] retrieved from query, byte[].length " + imageBytes.length
+				log.info "returning byte[] retrieved from query, byte[].length " + imageBytes.length
 				return new ByteArrayInputStream(imageBytes)
 			}
 			else {
-				println "did not find any result to the query for image.id == " + image.id
-				println "throwing an exception"
+				log.info "did not find any result to the query for image.id == " + image.id
+				log.info "throwing an exception"
 			}
 		}
 		catch(e) {
-			println "Exception while trying to get the imageInputStream from mongodb"
-			println e.printStackTrace()
+			log.info "Exception while trying to get the imageInputStream from mongodb"
+			log.info e.printStackTrace()
 			throw e
 		}
 	}
@@ -126,7 +126,6 @@ class ImageDBService implements InitializingBean {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream()
 		// TODO handle pngs properly
 		ImageIO.write(bImage, "jpg", baos)
-		
 
 		BasicDBObject dbObject = new BasicDBObject()
 		dbObject.put("${grailsApplication.config.sharevent.imageDBImageId}", image.id)
@@ -154,10 +153,10 @@ class ImageDBService implements InitializingBean {
 		try {
 			def env = System.getenv()
 			def vcap = env['VCAP_SERVICES']
-			println 'VCAP_SERVICES == ' + vcap
+			log.info 'VCAP_SERVICES == ' + vcap
 
 			def vcapJSON = JSON.parse(vcap)
-			println vcapJSON['mongodb-1.8']
+			log.info vcapJSON['mongodb-1.8']
 			def mongoJSON = vcapJSON['mongodb-1.8']
 			def credentials = mongoJSON.credentials
 			results['hostname'] = credentials.hostname.get(0)
@@ -166,14 +165,14 @@ class ImageDBService implements InitializingBean {
 			results['username'] = credentials.username.get(0)
 			results['name'] = credentials.name.get(0)
 			results['password'] = credentials.password.get(0)
-			println results
+			log.info results
 		}
 		catch(e) {
-			println 'could not read VCAP_SERVICES completely... falling back to default values'
+			log.info 'could not read VCAP_SERVICES completely... falling back to default values'
 			results['hostname'] = 'localhost'
 			results['port'] = 27017
 			results['db'] = 'db'
-			println results
+			log.info results
 		}
 
 		results
@@ -196,12 +195,12 @@ class ImageDBService implements InitializingBean {
 			}
 		}
 		catch(Exception e) {
-			log.error "could not open image.id==" + image?.id
+			log.error "could not open image.id=="
 			return null
 		}
 
-		println  'Found the following keys in mongo'
-		println  mongoKeys
+		log.info  'Found the following keys in mongo'
+		log.info  mongoKeys
 
 
 		// remove all image ids also available in the local data source
