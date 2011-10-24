@@ -81,15 +81,9 @@ log4j = {
            'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
            'org.springframework',
            'org.hibernate',
-           'net.sf.ehcache.hibernate',
-		   'com.sharevent.GalleryController'
+           'net.sf.ehcache.hibernate'
 
     warn   'org.mortbay.log'
-
-	debug  'com.sharevent.GalleryController'
-
-	info  'com.sharevent.GalleryController'
-
 }
 
 sharevent = [maxImageWidth: 300, maxImageHeight: 300, imageDBCollection: "images", imageDBThumbsCollection: "imageThumbs", imageDB: "${appName}".toLowerCase(), imageDBImageId: "imageKey"]
