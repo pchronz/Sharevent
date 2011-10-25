@@ -716,6 +716,8 @@ class GalleryController {
             }
         }
 
+		def images = []
+
 		if(imageIds.size() == 0) {
 			log.info "No image to show, redirecting to gallery with id ${params.id}"
 			flash.message = "There are no images selected to download."
@@ -724,15 +726,20 @@ class GalleryController {
 		}
 		else {
 			// get the corresponding images
-			def images = []
+			images = []
 			imageIds.each { imageId ->
-				def image = Image.get(imageId)
-				if(!image) {
-					log.error "Could not retrieve image w/ id ${imageId} for downloading."
-					flash.message = "Some of the selected images could not be downloaded."
+				try {
+					def image = Image.get(imageId.toLong())
+					if(!image) {
+						log.error "Could not retrieve image w/ id ${imageId} for downloading."
+						flash.message = "Some of the selected images could not be downloaded."
+					}
+					else 
+						images.add(image)
 				}
-				else 
-					images.add(image)
+				catch(e) {
+					log.error "Could not parse imagedId ${imageId} to integer"
+				}
 			}
 		}
 

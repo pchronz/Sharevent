@@ -33,7 +33,7 @@
 							<div id="all_images" class="galleryImageDiv" >
 								<img src="${imageUrl.value}" width="250px" />
 								<br />
-								<g:checkBox class="selectBox" name="image_${id}" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
+								<g:checkBox class="selectBox" name="image_${imageUrl.key}" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
 							</div>
 						</g:each>
 					</g:if>
