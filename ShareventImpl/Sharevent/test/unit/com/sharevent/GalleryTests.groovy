@@ -22,17 +22,17 @@ class GalleryTests extends GrailsUnitTestCase {
 		GalleryUser creator = new GalleryUser(firstName: "Cook", lastName: "Poo", email: "cook@poo.ie")
 
 		Gallery gallery = new Gallery(date:new Date(), title:"Super cool event", location:"Dortmund")
-		gallery.creatorId = "placeholder"
 		gallery.addToUsers creator
 		creator.addToGalleries gallery
-		if(!gallery.save(flush:true)) {
-			gallery.errors.each {
+		if(!creator.save(flush:true)) {
+			creator.errors.each {
 				println it
 			}
 			fail()
 		}
-		if(!creator.save(flush:true)) {
-			creator.errors.each {
+		gallery.creatorId = creator.id
+		if(!gallery.save(flush:true)) {
+			gallery.errors.each {
 				println it
 			}
 			fail()
@@ -143,17 +143,17 @@ class GalleryTests extends GrailsUnitTestCase {
 		GalleryUser creator = new GalleryUser(firstName: "Cook", lastName: "Poo", email: "cook@poo.ie")
 
 		Gallery gallery = new Gallery(date:new Date(), title:"Super cool event", location:"Dortmund")
-		gallery.creatorId = "placeholder"
 		gallery.addToUsers creator
 		creator.addToGalleries gallery
-		if(!gallery.save(flush:true)) {
-			gallery.errors.each {
+		if(!creator.save(flush:true)) {
+			creator.errors.each {
 				println it
 			}
 			fail()
 		}
-		if(!creator.save(flush:true)) {
-			creator.errors.each {
+		gallery.creatorId = creator.id
+		if(!gallery.save(flush:true)) {
+			gallery.errors.each {
 				println it
 			}
 			fail()
