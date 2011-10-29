@@ -783,7 +783,6 @@ class GalleryController {
 			return
 		}
 
-		println params.key + ", " + gallery.creatorId
 		if(params.key != gallery.creatorId) {
 			log.info "Unauthorized user tried to delete images from gallery with id ${gallery.id}"
 			flash.message = "Only the gallery's creator may delete images."
@@ -803,5 +802,55 @@ class GalleryController {
                 }
             }
         }
+		
+		// remove the images
+		images.each { imageId ->
+			try {
+				def image = Image.get(imageId)
+				def galleryUser = image.galleryUser
+				if(imageService.deleteImage(image)) {
+					log.error "Error while deleting image == ${imageId}"
+				}
+				galleryUser.save(flush: true, failOnError: true)
+			}
+			catch(e) {
+				log.error "Error while deleting image == ${imageId}"
+			}
+		}
+
+		redirect action: "view", params: [key: gallery.creatorId, id: gallery.id]
 	}
+
+    def deleteGallery = {
+		println "delette gallry"
+		def gallery = Gallery.get(params.id)
+		if(!gallery) {
+			log.error "Error while retrieving gallery with id ${params.id}"
+			flash.message = "Error while deleting the gallery."
+			redirect controller: "main"
+			return
+		}
+		if(params.key != gallery.creatorId) {
+			log.info "Non-creator tried to remove gallery ${gallery.id}"
+			flash.message = "Only the gallery's creator may delete it"
+			redirect action: "view", params: [id: params.id]
+			return
+		}
+		
+		println "deleting gallery"
+		try {
+			galleryService.deleteGallery(params.id)
+		}
+		catch(e) {
+			flash.message = "Something went wrong while we tried to delete your gallery."
+			redirect controller: "main"
+			return
+		}
+
+		println "gallery deleted"
+
+        flash.message = "${message(code: 'userDef.galleryDeleted')}"
+
+        redirect(controller: "main", action: "index")
+    }
 }

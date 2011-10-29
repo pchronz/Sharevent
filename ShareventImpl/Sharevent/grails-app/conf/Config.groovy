@@ -84,6 +84,7 @@ log4j = {
            'net.sf.ehcache.hibernate'
 
     warn   'org.mortbay.log'
+	info   'grails.app'
 }
 
 sharevent = [maxImageWidth: 300, maxImageHeight: 300, imageDBCollection: "images", imageDBThumbsCollection: "imageThumbs", imageDB: "${appName}".toLowerCase(), imageDBImageId: "imageKey"]

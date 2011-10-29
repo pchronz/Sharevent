@@ -14,7 +14,7 @@
         <p>
 	    <span class="spanBold"><g:message code="userDef.participationLink" args="${[]}" /></span><g:link controller="gallery" action="view" id="${galleryInstance.id}" >${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id)}</g:link>
 		<br />
-		<g:if test="${isAdmin || isNewGallery}">
+		<g:if test="${isAdmin}">
 			<span class="spanBold"><g:message code="userDef.administrationLink" args="${[]}" /></span><g:link controller="gallery" action="view" id="${galleryInstance.id}" params="${[key: galleryInstance.creatorId]}" >${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id, params: [key: galleryInstance.creatorId])}</g:link>
 		</g:if>
 		<br />
@@ -22,7 +22,9 @@
 
         <g:form controller="gallery" id="${galleryInstance.id}">
 
-            <g:actionSubmit name="Download" value="${message(code: 'userDef.downloadImages')}" action="download" class="buttons" />
+		<div class="buttons">
+			<g:actionSubmit name="Download" value="${message(code: 'userDef.downloadImages')}" action="download" class="save" />
+		</div>
 	<!-- only show the users contribution if it is not empty -->
 		<g:each var="user" in="${galleryInstance.users}">
 			<div id="user_${user.id}">
@@ -53,12 +55,15 @@
 			</div>
 		</g:each>
 
-        <p>
-		<!-- TODO add the delete gallery and remove images buttons -->
-			<g:actionSubmit name="removeImages" value="${message(code: 'userDef.deleteSelection')}" action="deleteImages" params="${[key: galleryInstance.creatorId]}" />
-        </p>
+        <div class="buttons">
+            <g:actionSubmit name="Download" value="${message(code: 'userDef.downloadImages')}" action="download" class="save" />
+		<g:if test="${isAdmin}">
+			<g:hiddenField name="key" value="${galleryInstance.creatorId}" />
+			<g:actionSubmit name="removeImages" value="${message(code: 'userDef.deleteSelection')}" action="deleteImages" class="delete" />
+			<g:actionSubmit name="removeGallery" value="${message(code: 'userDef.deleteGallery')}" action="deleteGallery" class="delete" />
+		</g:if>
+        </div>
 
-            <g:actionSubmit name="Download" value="${message(code: 'userDef.downloadImages')}" action="download" class="buttons" />
 
         </g:form>
 

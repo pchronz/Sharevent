@@ -35,6 +35,8 @@ class ImageService {
 		galleryUser.removeFromImages(image)
 		gallery.removeFromImages(image)
 
+		imageDBService.delete(image)
+
 		image.delete(flush: true)
 	}
 

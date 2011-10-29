@@ -54,7 +54,7 @@ class ImageDBService {
 		if(!initialized) initService()
 
 		// delete the image
-		removeImage(image.id, ${grailsApplication.config.sharevent.imageDBCollection})
+		removeImage(image.id, "images")
 
 		// delete the thumbnail
 		removeImage(image.id, "imageThumbs")
