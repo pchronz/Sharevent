@@ -582,17 +582,21 @@ class GalleryController {
 			return
 		}
 
-		redirect action: 'view', params: [id: gallery.id]
+		// entering creatorId as params.key, so that the administration link will be shown
+		redirect action: 'view', params: [id: gallery.id, key: gallery.creatorId]
 	}
 
     def view = {
-        def gallery= Gallery.get(params.id)
+        def gallery = Gallery.get(params.id)
 
 		if(!gallery) {
 			flash.message = "Error while loading the gallery"
 			redirect controller: 'main'
 			return
 		}
+		
+		boolean isAdmin = params.key == gallery.creatorId ? true : false
+		log.info "Viewing gallery ${gallery.id} as admin: " + isAdmin
 
 		// TODO check whether the user is logged in
 		
@@ -607,7 +611,7 @@ class GalleryController {
 		log.info 'About to render following images: ' + urls
 
         if(gallery) {
-            render view:"view", model:[galleryInstance:gallery, urls: urls] 
+            render view:"view", model:[galleryInstance:gallery, urls: urls, isAdmin: isAdmin] 
 		}
         else {
 			flash.message = "Error while loading the gallery"
@@ -768,4 +772,36 @@ class GalleryController {
 		}
 		zos.close()
     }
+
+
+    def deleteImages = {
+		def gallery = Gallery.get(params?.id)
+		if(!gallery) {
+			log.error "Could not find requested gallery with id == " + params?.id
+			flash.message = "Oooops, we could not find the requested gallery."
+			redirect controller: "main"
+			return
+		}
+
+		println params.key + ", " + gallery.creatorId
+		if(params.key != gallery.creatorId) {
+			log.info "Unauthorized user tried to delete images from gallery with id ${gallery.id}"
+			flash.message = "Only the gallery's creator may delete images."
+			redirect controller: "gallery", action: "view", params: [id: gallery.id]
+			return
+		}
+
+        // first get the selected image ids
+        def images = []
+		log.error 'getting ids for images to delete'
+        params.each {
+            if(it.key instanceof java.lang.String) {
+                if(it.key.startsWith("image")) {
+                    // Assuming that Grails is providing only selected checkboxes!
+                    String imageId = it.key
+                    images.add(imageId.split("_")[1])
+                }
+            }
+        }
+	}
 }

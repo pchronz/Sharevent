@@ -6,13 +6,17 @@
 	<uploader:head css="${resource(dir: 'css', file:'main.css')}"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="layout" content="main" />
-    <title>Sharevent: Easy Photo Sharing</title>
+    <title><g:message code="userDef.companyName" />: <g:message code="userDef.companySlogan" /></title>
   </head>
   <body>
     <div id="viewGalleryViewport">
         <h2>${galleryInstance.title}</h2>
         <p>
 	    <span class="spanBold"><g:message code="userDef.participationLink" args="${[]}" /></span><g:link controller="gallery" action="view" id="${galleryInstance.id}" >${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id)}</g:link>
+		<br />
+		<g:if test="${isAdmin || isNewGallery}">
+			<span class="spanBold"><g:message code="userDef.administrationLink" args="${[]}" /></span><g:link controller="gallery" action="view" id="${galleryInstance.id}" params="${[key: galleryInstance.creatorId]}" >${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id, params: [key: galleryInstance.creatorId])}</g:link>
+		</g:if>
 		<br />
         </p>
 
@@ -38,7 +42,7 @@
 						</g:each>
 					</g:if>
 					<g:else>
-						<p id='emptyGalleryWarningDiv'>This gallery is empty.</p>
+						<p id='emptyGalleryWarningDiv'><g:message code="view.gallery.view.emptyGallery" /></p>
 					</g:else>
 					<div class="galleryHidePhotosDiv" id="galleryHidePhotosDivBottom">
 						<p>
@@ -51,6 +55,7 @@
 
         <p>
 		<!-- TODO add the delete gallery and remove images buttons -->
+			<g:actionSubmit name="removeImages" value="${message(code: 'userDef.deleteSelection')}" action="deleteImages" params="${[key: galleryInstance.creatorId]}" />
         </p>
 
             <g:actionSubmit name="Download" value="${message(code: 'userDef.downloadImages')}" action="download" class="buttons" />
