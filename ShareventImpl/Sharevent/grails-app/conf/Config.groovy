@@ -99,4 +99,20 @@ grails.plugin.cloudfoundry.username = 'peter.chronz@googlemail.com'
 grails.plugin.cloudfoundry.password = 'kurwamac'
 
 
+grails {
+	plugin {
+		aws {
+			credentials {
+				accessKey = "AKIAJTWMYZUPSGX6VEMQ"
+				secretKey = "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"
+			}
+			s3 {
+				// TODO consider setting to private
+				acl = 'public'
+				// TODO set to reliable storage once live
+				rrs = true
+			}
+		}
+	}
+}
 

@@ -42,7 +42,7 @@ class GalleryService {
 		session = SessionFactoryUtils.getSession(sessionFactory, true);
 		session.setFlushMode(FlushMode.COMMIT)
 		// delete the gallery itself
-		if(!gallery.delete(flush: true, failOnError: true)) {
+		if(gallery.delete(flush: true, failOnError: true)) {
 			log.error 'Could not delete gallery'
 			gallery.errors.each {
 				println it

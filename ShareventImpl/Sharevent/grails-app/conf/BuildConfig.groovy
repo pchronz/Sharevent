@@ -29,5 +29,11 @@ grails.project.dependency.resolution = {
         // runtime 'mysql:mysql-connector-java:5.1.13'
     }
 	plugins {
+		runtime (':aws:1.1.9.2') {
+			excludes( name: 'jackson-core-asl')
+		}
+		runtime (name: ':cloud-foundry:1.2') {
+			excludes( name: 'jackson-core-asl')
+		}
 	}
 }

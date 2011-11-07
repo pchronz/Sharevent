@@ -604,7 +604,7 @@ class GalleryController {
 		// to the images in the image DB here and associate the images with those
 		def urls = [:]
 		gallery.images?.each { image ->
-			def url = imageDBService.getImageURL(image)
+			def url = imageDBService.getImageThumbURL(image)
 			urls[image.id.toString()] = url
 		}
 
@@ -697,7 +697,7 @@ class GalleryController {
 				render(text: [success: false] as JSON, contentType: 'text/JSON')
 				return
 			}
-			def imageURL = imageDBService.getImageURL(image)
+			def imageURL = imageDBService.getImageThumbURL(image)
 			log.info  'imageURL == ' + imageURL
 			render(text: [success: true, imageURL: imageURL] as JSON, contentType: 'text/JSON')
 		}
@@ -709,7 +709,6 @@ class GalleryController {
 
         // first get the selected image ids
         def imageIds = []
-		println params
         params.each {
             if(it.key instanceof java.lang.String) {
                 if(it.key.startsWith("image")) {
@@ -822,7 +821,6 @@ class GalleryController {
 	}
 
     def deleteGallery = {
-		println "delette gallry"
 		def gallery = Gallery.get(params.id)
 		if(!gallery) {
 			log.error "Error while retrieving gallery with id ${params.id}"
@@ -837,7 +835,6 @@ class GalleryController {
 			return
 		}
 		
-		println "deleting gallery"
 		try {
 			galleryService.deleteGallery(params.id)
 		}
@@ -846,8 +843,6 @@ class GalleryController {
 			redirect controller: "main"
 			return
 		}
-
-		println "gallery deleted"
 
         flash.message = "${message(code: 'userDef.galleryDeleted')}"
 

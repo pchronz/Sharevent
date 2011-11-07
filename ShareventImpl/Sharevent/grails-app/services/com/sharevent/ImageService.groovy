@@ -70,7 +70,7 @@ class ImageService {
 		// delete it
 		if(bsrc == null) {
 			log.error "Could not read an image. Deleting it. Image.id== " + image.id
-			imageService.deleteImage(image)
+			imageDBService.deleteImage(image)
 			throw new Exception("${message(code: 'userdef.couldNotReadImage')}")
 		}
 
