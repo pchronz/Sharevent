@@ -24,10 +24,10 @@ class BootStrap {
 			SecUserSecRole.create adminUser, adminRole
 	    }
 
-		// remove all orphaned image ids from the imagedb
-		imageDBService.synchronizeImageDB()
-
 		if(Environment.current == Environment.DEVELOPMENT) {
+			// remove all orphaned image ids from the imagedb
+			imageDBService.synchronizeImageDB()
+
 			//creates content for designing the inbox view
 			contentScaffolder.createContent()
 		}

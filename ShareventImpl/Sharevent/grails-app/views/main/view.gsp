@@ -15,7 +15,7 @@
     <div id="mainViewport">
 
 		<g:form controller="gallery" action="createNew">
-			<label for="gallery_title_input" style="display: block;"><g:message code="view.main.view.title" args="${}" /></label>
+			<label for="gallery_title_input" style="display: block;"><g:message code="view.main.view.title" /></label>
 			<input type="text" id="gallery_title_input" name="gallery_title" style="width: 70%;" /> 
 			<input type="submit" value="${message(code:'view.main.view.create')}"  style="width: 20%;"/>
 		</g:form>

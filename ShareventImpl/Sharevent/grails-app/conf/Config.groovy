@@ -95,10 +95,6 @@ grails.plugins.springsecurity.userLookup.userDomainClassName = 'com.sharevent.Se
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'com.sharevent.SecUserSecRole'
 grails.plugins.springsecurity.authority.className = 'com.sharevent.SecRole'
 
-grails.plugin.cloudfoundry.username = 'peter.chronz@googlemail.com'
-grails.plugin.cloudfoundry.password = 'kurwamac'
-
-
 grails {
 	plugin {
 		aws {

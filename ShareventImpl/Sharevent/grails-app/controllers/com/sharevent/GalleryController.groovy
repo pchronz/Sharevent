@@ -608,9 +608,24 @@ class GalleryController {
 			urls[image.id.toString()] = url
 		}
 
+
 		log.info 'About to render following images: ' + urls
 
         if(gallery) {
+			// log that we are displaying the gallery
+			def galleryLog = GalleryLog.findByGallery(gallery)
+			if(!galleryLog) {
+				log.info "No galleryLog found, creating one..."
+				galleryLog = new GalleryLog(gallery: gallery)
+				if(!galleryLog.save(flush: true)) {
+					log.error "Error while saving new galleryLog"
+					galleryLog.errors.each { error ->
+						log.error error
+					}
+				}
+			}
+			// TODO get the real IP from the request
+			galleryLog?.addClickLogEntry(new Date(), "cookie monster")
             render view:"view", model:[galleryInstance:gallery, urls: urls, isAdmin: isAdmin] 
 		}
         else {
@@ -814,6 +829,7 @@ class GalleryController {
 			}
 			catch(e) {
 				log.error "Error while deleting image == ${imageId}"
+				log.error e.toString()
 			}
 		}
 

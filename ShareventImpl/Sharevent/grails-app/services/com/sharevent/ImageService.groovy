@@ -30,14 +30,18 @@ class ImageService {
 		def session = SessionFactoryUtils.getSession(sessionFactory, true);
 		session.setFlushMode(FlushMode.COMMIT)
 
+		imageDBService.delete(image)
+		log.info "Deleted image.id == ${image.id} from imageDB."
+
+
 		def galleryUser = image.galleryUser
 		def gallery = image.gallery
 		galleryUser.removeFromImages(image)
 		gallery.removeFromImages(image)
 
-		imageDBService.delete(image)
-
+		def imageId = image.id
 		image.delete(flush: true)
+		log.info "Deleted domain instance image.id == ${imageId}"
 	}
 
 	def uploadImage(def request, def image, def user) {
