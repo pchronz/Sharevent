@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
   <head>
-    <g:javascript library="prototype" />
+	<g:javascript library="jquery" />
     <g:javascript src="gallery-view.js" />
 	<uploader:head css="${resource(dir: 'css', file:'main.css')}"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -72,47 +72,30 @@
 			<div id="upload_div">
 				<uploader:uploader id="${galleryInstance.id}" url="${[controller: 'gallery', action: 'uploadImage', id: galleryInstance.id]}" multiple="true" sizeLimit="5000000">
 					<uploader:onSubmit>
-						$$('#divContributeSpinner').each(function(s) {
-							ongoingUploads += 1;
-							s.show();
-						});
+						ongoingUploads += 1;
+						$('#divContributeSpinner').show();
 					</uploader:onSubmit>
 					<uploader:onComplete>
-						$$('#galleryHidePhotosDivBottom').each(function(s) {
-							var divEl = document.createElement('div');
-							Element.extend(divEl);
-							// TODO ids have to be unique!
-							divEl.writeAttribute('id', 'all_images');
-							divEl.addClassName('galleryImageDiv');
-							
-							var divImg = document.createElement('img');
-							Element.extend(divImg);
-							if(responseJSON.success == true) {
-								divImg.writeAttribute('src', responseJSON.imageURL);
-								divImg.writeAttribute('width', '250px');
-							}
-							else {
-								divImg.writeAttribute('src', "${resource(dir: 'images', file: 'error.png')}");
-								divImg.writeAttribute('alt', 'Something went wrong while uploading your image.');
-							}
-							Element.insert(divEl, divImg);
+						var attrs = "";
+						if(responseJSON.success == true) {
+							attrs = "src='" + responseJSON.imageURL + "' width='250px'";
+						}
+						else {
+							attrs = "src='" + ${resource(dir: 'images', file: 'error.png')} + "alt='Something went wrong while uploading your image.'";
+						}
+						
+						// TODO add select box
+						// TODO unique ids!
+						var imgDiv = "<div id='all_images' class='galleryImageDiv'><img " + attrs + "></img></div>";
+						$('#galleryHidePhotosDivBottom').before(imgDiv);
 
-							Element.insert(s, {before: divEl});
-							Element.update(s);
+						$('#emptyGalleryWarningDiv').hide();
 
-							$$('#emptyGalleryWarningDiv').each(function(s) {
-								Element.remove(s);
-							});
-						});
-						$$('#divContributeSpinner').each(function(s) {
-							ongoingUploads -= 1;
-							if (ongoingUploads == 0) {
-								s.hide();
-								$$('#divPostUpload').each(function(s) {
-									s.show();
-								});
-							}
-						});
+						ongoingUploads -= 1;
+						if (ongoingUploads == 0) {
+							$('#divContributeSpinner').hide();
+							$('#divPostUpload').show();
+						}
 					</uploader:onComplete>
 				</uploader:uploader>
 			</div>

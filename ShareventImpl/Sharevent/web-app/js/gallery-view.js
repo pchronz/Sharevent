@@ -1,6 +1,6 @@
-document.observe("dom:loaded", function() {
-	$$('.hide').each(function(s) {
-		s.observe('click', function(event) {
+var ongoingUploads = 0;
+$(function() {
+	$('.hide').click(function() {
 			Event.element(event).up(1).siblings().each(function(s) {
 				s.toggle();
 			});
@@ -9,31 +9,19 @@ document.observe("dom:loaded", function() {
 				Event.element(event).update("Show");
 			else
 				Event.element(event).update("Hide");
+	});
+	
+	$('.selectAll').click(function() {
+		Event.element(e).up(1).descendants('.selectBox').each(function(e) {
+			e.checked = true;
 		});
 	});
 	
-	$$('.selectAll').each(function(e) {
-		e.observe('click', function(e) {
-			Event.element(e).up(1).descendants('.selectBox').each(function(e) {
-				e.checked = true;
-			});
+	$('.selectNone').click(function() {
+		Event.element(e).up(1).descendants('.selectBox').each(function(e) {
+			e.checked = false;
 		});
 	});
 	
-	$$('.selectNone').each(function(e) {
-		e.observe('click', function(e) {
-			Event.element(e).up(1).descendants('.selectBox').each(function(e) {
-				e.checked = false;
-			});
-		});
-	});
-	
-	// $$('#upload_div').invoke('hide');
-
-	//$$('#upload_button').each(function(s) {
-	//	s.observe('click', function(event) {
-	//		$$('#upload_div').invoke('show');
-	//	});
-	//});
 });
 
