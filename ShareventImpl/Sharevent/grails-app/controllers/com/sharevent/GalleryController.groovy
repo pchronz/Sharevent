@@ -603,9 +603,12 @@ class GalleryController {
 		// since we cannot use the AWS service in the gsp, we need to create the links
 		// to the images in the image DB here and associate the images with those
 		def urls = [:]
+		def urlsFull = [:]
 		gallery.images?.each { image ->
 			def url = imageDBService.getImageThumbURL(image)
+			def urlFull = imageDBService.getImageURL(image)
 			urls[image.id.toString()] = url
+			urlsFull[image.id.toString()] = urlFull
 		}
 
 
@@ -626,7 +629,7 @@ class GalleryController {
 			}
 			// TODO get the real IP from the request
 			galleryLog?.addClickLogEntry(new Date(), "cookie monster")
-            render view:"view", model:[galleryInstance:gallery, urls: urls, isAdmin: isAdmin] 
+            render view:"view", model:[galleryInstance:gallery, urls: urls, urlsFull: urlsFull, isAdmin: isAdmin] 
 		}
         else {
 			flash.message = "Error while loading the gallery"

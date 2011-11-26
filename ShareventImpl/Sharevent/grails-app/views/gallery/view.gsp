@@ -3,10 +3,21 @@
   <head>
 	<g:javascript library="jquery" />
     <g:javascript src="gallery-view.js" />
+	<g:javascript src="facebox.js" />
 	<uploader:head css="${resource(dir: 'css', file:'main.css')}"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="layout" content="main" />
     <title><g:message code="userDef.companyName" />: <g:message code="userDef.companySlogan" /></title>
+	<g:javascript>
+		$(function(){
+			// FACEBOX
+			console.log('found ' + $('a[rel*="facebox"]').length + ' elements to facebox');
+			$('a[rel*=facebox]').facebox({
+				loadingImage : "${resource(dir: 'images/facebox', file: 'loading.gif')}",
+				closeImage   : "${resource(dir: 'images/facebox', file: 'closelabel.png')}"
+			})
+		});
+	</g:javascript>
   </head>
   <body>
     <div id="viewGalleryViewport">
@@ -29,6 +40,9 @@
 		<g:each var="user" in="${galleryInstance.users}">
 			<div id="user_${user.id}">
 				<div id="userBoxView" >
+					<div class="selectAll">
+						<g:checkBox name="selectAll" /><a href="#">Select All</a>
+					</div>
 					<div class="galleryHidePhotosDiv" id="galleryHidePhotosDivTop">
 						<p>
 							<a class="hide" href="#"><g:message code="userDef.hide" args="${[]}" /></a>
@@ -37,7 +51,9 @@
 					<g:if test="${urls.size() > 0}">
 						<g:each var="imageUrl" in="${urls}" >
 							<div id="all_images" class="galleryImageDiv" >
-								<img src="${imageUrl.value}" width="250px" />
+								<a href="${urlsFull[imageUrl.key]}">
+									<img src="${imageUrl.value}" id="img_${imageUrl.key}" width="250px" />
+								</a>
 								<br />
 								<g:checkBox class="selectBox" name="image_${imageUrl.key}" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
 							</div>
@@ -50,6 +66,9 @@
 						<p>
 							<a class="hide" href="#"><g:message code="userDef.hide" args="${[]}" /></a>
 						</p>
+					</div>
+					<div class="selectAll">
+						<g:checkBox name="selectAll" /><a href="#">Select All</a>
 					</div>
 				</div>
 			</div>
@@ -74,14 +93,18 @@
 					<uploader:onSubmit>
 						ongoingUploads += 1;
 						$('#divContributeSpinner').show();
+						console.log('On submit done.');
 					</uploader:onSubmit>
 					<uploader:onComplete>
 						var attrs = "";
+						var url = "";
 						if(responseJSON.success == true) {
-							attrs = "src='" + responseJSON.imageURL + "' width='250px'";
+							url = responseJSON.imageURL;
+							attrs = "src='" + url + "' width='250px'";
 						}
 						else {
-							attrs = "src='" + ${resource(dir: 'images', file: 'error.png')} + "alt='Something went wrong while uploading your image.'";
+							url = ${resource(dir: 'images', file: 'error.png')};
+							attrs = "src='" + url + "alt='Something went wrong while uploading your image.'";
 						}
 						
 						// TODO add select box
@@ -96,6 +119,7 @@
 							$('#divContributeSpinner').hide();
 							$('#divPostUpload').show();
 						}
+						console.log("On complete done.");
 					</uploader:onComplete>
 				</uploader:uploader>
 			</div>

@@ -19,7 +19,6 @@
 			<input type="text" id="gallery_title_input" name="gallery_title" style="width: 70%;" /> 
 			<input type="submit" value="${message(code:'view.main.view.create')}"  style="width: 20%;"/>
 		</g:form>
-		<g:link controller="gallery" action="viewExample"><g:message code="userDef.viewExampleGallery" args="${[]}" /></g:link>
     </div>
 </body>
 </html>
