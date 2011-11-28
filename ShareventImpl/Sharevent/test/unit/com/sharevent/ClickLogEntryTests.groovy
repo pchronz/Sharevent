@@ -2,7 +2,7 @@ package com.sharevent
 
 import grails.test.*
 
-class AdsControllerTests extends ControllerUnitTestCase {
+class ClickLogEntryTests extends GrailsUnitTestCase {
     protected void setUp() {
         super.setUp()
     }

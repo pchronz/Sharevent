@@ -84,6 +84,7 @@ log4j = {
            'net.sf.ehcache.hibernate'
 
     warn   'org.mortbay.log'
+	info   'grails.app'
 }
 
 sharevent = [maxImageWidth: 300, maxImageHeight: 300, imageDBCollection: "images", imageDBThumbsCollection: "imageThumbs", imageDB: "${appName}".toLowerCase(), imageDBImageId: "imageKey"]
@@ -94,8 +95,20 @@ grails.plugins.springsecurity.userLookup.userDomainClassName = 'com.sharevent.Se
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'com.sharevent.SecUserSecRole'
 grails.plugins.springsecurity.authority.className = 'com.sharevent.SecRole'
 
-grails.plugin.cloudfoundry.username = 'peter.chronz@googlemail.com'
-grails.plugin.cloudfoundry.password = 'kurwamac'
-
-
+grails {
+	plugin {
+		aws {
+			credentials {
+				accessKey = "AKIAJTWMYZUPSGX6VEMQ"
+				secretKey = "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"
+			}
+			s3 {
+				// TODO consider setting to private
+				acl = 'public'
+				// TODO set to reliable storage once live
+				rrs = true
+			}
+		}
+	}
+}
 

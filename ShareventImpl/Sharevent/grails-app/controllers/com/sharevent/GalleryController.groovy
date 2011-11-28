@@ -582,32 +582,54 @@ class GalleryController {
 			return
 		}
 
-		redirect action: 'view', params: [id: gallery.id]
+		// entering creatorId as params.key, so that the administration link will be shown
+		redirect action: 'view', params: [id: gallery.id, key: gallery.creatorId]
 	}
 
     def view = {
-        def gallery= Gallery.get(params.id)
+        def gallery = Gallery.get(params.id)
 
 		if(!gallery) {
 			flash.message = "Error while loading the gallery"
 			redirect controller: 'main'
 			return
 		}
+		
+		boolean isAdmin = params.key == gallery.creatorId ? true : false
+		log.info "Viewing gallery ${gallery.id} as admin: " + isAdmin
 
 		// TODO check whether the user is logged in
 		
 		// since we cannot use the AWS service in the gsp, we need to create the links
 		// to the images in the image DB here and associate the images with those
 		def urls = [:]
+		def urlsFull = [:]
 		gallery.images?.each { image ->
-			def url = imageDBService.getImageURL(image)
+			def url = imageDBService.getImageThumbURL(image)
+			def urlFull = imageDBService.getImageURL(image)
 			urls[image.id.toString()] = url
+			urlsFull[image.id.toString()] = urlFull
 		}
+
 
 		log.info 'About to render following images: ' + urls
 
         if(gallery) {
-            render view:"view", model:[galleryInstance:gallery, urls: urls] 
+			// log that we are displaying the gallery
+			def galleryLog = GalleryLog.findByGallery(gallery)
+			if(!galleryLog) {
+				log.info "No galleryLog found, creating one..."
+				galleryLog = new GalleryLog(gallery: gallery)
+				if(!galleryLog.save(flush: true)) {
+					log.error "Error while saving new galleryLog"
+					galleryLog.errors.each { error ->
+						log.error error
+					}
+				}
+			}
+			// TODO get the real IP from the request
+			galleryLog?.addClickLogEntry(new Date(), "cookie monster")
+            render view:"view", model:[galleryInstance:gallery, urls: urls, urlsFull: urlsFull, isAdmin: isAdmin] 
 		}
         else {
 			flash.message = "Error while loading the gallery"
@@ -693,7 +715,7 @@ class GalleryController {
 				render(text: [success: false] as JSON, contentType: 'text/JSON')
 				return
 			}
-			def imageURL = imageDBService.getImageURL(image)
+			def imageURL = imageDBService.getImageThumbURL(image)
 			log.info  'imageURL == ' + imageURL
 			render(text: [success: true, imageURL: imageURL] as JSON, contentType: 'text/JSON')
 		}
@@ -705,7 +727,6 @@ class GalleryController {
 
         // first get the selected image ids
         def imageIds = []
-		println params
         params.each {
             if(it.key instanceof java.lang.String) {
                 if(it.key.startsWith("image")) {
@@ -716,6 +737,8 @@ class GalleryController {
             }
         }
 
+		def images = []
+
 		if(imageIds.size() == 0) {
 			log.info "No image to show, redirecting to gallery with id ${params.id}"
 			flash.message = "There are no images selected to download."
@@ -724,15 +747,20 @@ class GalleryController {
 		}
 		else {
 			// get the corresponding images
-			def images = []
+			images = []
 			imageIds.each { imageId ->
-				def image = Image.get(imageId)
-				if(!image) {
-					log.error "Could not retrieve image w/ id ${imageId} for downloading."
-					flash.message = "Some of the selected images could not be downloaded."
+				try {
+					def image = Image.get(imageId.toLong())
+					if(!image) {
+						log.error "Could not retrieve image w/ id ${imageId} for downloading."
+						flash.message = "Some of the selected images could not be downloaded."
+					}
+					else 
+						images.add(image)
 				}
-				else 
-					images.add(image)
+				catch(e) {
+					log.error "Could not parse imagedId ${imageId} to integer"
+				}
 			}
 		}
 
@@ -760,5 +788,83 @@ class GalleryController {
 			origin.close();
 		}
 		zos.close()
+    }
+
+
+    def deleteImages = {
+		def gallery = Gallery.get(params?.id)
+		if(!gallery) {
+			log.error "Could not find requested gallery with id == " + params?.id
+			flash.message = "Oooops, we could not find the requested gallery."
+			redirect controller: "main"
+			return
+		}
+
+		if(params.key != gallery.creatorId) {
+			log.info "Unauthorized user tried to delete images from gallery with id ${gallery.id}"
+			flash.message = "Only the gallery's creator may delete images."
+			redirect controller: "gallery", action: "view", params: [id: gallery.id]
+			return
+		}
+
+        // first get the selected image ids
+        def images = []
+		log.error 'getting ids for images to delete'
+        params.each {
+            if(it.key instanceof java.lang.String) {
+                if(it.key.startsWith("image")) {
+                    // Assuming that Grails is providing only selected checkboxes!
+                    String imageId = it.key
+                    images.add(imageId.split("_")[1])
+                }
+            }
+        }
+		
+		// remove the images
+		images.each { imageId ->
+			try {
+				def image = Image.get(imageId)
+				def galleryUser = image.galleryUser
+				if(imageService.deleteImage(image)) {
+					log.error "Error while deleting image == ${imageId}"
+				}
+				galleryUser.save(flush: true, failOnError: true)
+			}
+			catch(e) {
+				log.error "Error while deleting image == ${imageId}"
+				log.error e.toString()
+			}
+		}
+
+		redirect action: "view", params: [key: gallery.creatorId, id: gallery.id]
+	}
+
+    def deleteGallery = {
+		def gallery = Gallery.get(params.id)
+		if(!gallery) {
+			log.error "Error while retrieving gallery with id ${params.id}"
+			flash.message = "Error while deleting the gallery."
+			redirect controller: "main"
+			return
+		}
+		if(params.key != gallery.creatorId) {
+			log.info "Non-creator tried to remove gallery ${gallery.id}"
+			flash.message = "Only the gallery's creator may delete it"
+			redirect action: "view", params: [id: params.id]
+			return
+		}
+		
+		try {
+			galleryService.deleteGallery(params.id)
+		}
+		catch(e) {
+			flash.message = "Something went wrong while we tried to delete your gallery."
+			redirect controller: "main"
+			return
+		}
+
+        flash.message = "${message(code: 'userDef.galleryDeleted')}"
+
+        redirect(controller: "main", action: "index")
     }
 }

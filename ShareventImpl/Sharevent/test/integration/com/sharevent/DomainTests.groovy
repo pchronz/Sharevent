@@ -19,7 +19,7 @@ class DomainTests extends GroovyTestCase {
 	}
 
 	void testPopulateAll() {
-		// create 3 galleiers each w/ 2 users, each w/ 2 images + 1 image per gallery
+		// create 3 galleries each w/ 2 users, each w/ 2 images + 1 image per gallery
 		populateAll()
 
 		// check the amount of images associate with each gallery
@@ -27,7 +27,7 @@ class DomainTests extends GroovyTestCase {
 			assertEquals 6, gallery.images.size()
 		}
 
-		// check the amount of images associated with each user
+		// check the number of images associated with each user
 		GalleryUser.list().each { user ->
 			assertEquals 2, user.images.size()
 		}
@@ -86,9 +86,10 @@ class DomainTests extends GroovyTestCase {
 		galleryUser.addToGalleries gallery
 		assertNotNull galleryUser.save(flush: true)
 		
-		Image image = null
+		def images = []
 		(1..2).each {
-			image = new Image()
+			def image = new Image()
+			images += image
 
 			galleryUser.addToImages image
 			gallery.addToImages image
@@ -96,9 +97,14 @@ class DomainTests extends GroovyTestCase {
 
 		assertNotNull galleryUser.save(flush: true)
 		assertNotNull gallery.save(flush: true)
-		assertNotNull image.save(flush: true)
+		images.each { image ->
+			assertNotNull image.save(flush: true)
+		}
 
-		[gallery, galleryUser, image]
+		assertEquals 2, galleryUser.images.size()
+		assertEquals 2, gallery.images.size()
+
+		[gallery, galleryUser, images]
     }
 
 	private def populateAll() {
@@ -106,8 +112,8 @@ class DomainTests extends GroovyTestCase {
 		(1..3).each {
 			Gallery gallery = null
 			GalleryUser galleryUser = null
-			Image image = null
-			(gallery, galleryUser, image) = createAll()
+			def images = null
+			(gallery, galleryUser, images) = createAll()
 
 			// add two more users, each with two images to the gallery
 			(1..2).each {
@@ -131,9 +137,9 @@ class DomainTests extends GroovyTestCase {
 						fail()
 					}
 				}
-				assertEquals 2, user.images.size()
 				assertNotNull gallery.save(flush: true)
 				assertNotNull user.save(flush: true)
+				assertEquals 2, GalleryUser.get(user.id).images.size()
 			}
 		}
 	}
