@@ -1,13 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
   <head>
-	<g:javascript library="jquery" />
     <g:javascript src="gallery-view.js" />
 	<g:javascript src="facebox.js" />
 	<uploader:head css="${resource(dir: 'css', file:'main.css')}"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="layout" content="main" />
-    <title><g:message code="userDef.companyName" />: <g:message code="userDef.companySlogan" /></title>
+    <title>
+    	<g:message code="userDef.companyName" />: <g:message code="userDef.companySlogan" />
+    </title>
+    <r:require modules="bootstrap"/>
 	<g:javascript>
 		$(function(){
 			// FACEBOX
@@ -50,17 +52,21 @@
 					</div>
 					<g:if test="${urls.size() > 0}">
 						<g:each var="imageUrl" in="${urls}" >
-							<div id="all_images" class="galleryImageDiv" >
-								<a href="${urlsFull[imageUrl.key]}">
-									<img src="${imageUrl.value}" id="img_${imageUrl.key}" width="250px" />
-								</a>
-								<br />
-								<g:checkBox class="selectBox" name="image_${imageUrl.key}" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
-							</div>
+							<ul class="media-grid">
+						        <li>
+						          <a href="${urlsFull[imageUrl.key]}">
+						            <img src="${imageUrl.value}" id="img_${imageUrl.key}" width="250px" />
+						          </a>
+						          <g:checkBox class="selectBox" name="image_${imageUrl.key}" value="${true}" />
+						          <g:message code="userDef.selectMe" args="${[]}" /> 
+						        </li>
+						    </ul>
 						</g:each>
 					</g:if>
 					<g:else>
-						<p id='emptyGalleryWarningDiv'><g:message code="view.gallery.view.emptyGallery" /></p>
+						<p id='emptyGalleryWarningDiv'>
+							<g:message code="view.gallery.view.emptyGallery" />
+						</p>
 					</g:else>
 					<div class="galleryHidePhotosDiv" id="galleryHidePhotosDivBottom">
 						<p>

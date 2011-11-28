@@ -96,7 +96,7 @@
             </table>
           </div>
           
-          <div id="gI_${gallery?.id}" class="gBody">
+          <div class="gBody" id="gI_${gallery?.id}">
             <g:render template="gImages" />
           </div>
           
