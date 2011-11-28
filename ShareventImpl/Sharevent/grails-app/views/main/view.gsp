@@ -9,15 +9,24 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="layout" content="main" />
-    <title><g:message code="userDef.companyName" args="${[]}" />: <g:message code="userDef.companySlogan" args="${[]}" /></title>
+    <title>
+      <g:message code="userDef.companyName" args="${[]}" />: 
+      <g:message code="userDef.companySlogan" args="${[]}" />
+    </title>
+    <r:require modules="bootstrap"/>
   </head>
   <body>
     <div id="mainViewport">
 
 		<g:form controller="gallery" action="createNew">
-			<label for="gallery_title_input" style="display: block;"><g:message code="view.main.view.title" /></label>
-			<input type="text" id="gallery_title_input" name="gallery_title" style="width: 70%;" /> 
-			<input type="submit" value="${message(code:'view.main.view.create')}"  style="width: 20%;"/>
+      <div class="row">
+        <div class="span10">
+          <input class="span10" placeholder="Geben sie hier den Ihrer Galerie ein" type="text" id="gallery_title_input" name="gallery_title" />
+        </div>
+         <div class="span2">
+          <input class="btn primary" type="submit" value="${message(code:'view.main.view.create')}" />
+         </div>
+      </div>
 		</g:form>
     </div>
 </body>
