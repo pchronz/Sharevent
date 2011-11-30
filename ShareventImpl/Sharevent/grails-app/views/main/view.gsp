@@ -13,7 +13,7 @@
       <g:message code="userDef.companyName" args="${[]}" />: 
       <g:message code="userDef.companySlogan" args="${[]}" />
     </title>
-    <r:require modules="bootstrap"/>
+    <r:require modules="bootstrap, jquery"/>
   </head>
   <body>
     <div id="mainViewport">

@@ -9,7 +9,7 @@
     <title>
     	<g:message code="userDef.companyName" />: <g:message code="userDef.companySlogan" />
     </title>
-    <r:require modules="bootstrap"/>
+    <r:require modules="bootstrap, jquery"/>
 	<g:javascript>
 		$(function(){
 			// FACEBOX
@@ -23,7 +23,7 @@
   </head>
   <body>
     <div id="viewGalleryViewport">
-        <h2>${galleryInstance.title}</h2>
+        <h1>${galleryInstance.title}</h1>
         <p>
 	    <span class="spanBold"><g:message code="userDef.participationLink" args="${[]}" /></span><g:link controller="gallery" action="view" id="${galleryInstance.id}" >${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id)}</g:link>
 		<br />
@@ -35,9 +35,12 @@
 
         <g:form controller="gallery" id="${galleryInstance.id}">
 
-		<div class="buttons">
-			<g:actionSubmit name="Download" value="${message(code: 'userDef.downloadImages')}" action="download" class="save" />
-		</div>
+		<g:actionSubmit 
+					name="Download" 
+					value="${message(code: 'userDef.downloadImages')}" 
+					action="download" 
+					class="btn primary" />
+
 	<!-- only show the users contribution if it is not empty -->
 		<g:each var="user" in="${galleryInstance.users}">
 			<div id="user_${user.id}">
@@ -55,7 +58,7 @@
 							<ul class="media-grid">
 						        <li>
 						          <a href="${urlsFull[imageUrl.key]}">
-						            <img src="${imageUrl.value}" id="img_${imageUrl.key}" width="250px" />
+						            <img src="${imageUrl.value}" id="img_${imageUrl.key}"/>
 						          </a>
 						          <g:checkBox class="selectBox" name="image_${imageUrl.key}" value="${true}" />
 						          <g:message code="userDef.selectMe" args="${[]}" /> 
@@ -80,14 +83,24 @@
 			</div>
 		</g:each>
 
-        <div class="buttons">
-            <g:actionSubmit name="Download" value="${message(code: 'userDef.downloadImages')}" action="download" class="save" />
+        <g:actionSubmit
+					name="Download" 
+					value="${message(code: 'userDef.downloadImages')}" 
+					action="download" 
+					class="btn primary" />
 		<g:if test="${isAdmin}">
 			<g:hiddenField name="key" value="${galleryInstance.creatorId}" />
-			<g:actionSubmit name="removeImages" value="${message(code: 'userDef.deleteSelection')}" action="deleteImages" class="delete" />
-			<g:actionSubmit name="removeGallery" value="${message(code: 'userDef.deleteGallery')}" action="deleteGallery" class="delete" />
+			<g:actionSubmit 
+					name="removeImages" 
+					value="${message(code: 'userDef.deleteSelection')}" 
+					ction="deleteImages" 
+					class="btn" />
+			<g:actionSubmit 
+					name="removeGallery" 
+					value="${message(code: 'userDef.deleteGallery')}" 
+					action="deleteGallery" 
+					class="btn danger" />
 		</g:if>
-        </div>
 
 
         </g:form>
