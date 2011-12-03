@@ -9,7 +9,7 @@
     <title>
     	<g:message code="userDef.companyName" />: <g:message code="userDef.companySlogan" />
     </title>
-    <r:require modules="bootstrap, jquery"/>
+    <r:require modules="bootstrap, jquery, gallery-view"/>
 	<g:javascript>
 		$(function(){
 			// FACEBOX
