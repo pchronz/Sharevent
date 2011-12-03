@@ -11,9 +11,9 @@
     	    <g:if test="${flash.message}">
     			<div class="message">${flash.message}</div>
     	    </g:if>
-            <div id="spinner" class="spinner">
+            <%--<div id="spinner" class="spinner">
                 <img src="${resource(dir:'images',file:'spinner.gif')}" alt="${message(code:'spinner.alt',default:'Loading...')}" />
-            </div>
+            </div>--%>
             <div id="shareventLogo" >
                 <g:link controller="main" action="view"><img src="${resource(dir:'images',file:'sharevent_logo.png')}" alt="Sharevent" border="0" />
                 </g:link>

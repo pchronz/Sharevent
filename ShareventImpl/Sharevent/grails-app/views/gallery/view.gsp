@@ -1,8 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
   <head>
-    <g:javascript src="gallery-view.js" />
-	<g:javascript src="facebox.js" />
 	<uploader:head css="${resource(dir: 'css', file:'main.css')}"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="layout" content="main" />
