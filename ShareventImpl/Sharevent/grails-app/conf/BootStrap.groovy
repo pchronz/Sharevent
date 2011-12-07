@@ -25,11 +25,7 @@ class BootStrap {
 	    }
 
 		if(Environment.current == Environment.DEVELOPMENT) {
-			// remove all orphaned image ids from the imagedb
-			imageDBService.synchronizeImageDB()
-
-			//creates content for designing the inbox view
-			contentScaffolder.createContent()
+			// do fancy stuff
 		}
 
     }
