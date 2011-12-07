@@ -7,17 +7,7 @@
     <title>
     	<g:message code="userDef.companyName" />: <g:message code="userDef.companySlogan" />
     </title>
-    <r:require modules="bootstrap, jquery, gallery-view"/>
-	<g:javascript>
-		$(function(){
-			// FACEBOX
-			console.log('found ' + $('a[rel*="facebox"]').length + ' elements to facebox');
-			$('a[rel*=facebox]').facebox({
-				loadingImage : "${resource(dir: 'images/facebox', file: 'loading.gif')}",
-				closeImage   : "${resource(dir: 'images/facebox', file: 'closelabel.png')}"
-			})
-		});
-	</g:javascript>
+    <r:require modules="foundation, jquery, gallery-view"/>
   </head>
   <body>
     <div id="viewGalleryViewport">
@@ -52,8 +42,8 @@
 						</p>
 					</div>
 					<g:if test="${urls.size() > 0}">
-						<g:each var="imageUrl" in="${urls}" >
-							<ul class="media-grid">
+						<ul class="block-grid mobile four-up">
+							<g:each var="imageUrl" in="${urls}" >
 						        <li>
 						          <a href="${urlsFull[imageUrl.key]}">
 						            <img src="${imageUrl.value}" id="img_${imageUrl.key}"/>
@@ -61,8 +51,8 @@
 						          <g:checkBox class="selectBox" name="image_${imageUrl.key}" value="${true}" />
 						          <g:message code="userDef.selectMe" args="${[]}" /> 
 						        </li>
-						    </ul>
-						</g:each>
+							</g:each>
+						</ul>
 					</g:if>
 					<g:else>
 						<p id='emptyGalleryWarningDiv'>
