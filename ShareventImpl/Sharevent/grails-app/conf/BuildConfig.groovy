@@ -32,7 +32,8 @@ grails.project.dependency.resolution = {
 		runtime (':aws:1.1.9.2') {
 			excludes( name: 'jackson-core-asl')
 		}
-        compile ":resources:1.1.3"
+        compile ":resources:1.0.2"
+        compile ":spring-security-core:1.1.2"
         compile ":jquery:1.7"
 
 		//runtime (name: ':cloud-foundry:1.2') {

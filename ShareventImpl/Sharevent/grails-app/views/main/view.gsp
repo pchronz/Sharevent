@@ -24,7 +24,7 @@
           <input class="large nice input-text" placeholder="Geben sie hier den Ihrer Galerie ein" type="text" id="gallery_title_input" name="gallery_title" />
         </div>
          <div class="two columns">
-          <input class="btn primary" class="large blue nice button radius" type="submit" value="${message(code:'view.main.view.create')}" />
+          <input class="large blue nice button radius" type="submit" value="${message(code:'view.main.view.create')}" />
          </div>
       </div>
 		</g:form>
