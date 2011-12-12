@@ -7,7 +7,7 @@
     <title>
     	<g:message code="userDef.companyName" />: <g:message code="userDef.companySlogan" />
     </title>
-    <r:require modules="foundation, jquery, gallery-view"/>
+    <r:require modules="bootstrap, jquery, gallery-view"/>
   </head>
   <body>
     <div id="viewGalleryViewport">
@@ -42,7 +42,7 @@
 						</p>
 					</div>
 					<g:if test="${urls.size() > 0}">
-						<ul class="block-grid mobile four-up">
+						<ul>
 							<g:each var="imageUrl" in="${urls}" >
 						        <li>
 						          <a href="${urlsFull[imageUrl.key]}">
