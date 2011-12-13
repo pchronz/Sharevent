@@ -255,14 +255,14 @@ td.errors textarea {
 	padding: 10px;
 }
 
-#userBoxView {
-	border: 2px solid #A4A4A4;
-	padding: 10px;
-	margin-top: 10px;
-	margin-bottom: 10px;
-  -moz-border-radius: 8px;
-  -webkit-border-radius: 8px;
-  border-radius: 8px;
+.userBoxView {
+    border: 2px solid #A4A4A4;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
 }
 
 .galleryImageDiv {

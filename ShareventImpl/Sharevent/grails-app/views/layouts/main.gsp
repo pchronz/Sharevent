@@ -17,14 +17,14 @@
     	    </g:if>
 
             <div class="row">
-                <div class="ten columns centered">
+                <div class="nine columns centered">
                     <g:link controller="main" action="view"><img src="${resource(dir:'images',file:'sharevent_logo.png')}" alt="Sharevent" border="0" />
                     </g:link>
                 </div>
             </div>
 
             <div class="row">
-                <div class="ten columns centered">
+                <div class="nine columns centered">
                     <g:layoutBody />
                 </div>
             </div>

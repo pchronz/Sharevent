@@ -20,11 +20,18 @@
 
 		<g:form controller="gallery" action="createNew">
       <div class="row">
-        <div class="eight columns">
-          <input class="large nice input-text" placeholder="Geben sie hier den Ihrer Galerie ein" type="text" id="gallery_title_input" name="gallery_title" />
+        <div class="seven columns">
+          <input  class="large nice input-text"
+                  style="height:34px;font-size:22px"
+                  placeholder="Name der Galerie" 
+                  type="text" 
+                  id="gallery_title_input" 
+                  name="gallery_title" />
         </div>
          <div class="two columns">
-          <input class="large blue nice button radius" type="submit" value="${message(code:'view.main.view.create')}" />
+          <f:actionSubmit
+              class="large blue nice button radius" 
+              value="${message(code:'view.main.view.create')}" />
          </div>
       </div>
 		</g:form>
