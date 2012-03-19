@@ -3,7 +3,6 @@ package com.sharevent
 import java.awt.*
 import java.awt.geom.*
 import java.awt.image.*
-import com.mongodb.Mongo
 import javax.imageio.stream.MemoryCacheImageOutputStream
 import javax.imageio.ImageIO
 import java.io.ByteArrayInputStream
