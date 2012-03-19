@@ -4,7 +4,6 @@ import com.sharevent.Image
 import com.sharevent.SecRole
 import com.sharevent.SecUser
 import com.sharevent.SecUserSecRole
-import com.mongodb.Mongo
 import grails.util.Environment
 
 
@@ -26,10 +25,10 @@ class BootStrap {
 
 		if(Environment.current == Environment.DEVELOPMENT) {
 			// remove all orphaned image ids from the imagedb
-			imageDBService.synchronizeImageDB()
+//			imageDBService.synchronizeImageDB()
 
 			//creates content for designing the inbox view
-			contentScaffolder.createContent()
+//			contentScaffolder.createContent()
 		}
 
     }
