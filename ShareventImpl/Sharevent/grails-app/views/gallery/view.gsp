@@ -10,13 +10,10 @@
   </head>
   <body>
 
-
 	<div class="row">
 		<div class="span12 galleryTitle">
 			<h2>${galleryInstance.title}</h2>
 		</div>
-		
-
 	</div>
 	
 	<div class="row">
@@ -31,7 +28,6 @@
 	<g:if test="${isAdmin}">
 		<div class="row">
 			<div class="span12">
-				
 				<g:message code="userDef.administrationLink" args="${[]}" />
 				<g:link controller="gallery" action="view" id="${galleryInstance.id}" params="${[key: galleryInstance.creatorId]}" >
 					${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id, params: [key: galleryInstance.creatorId])}
@@ -40,14 +36,14 @@
 		</div>
 	</g:if>
 
-
-
-	
         <g:form controller="gallery" id="${galleryInstance.id}">
 
+		<r:script type="text/javascript" charset="utf-8">
+			function selectAllImages(boxId){
+				$('input[type=checkbox]').attr('checked',$('#'+boxId).is(':checked'));
+			}		
+		</r:script>
 
-		<!-- only show the users contribution if it is not empty -->
-		<g:each var="user" in="${galleryInstance.users}">
 		
 		<div class="row control">
 			<g:if test="${urls.size() > 0}">
@@ -59,8 +55,10 @@
 						action="download"  />
 				</div>
 				<div class="span2">
-					<g:checkBox name="selectAll" />
-					<a href="#">Select All</a>
+					<g:checkBox id="selectAll" 
+						name="selectAll" 
+						onclick="selectAllImages('selectAll')"/>
+						Select All
 				</div>
 				
 			</g:if>
@@ -95,27 +93,24 @@
 		</div>
 		
 <%--
-					<g:if test="${urls.size() > 0}">
-						<g:each var="imageUrl" in="${urls}" >
-							
-						          <a href="${urlsFull[imageUrl.key]}">
-						            <img src="${imageUrl.value}" id="img_${imageUrl.key}" width="250px" />
-						          </a>
-						          <g:checkBox class="selectBox" name="image_${imageUrl.key}" value="${true}" />
-						          <g:message code="userDef.selectMe" args="${[]}" /> 
-						
-						</g:each>
-					</g:if>
-					<g:else>
-						<p id='emptyGalleryWarningDiv'>
-							<g:message code="view.gallery.view.emptyGallery" />
-						</p>
-					</g:else>
+<g:if test="${urls.size() > 0}">
+	<g:each var="imageUrl" in="${urls}" >
+		
+		  <a href="${urlsFull[imageUrl.key]}">
+		    <img src="${imageUrl.value}" id="img_${imageUrl.key}" width="250px" />
+		  </a>
+		  <g:checkBox class="selectBox" name="image_${imageUrl.key}" value="${true}" />
+		  <g:message code="userDef.selectMe" args="${[]}" /> 
+	
+	</g:each>
+</g:if>
+<g:else>
+	<p id='emptyGalleryWarningDiv'>
+		<g:message code="view.gallery.view.emptyGallery" />
+	</p>
+</g:else>
 --%>
 
-
-				
-		</g:each>
 
 		<g:if test="${urls.size() > 0}">
 			<div class="row">

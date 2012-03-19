@@ -13,10 +13,27 @@
       <g:message code="userDef.companyName" args="${[]}" />: 
       <g:message code="userDef.companySlogan" args="${[]}" />
     </title>
-    <r:require modules="bootstrap"/>
   </head>
   <body>
-
+	<div class="row">
+		<div class="span8">
+			<g:if test="${flash.error}">
+				<div class="alert alert-error">
+					 <a class="close" data-dismiss="alert">×</a>
+					${flash.error}
+				</div>
+			</g:if>
+		</div>
+		<div class="span8">
+			<g:if test="${flash.message}">
+				<div class="alert alert-info">
+					 <a class="close" data-dismiss="alert">×</a>
+					${flash.message}
+				</div>
+			</g:if>
+		</div>
+	</div>
+	
 	<g:form controller="gallery" action="createNew">
 		<div class="row">
 			<div class="span8">
