@@ -56,7 +56,8 @@
 				</div>
 				<div class="span2">
 					<g:checkBox id="selectAll" 
-						name="selectAll" 
+						name="selectAll"
+						value="${true}"
 						onclick="selectAllImages('selectAll')"/>
 						Select All
 				</div>
@@ -92,26 +93,6 @@
 			</div>			
 		</div>
 		
-<%--
-<g:if test="${urls.size() > 0}">
-	<g:each var="imageUrl" in="${urls}" >
-		
-		  <a href="${urlsFull[imageUrl.key]}">
-		    <img src="${imageUrl.value}" id="img_${imageUrl.key}" width="250px" />
-		  </a>
-		  <g:checkBox class="selectBox" name="image_${imageUrl.key}" value="${true}" />
-		  <g:message code="userDef.selectMe" args="${[]}" /> 
-	
-	</g:each>
-</g:if>
-<g:else>
-	<p id='emptyGalleryWarningDiv'>
-		<g:message code="view.gallery.view.emptyGallery" />
-	</p>
-</g:else>
---%>
-
-
 		<g:if test="${urls.size() > 0}">
 			<div class="row">
 				<div class="span3">
@@ -126,15 +107,17 @@
 						<g:actionSubmit 
 							name="removeImages" 
 							value="${message(code: 'userDef.deleteSelection')}" 
-							action="deleteImages" 
-							class="btn btn-warning span3" />
+							action="deleteImages"
+							onclick="if(!confirm('Are you sure?')) return false" 
+							class="btn btn-info span3" />
 					</div>
 					<div class="span3">
 						<g:actionSubmit 
 							name="removeGallery" 
 							value="${message(code: 'userDef.deleteGallery')}" 
 							action="deleteGallery"
-							class="btn btn-danger span3" />
+							onclick="if(!confirm('Are you sure?')) return false"
+							class="btn span3" />
 					</div>
 				</g:if>
 			</div>
@@ -152,44 +135,14 @@
 				url="${[controller: 'gallery', action: 'uploadImage', id: galleryInstance.id]}"
 				multiple="true" 
 				sizeLimit="5000000">
+				<uploader:onComplete>
+					window.location.reload(true);
+				</uploader:onComplete>
 			</uploader:uploader>
 		</div>
 	</div>
 	
 
-<%--
-	<uploader:onSubmit>
-			ongoingUploads += 1;
-			$('#divContributeSpinner').show();
-			console.log('On submit done.');
-		</uploader:onSubmit>
-		<uploader:onComplete>
-			var attrs = "";
-			var url = "";
-			if(responseJSON.success == true) {
-				url = responseJSON.imageURL;
-				attrs = "src='" + url + "' width='250px'";
-			}
-			else {
-				url = ${resource(dir: 'images', file: 'error.png')};
-				attrs = "src='" + url + "alt='Something went wrong while uploading your image.'";
-			}
-			
-			// TODO add select box
-			// TODO unique ids!
-			var imgDiv = "<div id='all_images' class='galleryImageDiv'><img " + attrs + "></img></div>";
-			$('#galleryHidePhotosDivBottom').before(imgDiv);
 
-			$('#emptyGalleryWarningDiv').hide();
-
-			ongoingUploads -= 1;
-			if (ongoingUploads == 0) {
-				$('#divContributeSpinner').hide();
-				$('#divPostUpload').show();
-			}
-			console.log("On complete done.");
-		</uploader:onComplete>
-	</uploader:uploader>
---%>
 </body>
 </html>
