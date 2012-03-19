@@ -18,7 +18,7 @@ modules = {
 	}
 
 	bootstrap {
-		defaultBundle 'sv'
+		defaultBundle 'bs'
 		dependsOn 'bootstrap-responsive'
 		dependsOn 'bootstrap-css'
 		dependsOn 'bootstrap-js'	
@@ -31,6 +31,13 @@ modules = {
 	sharevent {
 		defaultBundle 'sv'
 		dependsOn 'sharevent-css'
+	}
+
+	overrides {
+		fileuploader{
+			defaultBundle 'sv'
+			resource url:'/css/uploader.css'
+		}
 	}
 	
 

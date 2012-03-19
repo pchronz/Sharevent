@@ -6,17 +6,14 @@
     <title>
     	<g:message code="userDef.companyName" />: <g:message code="userDef.companySlogan" />
     </title>
-
-
-	<uploader:head css="${resource(dir: 'css', file:'main.css')}"/>
+	<r:require module="fileuploader" />
   </head>
   <body>
 
 
 	<div class="row">
-		<div class="span12">
+		<div class="span12 galleryTitle">
 			<h2>${galleryInstance.title}</h2>
-
 		</div>
 		
 
@@ -52,8 +49,8 @@
 		<!-- only show the users contribution if it is not empty -->
 		<g:each var="user" in="${galleryInstance.users}">
 		
-		<g:if test="${urls.size() > 0}">
-			<div class="row control">
+		<div class="row control">
+			<g:if test="${urls.size() > 0}">
 				<div class="span3">
 					<g:actionSubmit 
 						class="btn btn-primary span3" 
@@ -66,8 +63,8 @@
 					<a href="#">Select All</a>
 				</div>
 				
-			</div>
-		</g:if>
+			</g:if>
+		</div>
 	
 		<div class="row">
 			<div class="span12">
@@ -160,11 +157,12 @@
 				url="${[controller: 'gallery', action: 'uploadImage', id: galleryInstance.id]}"
 				multiple="true" 
 				sizeLimit="5000000">
+			</uploader:uploader>
 		</div>
 	</div>
 	
 
-
+<%--
 	<uploader:onSubmit>
 			ongoingUploads += 1;
 			$('#divContributeSpinner').show();
@@ -197,5 +195,6 @@
 			console.log("On complete done.");
 		</uploader:onComplete>
 	</uploader:uploader>
+--%>
 </body>
 </html>
