@@ -68,13 +68,76 @@
 							<g:message code="view.gallery.view.emptyGallery" />
 						</p>
 					</g:else>
-					<div class="galleryHidePhotosDiv" id="galleryHidePhotosDivBottom">
-						<p>
-							<a class="hide" href="#"><g:message code="userDef.hide" args="${[]}" /></a>
-						</p>
+					<%-- XXX mocked images for layouting --%>
+					<div id="all_images" class="galleryImageDiv">
+						<a href="http://s3.amazonaws.com/com.sharevent.images/test/1.jpg">
+							<img src="http://s3.amazonaws.com/com.sharevent.imagethumbs/test/1.jpg" id="img_1" width="250px" />
+						</a>
+						<br />
+						<g:checkBox class="selectBox" name="image_1" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
 					</div>
-					<div class="selectAll">
-						<g:checkBox name="selectAll" /><a href="#">Select All</a>
+					<div id="all_images" class="galleryImageDiv">
+						<a href="http://s3.amazonaws.com/com.sharevent.images/test/2.jpg">
+							<img src="http://s3.amazonaws.com/com.sharevent.imagethumbs/test/2.jpg" id="img_1" width="250px" />
+						</a>
+						<br />
+						<g:checkBox class="selectBox" name="image_2" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
+					</div>
+					<div id="all_images" class="galleryImageDiv">
+						<a href="http://s3.amazonaws.com/com.sharevent.images/test/3.jpg">
+							<img src="http://s3.amazonaws.com/com.sharevent.imagethumbs/test/3.jpg" id="img_1" width="250px" />
+						</a>
+						<br />
+						<g:checkBox class="selectBox" name="image_3" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
+					</div>
+					<div id="all_images" class="galleryImageDiv">
+						<a href="http://s3.amazonaws.com/com.sharevent.images/test/4.jpg">
+							<img src="http://s3.amazonaws.com/com.sharevent.imagethumbs/test/4.jpg" id="img_1" width="250px" />
+						</a>
+						<br />
+						<g:checkBox class="selectBox" name="image_4" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
+					</div>
+					<div id="all_images" class="galleryImageDiv">
+						<a href="http://s3.amazonaws.com/com.sharevent.images/test/5.jpg">
+							<img src="http://s3.amazonaws.com/com.sharevent.imagethumbs/test/5.jpg" id="img_1" width="250px" />
+						</a>
+						<br />
+						<g:checkBox class="selectBox" name="image_5" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
+					</div>
+					<div id="all_images" class="galleryImageDiv">
+						<a href="http://s3.amazonaws.com/com.sharevent.images/test/6.jpg">
+							<img src="http://s3.amazonaws.com/com.sharevent.imagethumbs/test/6.jpg" id="img_1" width="250px" />
+						</a>
+						<br />
+						<g:checkBox class="selectBox" name="image_6" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
+					</div>
+					<div id="all_images" class="galleryImageDiv">
+						<a href="http://s3.amazonaws.com/com.sharevent.images/test/7.jpg">
+							<img src="http://s3.amazonaws.com/com.sharevent.imagethumbs/test/7.jpg" id="img_1" width="250px" />
+						</a>
+						<br />
+						<g:checkBox class="selectBox" name="image_7" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
+					</div>
+					<div id="all_images" class="galleryImageDiv">
+						<a href="http://s3.amazonaws.com/com.sharevent.images/test/8.jpg">
+							<img src="http://s3.amazonaws.com/com.sharevent.imagethumbs/test/8.jpg" id="img_1" width="250px" />
+						</a>
+						<br />
+						<g:checkBox class="selectBox" name="image_8" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
+					</div>
+					<div id="all_images" class="galleryImageDiv">
+						<a href="http://s3.amazonaws.com/com.sharevent.images/test/9.jpg">
+							<img src="http://s3.amazonaws.com/com.sharevent.imagethumbs/test/9.jpg" id="img_1" width="250px" />
+						</a>
+						<br />
+						<g:checkBox class="selectBox" name="image_9" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
+					</div>
+					<div id="all_images" class="galleryImageDiv">
+						<a href="http://s3.amazonaws.com/com.sharevent.images/test/10.jpg">
+							<img src="http://s3.amazonaws.com/com.sharevent.imagethumbs/test/10.jpg" id="img_1" width="250px" />
+						</a>
+						<br />
+						<g:checkBox class="selectBox" name="image_10" value="${true}" /> <g:message code="userDef.selectMe" args="${[]}" /> 
 					</div>
 				</div>
 			</div>
