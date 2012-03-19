@@ -4,7 +4,7 @@
         <title><g:layoutTitle default="Sharevent" /></title>
         <link rel="stylesheet" href="${resource(dir:'css',file:'main.css')}" />
         <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
-	<r:script modules="boostrap, jquery" />
+		<r:script modules="boostrap, jquery" />
         <g:layoutHead />
         <r:layoutResources/>
     </head>

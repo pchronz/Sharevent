@@ -667,7 +667,7 @@ class GalleryController {
 					}
 				}
 				if(users.size() > 0)
-					log.info 'Found multiples incognito users for one gallery. Taking the first one.'
+					log.warn 'Found multiples incognito users for one gallery. Taking the first one.'
 				if(users.size() == 0) {
 					log.info "Did not find any incognito users for gallery ${galleryInstance.id}"
 					render status: 500
