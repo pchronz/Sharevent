@@ -51,39 +51,49 @@
 
 		<!-- only show the users contribution if it is not empty -->
 		<g:each var="user" in="${galleryInstance.users}">
-
-		<div class="row control">
-			<div class="span3">
-				<g:actionSubmit 
-					class="btn btn-primary span3" 
-					name="Download" 
-					value="${message(code: 'userDef.downloadImages')}"
-					action="download"  />
+		
+		<g:if test="${urls.size() > 0}">
+			<div class="row control">
+				<div class="span3">
+					<g:actionSubmit 
+						class="btn btn-primary span3" 
+						name="Download" 
+						value="${message(code: 'userDef.downloadImages')}"
+						action="download"  />
+				</div>
+				<div class="span2">
+					<g:checkBox name="selectAll" />
+					<a href="#">Select All</a>
+				</div>
+				
 			</div>
-			<div class="span2">
-				<g:checkBox name="selectAll" />
-				<a href="#">Select All</a>
-			</div>
-			
-		</div>
+		</g:if>
 	
 		<div class="row">
 			<div class="span12">
-
-				<ul class="thumbnails">
-					<g:each in="${1..10}" var="i">
-						<li class="span3">
-							<a href="#" class="thumbnail">
-								<img src="http://s3.amazonaws.com/com.sharevent.imagethumbs/test/${i}.jpg" />
-							</a>
-							<div class="caption">
-								<g:checkBox  name="image_1" value="${true}" />
-								<g:message code="userDef.selectMe" args="${[]}" /> 
-							</div>
-						</li>				 
-					</g:each>
-				</ul>	
-
+				<g:if test="${urls.size() > 0}">
+					<ul class="thumbnails">
+						<g:each var="imageUrl" in="${urls}">
+							<li class="span3">
+								<a href="${urlsFull[imageUrl.key]}" class="thumbnail">
+									<img  src="${imageUrl.value}" id="img_${imageUrl.key}"/>
+								</a>
+								<div class="caption">
+									<g:checkBox  name="image_${imageUrl.key}" value="${true}"/>
+									<g:message code="userDef.selectMe" args="${[]}" /> 
+								</div>
+							</li>				 
+						</g:each>
+					</ul>	
+				</g:if>
+				<g:else>
+					<div class="alert alert-info">
+						<a class="close" data-dismiss="alert">×</a>
+						<h3>
+							<g:message code="view.gallery.view.emptyGallery" />
+						</h3>
+					</div>
+				</g:else>
 			</div>			
 		</div>
 		
@@ -110,33 +120,33 @@
 				
 		</g:each>
 
-
-		<div class="row">
-			<div class="span3">
-            			<g:actionSubmit 
-					name="Download" 
-					value="${message(code: 'userDef.downloadImages')}" 
-					action="download"
-					class="btn btn-primary span3" />
+		<g:if test="${urls.size() > 0}">
+			<div class="row">
+				<div class="span3">
+					<g:actionSubmit 
+						name="Download" 
+						value="${message(code: 'userDef.downloadImages')}" 
+						action="download"
+						class="btn btn-primary span3" />
+				</div>
+				<g:if test="${isAdmin}">
+					<div class="span3">
+						<g:actionSubmit 
+							name="removeImages" 
+							value="${message(code: 'userDef.deleteSelection')}" 
+							action="deleteImages" 
+							class="btn btn-warning span3" />
+					</div>
+					<div class="span3">
+						<g:actionSubmit 
+							name="removeGallery" 
+							value="${message(code: 'userDef.deleteGallery')}" 
+							action="deleteGallery"
+							class="btn btn-danger span3" />
+					</div>
+				</g:if>
 			</div>
-			<g:if test="${isAdmin}">
-				<div class="span3">
-					<g:actionSubmit 
-						name="removeImages" 
-						value="${message(code: 'userDef.deleteSelection')}" 
-						action="deleteImages" 
-						class="btn btn-warning span3" />
-				</div>
-				<div class="span3">
-					<g:actionSubmit 
-						name="removeGallery" 
-						value="${message(code: 'userDef.deleteGallery')}" 
-						action="deleteGallery"
-						class="btn btn-danger span3" />
-				</div>
-			</g:if>
-		</div>
-		
+		</g:if>	
 
 		<g:hiddenField name="key" value="${galleryInstance.creatorId}" />
         </g:form>
