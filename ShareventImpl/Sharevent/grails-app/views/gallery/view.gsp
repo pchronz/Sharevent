@@ -20,7 +20,7 @@
 		<div class="span12">
 			<g:message code="userDef.participationLink"/>
 			<g:link controller="gallery" action="view" id="${galleryInstance.id}" >
-				${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id)}
+				<sv:shortUrl gallery="${galleryInstance}" />
 			</g:link>
 		</div>
 	</div>
@@ -30,7 +30,7 @@
 			<div class="span12">
 				<g:message code="userDef.administrationLink" args="${[]}" />
 				<g:link controller="gallery" action="view" id="${galleryInstance.id}" params="${[key: galleryInstance.creatorId]}" >
-					${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id, params: [key: galleryInstance.creatorId])}
+					<sv:shortAdminUrl gallery="${galleryInstance}" />
 				</g:link>
 			</div>
 		</div>

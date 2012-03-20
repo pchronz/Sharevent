@@ -99,20 +99,31 @@ class ImageDbServiceTests extends GroovyTestCase {
 
 		// try to download the thumbnail
 		def baos = new ByteArrayOutputStream()
-		baos << new URL(thumbUrl).openStream()
-		assertTrue baos.toByteArray().length == 0
+		def fail = false
+		try {
+			baos << new URL(thumbUrl).openStream()
+		}
+		catch(e) {
+			fail = true
+		}
+		assertTrue fail
 
 		// try to download the image
 		baos = new ByteArrayOutputStream()
-		baos << new URL(imageUrl).openStream()
-		assertTrue baos.toByteArray().length == 0
-
+		fail = false
+		try {
+			baos << new URL(imageUrl).openStream()
+		}
+		catch(e) {
+			fail = true
+		}
+		assertTrue fail
 	}
 
     private def createAll() {
 		def galleryUser = new GalleryUser(firstName: 'Cook', lastName: 'Poo', email: 'cook@poo.com')
 		assertNotNull galleryUser.save(flush: true)
-		def gallery = new Gallery(date: new Date(), title: 'Test Title', location: 'Test Location')
+		def gallery = new Gallery(title: 'Test Title', location: 'Test Location')
 		assertNotNull galleryUser.save(flush: true)
 		gallery.creatorId = galleryUser.id
 		gallery.addToUsers galleryUser

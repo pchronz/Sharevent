@@ -867,4 +867,25 @@ class GalleryController {
 
         redirect(controller: "main", action: "index")
     }
+
+	def viewShortUrl = {
+		// get the URL
+		def shortUrl = params.shortUrl
+		
+		// get the corresponding gallery
+		def urlMap = UrlMap.findByShortUrl(shortUrl)
+
+		if(urlMap) {
+			redirect action: "view", id: urlMap.gallery.id
+		}
+		else {
+			urlMap = UrlMap.findByShortAdminUrl(shortUrl)
+			if(urlMap) {
+				redirect action: "view", id: urlMap.gallery.id, params: [key: urlMap.gallery.creatorId]
+			}
+			else {
+				redirect action: "view"
+			}
+		}
+	}
 }

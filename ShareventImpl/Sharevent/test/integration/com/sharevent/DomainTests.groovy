@@ -68,12 +68,18 @@ class DomainTests extends GroovyTestCase {
 		assertEquals 9, GalleryUser.list().size()
 		assertEquals 3, Gallery.list().size()
 	}
+
+	def testShortUrl() {
+		populateAll()
+		def gallery = Gallery.list()[0]
+		assertEquals 12, gallery.urlMap.shortUrl.size()
+	}
 		
 
     private def createAll() {
 		def galleryUser = new GalleryUser(firstName: 'Cook', lastName: 'Poo', email: 'cook@poo.com')
 		assertNotNull galleryUser.save(flush: true)
-		def gallery = new Gallery(date: new Date(), title: 'Test Title', location: 'Test Location')
+		def gallery = new Gallery(title: 'Test Title', location: 'Test Location')
 		assertNotNull galleryUser.save(flush: true)
 		gallery.creatorId = galleryUser.id
 		gallery.addToUsers galleryUser
