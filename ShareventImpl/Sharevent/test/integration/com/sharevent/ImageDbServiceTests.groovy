@@ -77,58 +77,38 @@ class ImageDbServiceTests extends GroovyTestCase {
 		assertTrue imageInputstream.bytes.length > 0
 	}
 
-//	void testPopulateAll() {
-//		// create 3 galleries each w/ 2 users, each w/ 2 images + 1 image per gallery
-//		populateAll()
-//
-//		// check the amount of images associate with each gallery
-//		Gallery.list().each { gallery ->
-//			assertEquals 6, gallery.images.size()
-//		}
-//
-//		// check the number of images associated with each user
-//		GalleryUser.list().each { user ->
-//			assertEquals 2, user.images.size()
-//		}
-//
-//		assertEquals 3, Gallery.list().size()
-//		assertEquals 9, GalleryUser.list().size()
-//		assertEquals 18, Image.list().size()
-//	}
-//
-//	void testRemoveAll() {
-//		// create a few galleries, users and images
-//		populateAll()
-//
-//		// for all users remove all images
-//		GalleryUser.list().each { user ->
-//			def images = []
-//			images += user.images
-//			images.each { image ->
-//				def galleryUser = image.galleryUser
-//				def gallery = image.gallery
-//				if(imageService.deleteImage(image)) {
-//					image.errors.each {
-//						println it
-//					}
-//					fail()
-//				}
-//				assertNotNull galleryUser.save(flush: true)
-//				assertNotNull gallery.save(flush: true)
-//			}
-//			assertEquals 0, GalleryUser.get(user.id).images.size()
-//		}
-//		
-//		Gallery.list().each { gallery ->
-//			assertEquals 0, gallery.images.size()
-//		}
-//
-//		assertEquals 0, Image.list().size()
-//		assertEquals 9, GalleryUser.list().size()
-//		assertEquals 3, Gallery.list().size()
-//	}
-//		
-//
+	void testDeleteImage() {
+		// read in the test image
+		def testImageUrl = ImageDbServiceTests.class.getResource("/image.jpg")
+		assertNotNull testImageUrl
+		def imageFile = new File(testImageUrl.path)
+		def imageBytes = imageFile.bytes
+		def bais = new ByteArrayInputStream(imageBytes)
+
+		// create users and galleries
+		createAll()
+
+		// get any user and image to her gallery
+		def user = GalleryUser.list()[0]
+		def image = user.images.asList()[0]
+		imageDBService.storeImageThumbnail(bais, image, user)
+		imageDBService.storeImage(bais, image, user)
+		imageDBService.delete(image)
+		def thumbUrl = imageDBService.getImageThumbURL(image)
+		def imageUrl = imageDBService.getImageURL(image)
+
+		// try to download the thumbnail
+		def baos = new ByteArrayOutputStream()
+		baos << new URL(thumbUrl).openStream()
+		assertTrue baos.toByteArray().length == 0
+
+		// try to download the image
+		baos = new ByteArrayOutputStream()
+		baos << new URL(imageUrl).openStream()
+		assertTrue baos.toByteArray().length == 0
+
+	}
+
     private def createAll() {
 		def galleryUser = new GalleryUser(firstName: 'Cook', lastName: 'Poo', email: 'cook@poo.com')
 		assertNotNull galleryUser.save(flush: true)
@@ -165,43 +145,6 @@ class ImageDbServiceTests extends GroovyTestCase {
 
 		[gallery, galleryUser, images]
     }
-//
-//	private def populateAll() {
-//		// create 3 galleries, users, images
-//		(1..3).each {
-//			Gallery gallery = null
-//			GalleryUser galleryUser = null
-//			def images = null
-//			(gallery, galleryUser, images) = createAll()
-//
-//			// add two more users, each with two images to the gallery
-//			(1..2).each {
-//				GalleryUser user = new GalleryUser(firstName: "Cook2", lastName: "Poo2", email: "cook2@poo.com")
-//				user.addToGalleries(gallery)
-//				gallery.addToUsers(user)
-//				if(!user.save(flush: true)) {
-//					user.errors.each { err ->
-//						println err
-//					}
-//					fail()
-//				}
-//				(1..2).each {
-//					Image newImage = new Image() 
-//					user.addToImages( newImage )
-//					gallery.addToImages(newImage)
-//					if(!newImage.save(flush: true)) {
-//						newImage.errors.each {err ->
-//							println err
-//						}
-//						fail()
-//					}
-//				}
-//				assertNotNull gallery.save(flush: true)
-//				assertNotNull user.save(flush: true)
-//				assertEquals 2, GalleryUser.get(user.id).images.size()
-//			}
-//		}
-//	}
 
 }
 
