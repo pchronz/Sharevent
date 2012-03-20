@@ -126,6 +126,9 @@
 		<g:hiddenField name="key" value="${galleryInstance.creatorId}" />
         </g:form>
 
+	<script type="text/javascript" charset="utf-8">
+		var ongoingUploads = 0;
+	</script>
 
 
 	<div class="row">
@@ -135,14 +138,24 @@
 				url="${[controller: 'gallery', action: 'uploadImage', id: galleryInstance.id]}"
 				multiple="true" 
 				sizeLimit="5000000">
+				<uploader:onSubmit>
+					ongoingUploads += 1;
+					console.log('obSubmit: ' +ongoingUploads)
+				</uploader:onSubmit>
 				<uploader:onComplete>
-					window.location.reload(true);
+					ongoingUploads -= 1;
+					console.log('onComplete :' +ongoingUploads)
+
+					if (ongoingUploads == 0) {
+						window.location.reload(true);
+						console.log('refresh :' +ongoingUploads)
+
+					}
+
 				</uploader:onComplete>
 			</uploader:uploader>
 		</div>
 	</div>
-	
-
 
 </body>
 </html>
