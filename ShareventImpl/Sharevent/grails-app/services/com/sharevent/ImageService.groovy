@@ -83,6 +83,8 @@ class ImageService {
 
 		// resize the images
 		def bais = scaleImage(maxImageHeight, maxImageWidth, bsrc)
+		bsrc = ImageIO.read(bais)
+		bais = cropImage(maxImageHeight, maxImageWidth, bsrc)
 
 		// uploading the scaled image
 		imageDBService.storeImageThumbnail(bais, image, user)
@@ -96,25 +98,38 @@ class ImageService {
 		log.info 'image upload successfull'
 	}
 
+	// sets the image so that the smaller of width and height is at least big enough
 	def scaleImage(int maxImageHeight, int maxImageWidth, BufferedImage bsrc) {
-		if(bsrc.getHeight() > maxImageHeight) {
-			int height = maxImageHeight 
-			int width = ((double)bsrc.getWidth()) * ((double)height)/((double)bsrc.getHeight())
-			BufferedImage bdest = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-			Graphics2D g = bdest.createGraphics();
-			AffineTransform at = AffineTransform.getScaleInstance((double)width/bsrc.getWidth(), (double)height/bsrc.getHeight());
-			g.drawRenderedImage(bsrc,at);
-			def baos = new ByteArrayOutputStream()
-			ImageIO.write(bdest, "JPG", new MemoryCacheImageOutputStream(baos))
-			def byteArray = baos.toByteArray()
-			new ByteArrayInputStream(byteArray)
+		int width = 0
+		int height = 0
+		if(bsrc.width < bsrc.height) {
+			width = maxImageWidth
+			height = ((double)bsrc.getHeight()) * ((double)width)/((double)bsrc.getWidth())
 		}
 		else {
-			def baos = new ByteArrayOutputStream()
-			ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(baos))
-			def byteArray = baos.toByteArray()
-			return new ByteArrayInputStream(byteArray)
+			height = maxImageHeight
+			width = ((double)bsrc.getWidth()) * ((double)height)/((double)bsrc.getHeight())
 		}
+		BufferedImage bdest = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = bdest.createGraphics();
+		AffineTransform at = AffineTransform.getScaleInstance((double)width/bsrc.getWidth(), (double)height/bsrc.getHeight());
+		g.drawRenderedImage(bsrc,at);
+		def baos = new ByteArrayOutputStream()
+		ImageIO.write(bdest, "JPG", new MemoryCacheImageOutputStream(baos))
+		def byteArray = baos.toByteArray()
+		new ByteArrayInputStream(byteArray)
+	}
+
+	def cropImage(int maxImageHeight, int maxImageWidth, BufferedImage bsrc) {
+		def height = maxImageHeight > bsrc.height ? bsrc.height : maxImageHeight
+		def width = maxImageWidth > bsrc.width ? bsrc.width : maxImageWidth
+		def x = (bsrc.width - width)/2 as int
+		def y = (bsrc.height - height)/2 as int
+		BufferedImage bdest = bsrc.getSubimage(x, y, width, height)	
+		def baos = new ByteArrayOutputStream()
+		ImageIO.write(bdest, "JPG", new MemoryCacheImageOutputStream(baos))
+		def byteArray = baos.toByteArray()
+		new ByteArrayInputStream(byteArray)
 	}
 }
 

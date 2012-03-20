@@ -32,33 +32,21 @@ class ImageDBService {
     }
 
 	def delete(image) {
-		// TODO S3
-//		if(Environment.currentEnvironment == Environment.DEVELOPMENT) {
-//			if(!initialized) initService()
-//
-//			// delete the image
-//			removeImage(image.id, "images")
-//
-//			// delete the thumbnail
-//			removeImage(image.id, "imagethumbs")
-//		}
-//		else {
-//			log.info "Attempting to delete image.id == ${image.id} from S3"
-//			aws.s3().on('com.sharevent.images').delete(image.id.toString(), image.galleryUser.id)
-//			aws.s3().on('com.sharevent.imagethumbs').delete(image.id.toString(), image.galleryUser.id)
-//			log.info "Done deleting image.id == ${image.id} from S3"
-//		}
+		log.info "Attempting to delete image.id == ${image.id} from S3"
+		aws.s3().on('com.sharevent.images').delete(image.id.toString(), image.galleryUser.id)
+		aws.s3().on('com.sharevent.imagethumbs').delete(image.id.toString(), image.galleryUser.id)
+		log.info "Done deleting image.id == ${image.id} from S3"
 	}
 
 
 	def getImageThumbInputStream(image) {
-			def s3Image = aws.s3().on('com.sharevent.imagethumbs').get(image.id + ".jpg", image.galleryUser.id + "/")
-			def s3InputStream = s3Image.getDataInputStream()
-			if(!s3InputStream) {
-				log.error "Could not retrieve inputStream for downloading image.id == " + image.id
-				throw new Exception("Could not retrieve inputStream for downloading image.id == " + image.id)
-			}
-			return new BufferedInputStream(s3InputStream, 2048)
+		def s3Image = aws.s3().on('com.sharevent.imagethumbs').get(image.id + ".jpg", image.galleryUser.id + "/")
+		def s3InputStream = s3Image.getDataInputStream()
+		if(!s3InputStream) {
+			log.error "Could not retrieve inputStream for downloading image.id == " + image.id
+			throw new Exception("Could not retrieve inputStream for downloading image.id == " + image.id)
+		}
+		return new BufferedInputStream(s3InputStream, 2048)
 	}
 
 	def getImageInputStream(image) {
@@ -133,26 +121,6 @@ class ImageDBService {
 //		}
 //		else {
 //			// TODO S3?
-//		}
-	}
-
-	private void removeImage(def imageId, def collection) {
-//		if(!initialized) initService()
-//
-//		DBCollection dbCollection = this.db.getCollection(collection)
-//		BasicDBObject query = new BasicDBObject()
-//		query.put("${grailsApplication.config.sharevent.imageDBImageId}", imageId)
-//		DBCursor cursor = dbCollection.find(query)
-//		try {
-//			// TODO log the number of removed objects
-//			while(cursor.hasNext()) {
-//				def nextObject = cursor.next()
-//				dbCollection.remove(nextObject)
-//			}
-//		}
-//		catch(Exception e) {
-//			log.error e
-//			log.error "could not open image.id==" + imageId
 //		}
 	}
 }
