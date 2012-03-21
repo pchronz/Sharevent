@@ -200,5 +200,13 @@
 		</div>
 	</div>
 
+	<script type="text/javascript" charset="utf-8">
+		$(function(){
+			$(".thumbnail").colorbox({rel: 'group1', preloading: true, scalePhotos: true, maxWidth: "100%", maxHeight: "100%"});
+			<g:if test="$showImage}">
+				$("#img_${showImage}").click();
+			</g:if>
+		})
+	</script>
 </body>
 </html>

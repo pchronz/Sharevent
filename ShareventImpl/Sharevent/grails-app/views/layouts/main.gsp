@@ -5,7 +5,7 @@
         <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
 		<g:javascript library="jquery" plugin="jquery"/>
         <g:layoutHead />
-		<r:require modules="bootstrap, sharevent"/>
+		<r:require modules="bootstrap, sharevent, colorbox"/>
         <r:layoutResources/>
 
     </head>

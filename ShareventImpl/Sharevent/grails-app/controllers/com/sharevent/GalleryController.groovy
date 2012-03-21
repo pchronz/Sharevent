@@ -636,7 +636,7 @@ class GalleryController {
 			def shortAdminUrl = gallery.urlMap.shortAdminUrl
 			shortAdminUrl = serverUrl.toString() + "/" + shortAdminUrl
 
-            render view:"view", model:[galleryInstance:gallery, urls: urls, urlsFull: urlsFull, isAdmin: isAdmin, shortUrl: shortUrl, shortAdminUrl: shortAdminUrl] 
+            render view:"view", model:[galleryInstance:gallery, urls: urls, urlsFull: urlsFull, isAdmin: isAdmin, shortUrl: shortUrl, shortAdminUrl: shortAdminUrl, showImage: params.showImage ?: null] 
 		}
         else {
 			flash.message = "Error while loading the gallery"
