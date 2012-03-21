@@ -7,6 +7,8 @@
     	<g:message code="userDef.companyName" />: <g:message code="userDef.companySlogan" />
     </title>
 	<r:require module="fileuploader" />
+	
+
   </head>
   <body>
 
@@ -74,10 +76,28 @@
 								<a href="${urlsFull[imageUrl.key]}" class="thumbnail">
 									<img  src="${imageUrl.value}" id="img_${imageUrl.key}"/>
 								</a>
-								<div class="caption">
-									<g:checkBox  name="image_${imageUrl.key}" value="${true}"/>
-									<g:message code="userDef.selectMe" args="${[]}" /> 
+								
+								<div class="wrapper top-left">	
+									<div class="overlay">
+										SAVE	
+									</div>
 								</div>
+								<div class="wrapper top-right">
+									<div class="overlay">
+										DELETE	
+									</div>
+								</div>
+								<div class="wrapper bottom-left bottom-offset">
+									<div class="overlay">
+										CHECK	
+									</div>
+								</div>
+								<div class="wrapper bottom-right bottom-offset">
+									<div class="overlay">
+										WTF	
+									</div>
+								</div>
+
 							</li>				 
 						</g:each>
 					</ul>	
@@ -156,6 +176,108 @@
 			</uploader:uploader>
 		</div>
 	</div>
+
+
+		<style type="text/css" media="screen">
+		
+			.wrapper {
+				position:relative;
+				z-index:2;
+			}
+
+			.overlay {
+				display:none; 
+				z-index:3;
+				background-color:black;  
+				opacity:0.6;
+				filter:alpha(opacity=60); /* IE transparency */
+				color:white;
+				font-weight:bold;
+				font-size:22px;
+				text-align:center;
+			}
+
+			
+			.top-left {
+				top:0px;
+				float:left;
+			}
+
+			.top-right {
+				top:0px;
+				float:right;
+			}
+
+			.bottom-left {
+				float:left;
+			}
+		
+			.bottom-right {
+				float:right;
+			}
+
+			.bottom-offset {
+			}
+			
+		</style>
+		<script type="text/javascript" charset="utf-8">
+
+			$('.thumbnail').hover(
+				function(){
+					var h = this.clientHeight;
+
+					var divs = $(this).nextAll();
+					
+					var hpx = h/2+'px';
+					var wpx = h/2+'px';
+
+					divs.css({height:hpx,width:wpx});
+
+					//TODO select only this children
+					$(".wrapper").css('margin-top',"-"+h+"px");
+					$(".bottom-offset").css('top', hpx);
+					$(".overlay").css({height:hpx,width:wpx});
+					var stop = true;	
+				},
+				function(){
+					return null;
+				}
+			);			
+
+			$(".wrapper").hover(
+			  function(){
+
+				$(this).find(':first-child').show();
+
+			  }, 
+			  function(){
+				$(this).find(':first-child').hide();
+			  }
+			);
+			
+			$('.top-left div').click(function () {
+			    alert('top left'); 
+			});
+
+			$('.top-right div').click(function () {
+			    alert('top right'); 
+			});
+
+			$('.bottom-left div').click(function () {
+			    alert('bottom left'); 
+			});
+		
+			$('.bottom-right div').click(function () {
+			    alert('bottom right'); 
+			});
+
+			$(window).bind("resize", resizeWindow);
+	 
+			function resizeWindow( e ) {
+				$(".wrapper").css({height:'0px',width:'0px'});
+			};
+		</script>
+
 
 </body>
 </html>
