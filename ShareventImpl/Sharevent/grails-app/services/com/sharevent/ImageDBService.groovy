@@ -33,8 +33,8 @@ class ImageDBService {
 
 	def delete(image) {
 		log.info "Attempting to delete image.id == ${image.id} from S3"
-		aws.s3().on('com.sharevent.images').delete(image.id.toString(), image.galleryUser.id)
-		aws.s3().on('com.sharevent.imagethumbs').delete(image.id.toString(), image.galleryUser.id)
+		aws.s3().on('com.sharevent.images').delete(image.id.toString() + ".jpg", image.galleryUser.id.toString() + "/")
+		aws.s3().on('com.sharevent.imagethumbs').delete(image.id.toString() + ".jpg", image.galleryUser.id.toString() + "/")
 		log.info "Done deleting image.id == ${image.id} from S3"
 	}
 

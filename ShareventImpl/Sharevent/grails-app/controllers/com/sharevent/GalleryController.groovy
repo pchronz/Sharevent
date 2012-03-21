@@ -629,7 +629,14 @@ class GalleryController {
 			}
 			// TODO get the real IP from the request
 			galleryLog?.addClickLogEntry(new Date(), "cookie monster")
-            render view:"view", model:[galleryInstance:gallery, urls: urls, urlsFull: urlsFull, isAdmin: isAdmin] 
+
+			def serverUrl = grailsApplication.config.grails.serverURL ?: ""
+			def shortUrl = gallery.urlMap.shortUrl
+			shortUrl = serverUrl.toString() + "/" + shortUrl
+			def shortAdminUrl = gallery.urlMap.shortAdminUrl
+			shortAdminUrl = serverUrl.toString() + "/" + shortAdminUrl
+
+            render view:"view", model:[galleryInstance:gallery, urls: urls, urlsFull: urlsFull, isAdmin: isAdmin, shortUrl: shortUrl, shortAdminUrl: shortAdminUrl] 
 		}
         else {
 			flash.message = "Error while loading the gallery"
@@ -867,4 +874,25 @@ class GalleryController {
 
         redirect(controller: "main", action: "index")
     }
+
+	def viewShortUrl = {
+		// get the URL
+		def shortUrl = params.shortUrl
+		
+		// get the corresponding gallery
+		def urlMap = UrlMap.findByShortUrl(shortUrl)
+
+		if(urlMap) {
+			redirect action: "view", id: urlMap.gallery.id
+		}
+		else {
+			urlMap = UrlMap.findByShortAdminUrl(shortUrl)
+			if(urlMap) {
+				redirect action: "view", id: urlMap.gallery.id, params: [key: urlMap.gallery.creatorId]
+			}
+			else {
+				redirect action: "view"
+			}
+		}
+	}
 }

@@ -11,6 +11,8 @@ class Gallery {
 
 	String creatorId
 
+	UrlMap urlMap
+
     static hasMany = [users:GalleryUser, images:Image]
 	static belongsTo = GalleryUser
 
@@ -32,10 +34,19 @@ class Gallery {
 			}
 			return found
 		})
+		urlMap(nullable: false)
     }
 
     static mapping = {
 		id generator: 'uuid'
     }
+
+	Gallery() {
+		this.urlMap = new UrlMap()
+		this.urlMap.shortUrl = UrlMap.generateRandomUrl()
+		this.urlMap.shortAdminUrl = UrlMap.generateRandomUrl()
+		this.date = new Date()
+
+	}
 }
 

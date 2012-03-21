@@ -19,24 +19,67 @@
 	</div>
 	
 	<div class="row">
+	  <form class="form-horizontal">
 		<div class="span12">
-			<g:message code="userDef.participationLink"/>
-			<g:link controller="gallery" action="view" id="${galleryInstance.id}" >
-				${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id)}
-			</g:link>
-		</div>
-	</div>
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label"><sv:shortLink gallery="${galleryInstance}"><g:message code="userDef.participationLink"/></sv:shortLink></label>
+					<div class="controls">
+						<input class="span3 gallery-short-url" type="text" value="${shortUrl}"></input>
+						<!-- AddThis Button BEGIN -->
+						<span class="help-inline addthis_toolbox addthis_default_style addthis_32x32_style">
+							<a class="addthis_button_twitter"></a>
+							<a class="addthis_button_facebook"></a>
+							<a class="addthis_button_mailto"></a>
+							<a class="addthis_button_google_plusone"></a>
+						</span>
+						<script type="text/javascript">
+							var addthis_config = {"data_track_addressbar":true, services_overlay:'facebook,twitter,mailto'};
+							var addthis_share = {
+							   url_transforms: {
+								 clean: true,
+								 remove: ['key'],
+								 shorten: { twitter: 'bitly' } 
+							   },
+								shorteners : {
+										bitly : { 
+											username: 'o_2146m4g6q1',
+											apiKey: 'R_c16d074693b049fec0ee2c5a8944c11b'
+										}
+									}
+							};
+						</script>
+					</div>
+				</div>
+				<g:if test="${isAdmin}">
+					<div class="control-group">
+						<label class="control-label"><sv:shortAdminLink gallery="${galleryInstance}"><g:message code="userDef.administrationLink"/></sv:shortAdminLink></label>
+						<div class="controls">
+							<input class="span3 gallery-short-url" type="text" value="${shortAdminUrl}"></input>
+						</div>
+					</div>
+				</g:if>
+			</fieldset>
 
-	<g:if test="${isAdmin}">
-		<div class="row">
-			<div class="span12">
-				<g:message code="userDef.administrationLink" args="${[]}" />
-				<g:link controller="gallery" action="view" id="${galleryInstance.id}" params="${[key: galleryInstance.creatorId]}" >
-					${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id, params: [key: galleryInstance.creatorId])}
-				</g:link>
-			</div>
+			
+			<script type="text/javascript" charset="utf-8">
+				$(function() {
+					$(".gallery-short-url").focus(function() {
+						this.select();
+					});
+					$(".gallery-short-url").mouseup(function(e) {
+						e.preventDefault();
+					});
+				});
+			</script>
+			
+			<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f69a3e22612bf8e"></script>
+			<%-- image overlay --%>
+			<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f69a3e22612bf8e"></script> 
+			<!-- AddThis Button END -->
 		</div>
-	</g:if>
+	  </form>
+	</div>
 
         <g:form controller="gallery" id="${galleryInstance.id}">
 
@@ -74,7 +117,7 @@
 						<g:each var="imageUrl" in="${urls}">
 							<li class="span3">
 								<a href="${urlsFull[imageUrl.key]}" class="thumbnail">
-									<img  src="${imageUrl.value}" id="img_${imageUrl.key}"/>
+									<img class="${!isAdmin ? 'addthis_shareable' : ''}"  src="${imageUrl.value}" id="img_${imageUrl.key}"/>
 								</a>
 								
 								<div class="wrapper top-left">	

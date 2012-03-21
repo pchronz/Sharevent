@@ -7,6 +7,7 @@ class UrlMappings {
 			}
 		}
 
+		"/$shortUrl"(controller: "gallery", action: "viewShortUrl")
 		"/"(view:"/main/view")
 		"404"(view:"/main/view")
 		"500"(view:'/error')
