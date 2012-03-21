@@ -114,11 +114,19 @@
 									</div>
 								</div>
 								<div class="oc-wrapper oc-bottom oc-left">
-									<div class="oc-overlay oc-download">
+									<div class="oc-overlay oc-select">
 									</div>
 								</div>
 								<div class="oc-wrapper oc-bottom oc-right">
-									<div class="oc-overlay oc-delete">
+									<div class="oc-overlay oc-social">
+										<br>
+										<span class="help-inline addthis_toolbox addthis_default_style addthis_32x32_style">
+										<a class="addthis_button_twitter"></a>
+										<a class="addthis_button_facebook"></a>
+										<br>
+										<a class="addthis_button_mailto"></a>
+										<a class="addthis_button_google_plusone"></a>
+										</span>
 									</div>
 								</div>
 
@@ -166,8 +174,10 @@
 				</g:if>
 			</div>
 		</g:if>	
-
-		<g:hiddenField name="key" value="${galleryInstance.creatorId}" />
+		
+		<div id="hiddenFieldContainer">
+			<g:hiddenField name="key" value="${galleryInstance.creatorId}" />
+		</div>
         </g:form>
 
 	<script type="text/javascript" charset="utf-8">
@@ -228,8 +238,12 @@
 				background-image: url(${resource(dir:'images',file:'gallery.png')});
 			}
 
-			.oc-download{
+			.oc-select{
 				background-image: url(${resource(dir:'images',file:'download.png')});
+			}
+
+			.oc-social {
+				background-image: url(${resource(dir:'images',file:'social.png')});
 			}			
 
 			.oc-top {
@@ -289,13 +303,14 @@
 				 $(this).parent().parent().remove();
 			});
 
-			$('.bottom-left div').click(function () {
-			    alert('bottom left'); 
+			$('.oc-select').click(function () {
+				var a = $(this).parent().parent().find('a').css('background-color', '#0069d6');
+				alert('selected'); 
+
 			});
 		
-			$('.bottom-right div').click(function () {
-			    alert('bottom right'); 
-			});
+			$('.oc-social').click(function () {
+			 });
 
 			$(window).bind("resize", resizeWindow);
 	 
