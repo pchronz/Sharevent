@@ -83,13 +83,6 @@
 
         <g:form controller="gallery" id="${galleryInstance.id}">
 
-		<r:script type="text/javascript" charset="utf-8">
-			function selectAllImages(boxId){
-				$('input[type=checkbox]').attr('checked',$('#'+boxId).is(':checked'));
-			}		
-		</r:script>
-
-		
 		<div class="row control">
 			<g:if test="${urls.size() > 0}">
 				<div class="span3">
@@ -99,14 +92,6 @@
 						value="${message(code: 'userDef.downloadImages')}"
 						action="download"  />
 				</div>
-				<div class="span2">
-					<g:checkBox id="selectAll" 
-						name="selectAll"
-						value="${true}"
-						onclick="selectAllImages('selectAll')"/>
-						Select All
-				</div>
-				
 			</g:if>
 		</div>
 	
@@ -120,24 +105,20 @@
 									<img class="${!isAdmin ? 'addthis_shareable' : ''}"  src="${imageUrl.value}" id="img_${imageUrl.key}"/>
 								</a>
 								
-								<div class="wrapper top-left">	
-									<div class="overlay">
-										SAVE	
+								<div class="oc-wrapper oc-top oc-left">	
+									<div class="oc-overlay oc-gallery">
 									</div>
 								</div>
-								<div class="wrapper top-right">
-									<div class="overlay">
-										DELETE	
+								<div class="oc-wrapper oc-top oc-right">
+									<div class="oc-overlay oc-delete">
 									</div>
 								</div>
-								<div class="wrapper bottom-left bottom-offset">
-									<div class="overlay">
-										CHECK	
+								<div class="oc-wrapper oc-bottom oc-left">
+									<div class="oc-overlay oc-download">
 									</div>
 								</div>
-								<div class="wrapper bottom-right bottom-offset">
-									<div class="overlay">
-										WTF	
+								<div class="oc-wrapper oc-bottom oc-right">
+									<div class="oc-overlay oc-delete">
 									</div>
 								</div>
 
@@ -223,45 +204,47 @@
 
 		<style type="text/css" media="screen">
 		
-			.wrapper {
+			.oc-wrapper {
 				position:relative;
 				z-index:2;
 			}
 
-			.overlay {
+			.oc-overlay {
 				display:none; 
 				z-index:3;
-				background-color:black;  
+				
+				background-repeat:no-repeat;
+				background-size: 100%;
+
 				opacity:0.6;
 				filter:alpha(opacity=60); /* IE transparency */
-				color:white;
-				font-weight:bold;
-				font-size:22px;
-				text-align:center;
 			}
-
 			
-			.top-left {
-				top:0px;
-				float:left;
+			.oc-delete {
+				background-image: url(${resource(dir:'images',file:'delete.png')});
 			}
 
-			.top-right {
+			.oc-gallery {
+				background-image: url(${resource(dir:'images',file:'gallery.png')});
+			}
+
+			.oc-download{
+				background-image: url(${resource(dir:'images',file:'download.png')});
+			}			
+
+			.oc-top {
 				top:0px;
+			}
+			.oc-bottom {
+				
+			}
+			.oc-left {
+				float:left;
+			}
+			.oc-right {
 				float:right;
-			}
-
-			.bottom-left {
-				float:left;
 			}
 		
-			.bottom-right {
-				float:right;
-			}
-
-			.bottom-offset {
-			}
-			
 		</style>
 		<script type="text/javascript" charset="utf-8">
 
@@ -277,19 +260,17 @@
 					divs.css({height:hpx,width:wpx});
 
 					//TODO select only this children
-					$(".wrapper").css('margin-top',"-"+h+"px");
-					$(".bottom-offset").css('top', hpx);
-					$(".overlay").css({height:hpx,width:wpx});
-					var stop = true;	
+					$(".oc-wrapper").css('margin-top',"-"+h+"px");
+					$(".oc-bottom").css('top', hpx);
+					$(".oc-overlay").css({height:hpx,width:wpx});
 				},
 				function(){
 					return null;
 				}
 			);			
 
-			$(".wrapper").hover(
+			$(".oc-wrapper").hover(
 			  function(){
-
 				$(this).find(':first-child').show();
 
 			  }, 
@@ -298,12 +279,14 @@
 			  }
 			);
 			
-			$('.top-left div').click(function () {
-			    alert('top left'); 
+			$('.oc-gallery').click(function () {
+			    alert('view gallery'); 
 			});
 
-			$('.top-right div').click(function () {
-			    alert('top right'); 
+			$('.oc-delete').click(function () {
+				var img = $(this).parent().parent().find('a').find('img').get(0);
+			    	alert('delete image: '+img.id);
+				 $(this).parent().parent().remove();
 			});
 
 			$('.bottom-left div').click(function () {
@@ -317,7 +300,7 @@
 			$(window).bind("resize", resizeWindow);
 	 
 			function resizeWindow( e ) {
-				$(".wrapper").css({height:'0px',width:'0px'});
+				$(".oc-wrapper").css({height:'0px',width:'0px'});
 			};
 		</script>
 
