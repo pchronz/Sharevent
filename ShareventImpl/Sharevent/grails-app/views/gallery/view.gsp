@@ -42,7 +42,7 @@
 								</div>
 
 								<div class="fb-like" 
-									style="display:inline"
+									style="display:inline;position:relative;top:-2px"
 									data-href= "${createLink(action: 'view', id: galleryInstance.id)}"
 									data-send="false"
 									data-layout="button_count" 
@@ -316,8 +316,12 @@
 
 			$('.thumbnail').hover(
 				function(){
-					var h = this.clientHeight;
+					var ww = $(window).width();	
+					if( ww <= 480)
+						return null;
 
+
+					var h = this.clientHeight;
 					var divs = $(this).nextAll();
 					
 					var hpx = h/2+'px';
