@@ -46,5 +46,8 @@ modules = {
 		resource url:[dir:'colorbox', file: 'colorbox.css']
 	}
 	
+	background {
+		resource url:[dir:'images', file: 'blue_bg.jpg']
+	}
 
 }
