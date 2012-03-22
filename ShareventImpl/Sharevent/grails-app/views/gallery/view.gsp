@@ -90,23 +90,23 @@
 		<div class="row control">
 			<g:if test="${urls.size() > 0}">
 				<div class="span3">
-					<g:actionSubmit 
-						class="btn btn-primary span3" 
+					<div class="btn-group dropdown-toggle" data-toggle="dropdown" >
+						<g:actionSubmit 
 						name="Download" 
-						value="${message(code: 'userDef.downloadImages')}"
-						action="download"  />
+						value="${message(code: 'userDef.downloadImages')}" 
+						action="download"
+						class="btn btn-primary span2" />
+						<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+							<span class="caret"></span>
+						</button> 	
+						<ul class="dropdown-menu">
+							<li><a href="#">selected only</a></li>
+						</ul>
+					</div>
 				</div>
 				<div class="span2">
 					<a class="btn btn-primary" data-toggle="modal" href="#upload-modal">Upload images</a>
 				</div>
-				<div class="span2">
-					<g:checkBox id="selectAll" 
-						name="selectAll"
-						value="${true}"
-						onclick="selectAllImages('selectAll')"/>
-						Select All
-				</div>
-				
 			</g:if>
 		</div>
 	
@@ -117,11 +117,33 @@
 						<g:each var="imageUrl" in="${urls}">
 							<li class="span3">
 								<a href="${urlsFull[imageUrl.key]}" class="thumbnail">
-									<img class="${!isAdmin ? 'addthis_shareable' : ''}"  src="${imageUrl.value}" id="img_${imageUrl.key}"/>
+									<img src="${imageUrl.value}" id="img_${imageUrl.key}"/>
 								</a>
-								<div class="caption">
-									<g:checkBox  name="image_${imageUrl.key}" value="${true}"/>
-									<g:message code="userDef.selectMe" args="${[]}" /> 
+								
+								<div class="ac-wrapper ac-top ac-left">	
+									<div class="ac-overlay ac-gallery">
+									</div>
+								</div>
+								<div class="ac-wrapper ac-top ac-right">
+									<div class="ac-overlay ac-delete">
+									</div>
+								</div>
+								<div class="ac-wrapper ac-bottom ac-left">
+									<div class="ac-overlay ac-select">
+										<input type="hidden" name="selected_img_${imageUrl.key}" value="" id="selected_img_${imageUrl.key}" />
+									</div>
+								</div>
+								<div class="ac-wrapper ac-bottom ac-right">
+									<div class="ac-overlay ac-social">
+										<br>
+										<span class="help-inline addthis_toolbox addthis_default_style addthis_32x32_style">
+										<a class="addthis_button_twitter"></a>
+										<a class="addthis_button_facebook"></a>
+										<br><br>
+										<a class="addthis_button_google_plusone"></a>
+										<a class="addthis_button_mailto"></a>
+										</span>
+									</div>
 								</div>
 							</li>				 
 						</g:each>
@@ -137,22 +159,22 @@
 				</g:else>
 			</div>			
 		</div>
-		
-		<div class="row">
-			<g:if test="${urls.size() > 0}">
-				<div class="span3">
-					<g:actionSubmit 
-						name="Download" 
-						value="${message(code: 'userDef.downloadImages')}" 
-						action="download"
-						class="btn btn-primary span3" />
-				</div>
-			</g:if>	
+
+			<div class="row">
+				<g:if test="${urls.size() > 0}">
+					<div class="span3">
+						<g:actionSubmit 
+							name="Download" 
+							value="${message(code: 'userDef.downloadImages')}" 
+							action="download"
+							class="btn btn-primary span3" />
+					</div>
+				</g:if>	
 
 			<div class="span2">
 				<a class="btn btn-primary" data-toggle="modal" href="#upload-modal" >Upload images</a>
 			</div>
-
+			<%--
 			<g:if test="${isAdmin}">
 				<div class="span3">
 					<g:actionSubmit 
@@ -171,6 +193,7 @@
 						class="btn span3" />
 				</div>
 			</g:if>
+			--%>
 		</div>
 
 		<g:hiddenField name="key" value="${galleryInstance.creatorId}" />
@@ -204,7 +227,6 @@
 					console.log('refresh :' +ongoingUploads)
 
 				}
-
 			</uploader:onComplete>
 		</uploader:uploader>
 
@@ -219,13 +241,132 @@
 	</div>
 
 
-	<script type="text/javascript" charset="utf-8">
-		$(function(){
-			$(".thumbnail").colorbox({rel: 'group1', preloading: true, scalePhotos: true, maxWidth: "100%", maxHeight: "100%"});
-			<g:if test="$showImage}">
-				$("#img_${showImage}").click();
-			</g:if>
-		});
+		<style type="text/css" media="screen">
+		
+			.ac-wrapper {
+				position:relative;
+				z-index:2;
+			}
+
+			.ac-overlay {
+				display:none; 
+				z-index:3;
+				
+				background-repeat:no-repeat;
+				background-size: 100%;
+
+				opacity:0.6;
+				filter:alpha(opacity=60); /* IE transparency */
+			}
+			
+			.ac-delete {
+				background-image: url(${resource(dir:'images',file:'delete.png')});
+			}
+
+			.ac-gallery {
+				background-image: url(${resource(dir:'images',file:'gallery.png')});
+			}
+
+			.ac-select{
+				background-image: url(${resource(dir:'images',file:'download.png')});
+			}
+
+			.ac-social {
+				background-image: url(${resource(dir:'images',file:'social.png')});
+			}			
+
+			.ac-top {
+				top:0px;
+			}
+			.ac-bottom {
+				
+			}
+			.ac-left {
+				float:left;
+			}
+			.ac-right {
+				float:right;
+			}
+		
+		</style>
+		<script type="text/javascript" charset="utf-8">
+
+			$('.thumbnail').hover(
+				function(){
+					var h = this.clientHeight;
+
+					var divs = $(this).nextAll();
+					
+					var hpx = h/2+'px';
+					var wpx = h/2+'px';
+
+					divs.css({height:hpx,width:wpx});
+
+					//TODO select only this children
+					$(".ac-wrapper").css('margin-top',"-"+h+"px");
+					$(".ac-bottom").css('top', hpx);
+					$(".ac-overlay").css({height:hpx,width:wpx});
+				},
+				function(){
+					return null;
+				}
+			);			
+
+			$(".ac-wrapper").hover(
+			  function(){
+				$(this).find(':first-child').show();
+
+			  }, 
+			  function(){
+				$(this).find(':first-child').hide();
+			  }
+			);
+			
+			$('.ac-gallery').click(function () {
+				var a = $(this).parent().siblings(':first');
+				a.click();
+			
+			});
+
+			$('.ac-delete').click(function () {
+				var img = $(this).parent().parent().find('a:first-child').find('img').get(0);
+				var hidden = $(this).children(':first');
+				hidden.attr('value','');
+				$(this).parent().parent().remove();
+				//TODO make a remote call to delete
+			});
+
+			$('.ac-select').click(function () {
+				var a = $(this).parent().siblings(':first');
+				var img = $(this).parent().parent().find('a:first-child').find('img').get(0);
+				var hidden = $(this).children(':first');
+				var value = hidden.attr('value');
+
+				if(value == ""){
+					a.css('background-color', '#0069d6');
+					hidden.attr('value',img.id);
+				}else{
+					a.css('background-color', '#fff');
+					hidden.attr('value','');
+				}
+			});
+		
+			$('.ac-social').click(function () {
+				//TODO
+			});
+
+			//reset overlay on window resize
+			$(window).bind("resize", resizeWindow);
+			function resizeWindow( e ) {
+				$(".ac-wrapper").css({height:'0px',width:'0px'});
+			};
+
+			$(function(){
+				$(".thumbnail").colorbox({rel: 'group1', preloading: true, scalePhotos: true, maxWidth: "100%", maxHeight: "100%"});
+				<g:if test="$showImage}">
+					$("#img_${showImage}").click();
+				</g:if>
+			});
 	</script>
 </body>
 </html>
