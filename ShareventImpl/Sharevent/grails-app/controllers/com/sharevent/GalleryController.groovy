@@ -733,24 +733,33 @@ class GalleryController {
 		// might not happen ever; even then only images would not be uploaded properly. no big deal!...?
 
         // first get the selected image ids
-        def imageIds = []
-        params.each {
-            if(it.key instanceof java.lang.String) {
-                if(it.key.startsWith("image")) {
-                    // Assuming that Grails is providing only selected checkboxes!
-                    String imageId = it.key
-                    imageIds.add(imageId.split("_")[1])
-                }
-            }
-        }
+		def imageIds = []
+		params.each {
+		    if(it.key instanceof java.lang.String) {
+			if(it.key.startsWith("selected_img_")) {
+			    // Assuming that Grails is providing only selected checkboxes!
+			    String imageId = it.value
+				if(imageId.size()>0)
+			    		imageIds.add(imageId.split("_")[-1])
+			}
+		    }
+		}
 
 		def images = []
 
 		if(imageIds.size() == 0) {
-			log.info "No image to show, redirecting to gallery with id ${params.id}"
-			flash.message = "There are no images selected to download."
-			redirect(action: 'view', params: [id: params.id])
-			return
+
+			def gallery = Gallery.findById(params.id)
+			gallery.images.each{
+				images.add it
+			}
+
+			if(!images){
+				log.info "No image to show, redirecting to gallery with id ${params.id}"
+				flash.message = "There are no images selected to download."
+				redirect(action: 'view', params: [id: params.id])
+				return
+			}
 		}
 		else {
 			// get the corresponding images

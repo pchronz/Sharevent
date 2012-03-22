@@ -85,19 +85,14 @@
 
 		<div class="row control">
 			<g:if test="${urls.size() > 0}">
-				<%--
-					<g:actionSubmit 
-						class="btn btn-primary span3" 
-						name="Download" 
-						value="${message(code: 'userDef.downloadImages')}"
-						action="download"  />
-				--%>
 				<div class="span3">
 					<div class="btn-group dropdown-toggle" data-toggle="dropdown" >
-						<button class="span2 btn btn-primary btn-large">
-							<i class="icon-download-alt icon-white"></i> Download
-						</button>	
-						<button class="btn btn-primary dropdown-toggle btn-large" data-toggle="dropdown">
+						<g:actionSubmit 
+						name="Download" 
+						value="${message(code: 'userDef.downloadImages')}" 
+						action="download"
+						class="btn btn-primary span2" />
+						<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
 							<span class="caret"></span>
 						</button> 	
 						<ul class="dropdown-menu">
@@ -115,7 +110,7 @@
 						<g:each var="imageUrl" in="${urls}">
 							<li class="span3">
 								<a href="${urlsFull[imageUrl.key]}" class="thumbnail">
-									<img class="${!isAdmin ? 'addthis_shareable' : ''}"  src="${imageUrl.value}" id="img_${imageUrl.key}"/>
+									<img src="${imageUrl.value}" id="img_${imageUrl.key}"/>
 								</a>
 								
 								<div class="oc-wrapper oc-top oc-left">	
@@ -128,7 +123,7 @@
 								</div>
 								<div class="oc-wrapper oc-bottom oc-left">
 									<div class="oc-overlay oc-select">
-										<input type="hidden" name="seleced_img_${imageUrl.key}" value="" id="seleced_img_${imageUrl.key}" />
+										<input type="hidden" name="selected_img_${imageUrl.key}" value="" id="selected_img_${imageUrl.key}" />
 									</div>
 								</div>
 								<div class="oc-wrapper oc-bottom oc-right">
@@ -161,7 +156,6 @@
 		
 		<g:if test="${urls.size() > 0}">
 			<div class="row">
-				<%--
 				<div class="span3">
 					<g:actionSubmit 
 						name="Download" 
@@ -169,6 +163,7 @@
 						action="download"
 						class="btn btn-primary span3" />
 				</div>
+				<%--
 				<g:if test="${isAdmin}">
 					<div class="span3">
 						<g:actionSubmit 
@@ -316,7 +311,6 @@
 
 			$('.oc-delete').click(function () {
 				var img = $(this).parent().parent().find('a:first-child').find('img').get(0);
-			    	alert('delete image: '+img.id);
 				 $(this).parent().parent().remove();
 			});
 
