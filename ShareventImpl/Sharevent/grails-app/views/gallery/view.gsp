@@ -115,6 +115,7 @@
 								</div>
 								<div class="oc-wrapper oc-bottom oc-left">
 									<div class="oc-overlay oc-select">
+										<input type="hidden" name="seleced_img_${imageUrl.key}" value="" id="seleced_img_${imageUrl.key}" />
 									</div>
 								</div>
 								<div class="oc-wrapper oc-bottom oc-right">
@@ -211,7 +212,6 @@
 		</div>
 	</div>
 
-
 		<style type="text/css" media="screen">
 		
 			.oc-wrapper {
@@ -294,18 +294,30 @@
 			);
 			
 			$('.oc-gallery').click(function () {
-			    alert('view gallery'); 
+				var a = $(this).parent().siblings(':first');
+				a.click();
+			
 			});
 
 			$('.oc-delete').click(function () {
-				var img = $(this).parent().parent().find('a').find('img').get(0);
+				var img = $(this).parent().parent().find('a:first-child').find('img').get(0);
 			    	alert('delete image: '+img.id);
 				 $(this).parent().parent().remove();
 			});
 
 			$('.oc-select').click(function () {
-				var a = $(this).parent().parent().find('a').css('background-color', '#0069d6');
-				alert('selected'); 
+				var a = $(this).parent().siblings(':first');
+				var img = $(this).parent().parent().find('a:first-child').find('img').get(0);
+				var hidden = $(this).children(':first');
+				var value = hidden.attr('value');
+
+				if(value == ""){
+					a.css('background-color', '#0069d6');
+					hidden.attr('value',img.id);
+				}else{
+					a.css('background-color', '#fff');
+					hidden.attr('value','');
+				}
 
 			});
 		
@@ -319,6 +331,13 @@
 			};
 		</script>
 
-
+	<script type="text/javascript" charset="utf-8">
+		$(function(){
+			$(".thumbnail").colorbox({rel: 'group1', preloading: true, scalePhotos: true, maxWidth: "100%", maxHeight: "100%"});
+			<g:if test="$showImage}">
+				$("#img_${showImage}").click();
+			</g:if>
+		})
+	</script>
 </body>
 </html>

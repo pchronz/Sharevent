@@ -14,6 +14,7 @@ modules = {
 	}
 
 	'bootstrap-js' {
+		dependsOn 'jquery'
 		resource url:[dir:'bootstrap/js', file:"bootstrap.${isDev?'js':'min.js'}"], disposition: 'head', exclude:'minify'	
 	}
 
@@ -38,6 +39,11 @@ modules = {
 			defaultBundle 'sv'
 			resource url:'/css/uploader.css'
 		}
+	}
+
+	colorbox {
+		resource url:[dir:'colorbox', file:isDev ? 'jquery.colorbox.js' : 'jquery.colorbox-min.js']
+		resource url:[dir:'colorbox', file: 'colorbox.css']
 	}
 	
 
