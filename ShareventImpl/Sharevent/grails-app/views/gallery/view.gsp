@@ -217,6 +217,7 @@
 			<uploader:onSubmit>
 				$('.qq-upload-drop-area').hide();
 				$('.qq-upload-button').hide();
+				$('#upload-modal .close').hide();
 				ongoingUploads += 1;
 				console.log('obSubmit: ' +ongoingUploads)
 			</uploader:onSubmit>
