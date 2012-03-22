@@ -215,6 +215,8 @@
 			multiple="true" 
 			sizeLimit="5000000">
 			<uploader:onSubmit>
+				$('.qq-upload-drop-area').hide();
+				$('.qq-upload-button').hide();
 				ongoingUploads += 1;
 				console.log('obSubmit: ' +ongoingUploads)
 			</uploader:onSubmit>
