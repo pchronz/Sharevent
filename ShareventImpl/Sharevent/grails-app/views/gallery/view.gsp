@@ -19,7 +19,7 @@
 	  
 	<div class="row">
 		<div class="span12 galleryTitle">
-			<h1 style="color: #FFFFFF;">${galleryInstance.title}</h1>
+			<h1 style="color: #FFFFFF;display:inline;margin-right:12px;">${galleryInstance.title}</h1>
 			<div class="g-plusone"
 				style="display:inline"
 				data-annotation="none"
@@ -96,18 +96,16 @@
 
 		
 		<div class="row">
-			<g:if test="${urls.size() > 0}">
-				<div class="span3">
-					<g:actionSubmit 
-						name="Download" 
-						value="${message(code: 'userDef.downloadImages')}" 
-						action="download"
-						class="btn btn-primary span3" />
+				<div class="span6">
+					<div class="btn-group">
+						<g:actionSubmit 
+							name="Download" 
+							value="${message(code: 'userDef.downloadImages')}" 
+							action="download"
+							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' }" />
+						<a class="btn btn-large" data-toggle="modal" href="#upload-modal">Upload </a>
+					</div>
 				</div>
-			</g:if>	
-			<div class="span2">
-				<a class="btn btn-primary" data-toggle="modal" href="#upload-modal">Upload images</a>
-			</div>
 		</div>
 <br>	
 		<div class="row">
@@ -202,23 +200,19 @@
 		}(document, 'script', 'facebook-jssdk'));
 		</script>
 		<%-- END facebook like --%>
-
 		<div class="row">
-			<g:if test="${urls.size() > 0}">
-				<div class="span3">
-					<g:actionSubmit 
-						name="Download" 
-						value="${message(code: 'userDef.downloadImages')}" 
-						action="download"
-						class="btn btn-primary span3" />
+				<div class="span6">
+					<div class="btn-group">
+						<g:actionSubmit 
+							name="Download" 
+							value="${message(code: 'userDef.downloadImages')}" 
+							action="download"
+							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' }" />
+						<a class="btn btn-large" data-toggle="modal" href="#upload-modal">Upload </a>
+					</div>
 				</div>
-			</g:if>	
-
-			<div class="span2">
-				<a class="btn btn-primary" data-toggle="modal" href="#upload-modal" >Upload images</a>
-			</div>
 		</div>
-
+		
 		<g:hiddenField name="key" value="${galleryInstance.creatorId}" />
         </g:form>
 
