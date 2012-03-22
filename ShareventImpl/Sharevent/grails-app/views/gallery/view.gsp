@@ -207,6 +207,12 @@
 
 			</uploader:onComplete>
 		</uploader:uploader>
+
+		<script type="text/javascript" charset="utf-8">
+			$(function(){
+				$('.qq-upload-drop-area').css('display', 'inline');
+			});
+		</script>
 	  </div>
 	  <div class="modal-footer">
 	  </div>
