@@ -3,6 +3,8 @@
     <head>
         <title><g:layoutTitle default="Sharevent" /></title>
         <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
+		<%-- Google web fonts --%>
+		<link href='http://fonts.googleapis.com/css?family=Fugaz+One|Sonsie+One|Exo|Megrim|Orbitron' rel='stylesheet' type='text/css'>
 		<g:javascript library="jquery" plugin="jquery"/>
         <g:layoutHead />
 		<r:require modules="bootstrap, sharevent, colorbox"/>
@@ -54,13 +56,6 @@
 	</g:if>
 	
 	<div class="container">
-		<div class="row">
-			<div class="span12">
-				<g:link controller="main" action="view">
-					<img class="logo1" src="${resource(dir:'images',file:'sharevent_logo.png')}" alt="Sharevent" />
-				</g:link>
-			</div>
-		</div>
 		
 		<div class="row">
 			<div class="span12">
