@@ -7,11 +7,8 @@
     	<g:message code="userDef.companyName" />: <g:message code="userDef.companySlogan" />
     </title>
 	<r:require module="fileuploader" />
-	
-
-  </head>
+</head>
   <body>
-
 	<div class="row">
 		<div class="span12 galleryTitle">
 			<h2>${galleryInstance.title}</h2>
@@ -83,6 +80,13 @@
 
         <g:form controller="gallery" id="${galleryInstance.id}">
 
+		<r:script type="text/javascript" charset="utf-8">
+			function selectAllImages(boxId){
+				$('input[type=checkbox]').attr('checked',$('#'+boxId).is(':checked'));
+			}		
+		</r:script>
+
+		
 		<div class="row control">
 			<g:if test="${urls.size() > 0}">
 				<div class="span3">
@@ -100,6 +104,9 @@
 						</ul>
 					</div>
 				</div>
+				<div class="span2">
+					<a class="btn btn-primary" data-toggle="modal" href="#upload-modal">Upload images</a>
+				</div>
 			</g:if>
 		</div>
 	
@@ -113,21 +120,21 @@
 									<img src="${imageUrl.value}" id="img_${imageUrl.key}"/>
 								</a>
 								
-								<div class="oc-wrapper oc-top oc-left">	
-									<div class="oc-overlay oc-gallery">
+								<div class="ac-wrapper ac-top ac-left">	
+									<div class="ac-overlay ac-gallery">
 									</div>
 								</div>
-								<div class="oc-wrapper oc-top oc-right">
-									<div class="oc-overlay oc-delete">
+								<div class="ac-wrapper ac-top ac-right">
+									<div class="ac-overlay ac-delete">
 									</div>
 								</div>
-								<div class="oc-wrapper oc-bottom oc-left">
-									<div class="oc-overlay oc-select">
+								<div class="ac-wrapper ac-bottom ac-left">
+									<div class="ac-overlay ac-select">
 										<input type="hidden" name="selected_img_${imageUrl.key}" value="" id="selected_img_${imageUrl.key}" />
 									</div>
 								</div>
-								<div class="oc-wrapper oc-bottom oc-right">
-									<div class="oc-overlay oc-social">
+								<div class="ac-wrapper ac-bottom ac-right">
+									<div class="ac-overlay ac-social">
 										<br>
 										<span class="help-inline addthis_toolbox addthis_default_style addthis_32x32_style">
 										<a class="addthis_button_twitter"></a>
@@ -138,7 +145,6 @@
 										</span>
 									</div>
 								</div>
-
 							</li>				 
 						</g:each>
 					</ul>	
@@ -153,83 +159,90 @@
 				</g:else>
 			</div>			
 		</div>
-		
-		<g:if test="${urls.size() > 0}">
+
 			<div class="row">
+				<g:if test="${urls.size() > 0}">
+					<div class="span3">
+						<g:actionSubmit 
+							name="Download" 
+							value="${message(code: 'userDef.downloadImages')}" 
+							action="download"
+							class="btn btn-primary span3" />
+					</div>
+				</g:if>	
+
+			<div class="span2">
+				<a class="btn btn-primary" data-toggle="modal" href="#upload-modal" >Upload images</a>
+			</div>
+			<%--
+			<g:if test="${isAdmin}">
 				<div class="span3">
 					<g:actionSubmit 
-						name="Download" 
-						value="${message(code: 'userDef.downloadImages')}" 
-						action="download"
-						class="btn btn-primary span3" />
+						name="removeImages" 
+						value="${message(code: 'userDef.deleteSelection')}" 
+						action="deleteImages"
+						onclick="if(!confirm('Are you sure?')) return false" 
+						class="btn btn-info span3" />
 				</div>
-				<%--
-				<g:if test="${isAdmin}">
-					<div class="span3">
-						<g:actionSubmit 
-							name="removeImages" 
-							value="${message(code: 'userDef.deleteSelection')}" 
-							action="deleteImages"
-							onclick="if(!confirm('Are you sure?')) return false" 
-							class="btn btn-info span3" />
-					</div>
-					<div class="span3">
-						<g:actionSubmit 
-							name="removeGallery" 
-							value="${message(code: 'userDef.deleteGallery')}" 
-							action="deleteGallery"
-							onclick="if(!confirm('Are you sure?')) return false"
-							class="btn span3" />
-					</div>
-				</g:if>
-				--%>
-			</div>
-		</g:if>	
-		
-		<div id="hiddenFieldContainer">
-			<g:hiddenField name="key" value="${galleryInstance.creatorId}" />
+				<div class="span3">
+					<g:actionSubmit 
+						name="removeGallery" 
+						value="${message(code: 'userDef.deleteGallery')}" 
+						action="deleteGallery"
+						onclick="if(!confirm('Are you sure?')) return false"
+						class="btn span3" />
+				</div>
+			</g:if>
+			--%>
 		</div>
+
+		<g:hiddenField name="key" value="${galleryInstance.creatorId}" />
         </g:form>
 
 	<script type="text/javascript" charset="utf-8">
 		var ongoingUploads = 0;
 	</script>
 
+	<div class="modal hide fade" id="upload-modal">
+	  <div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Upload images</h3>
+	  </div>
+	  <div class="modal-body">
+		<uploader:uploader 
+			id="${galleryInstance.id}"
+			url="${[controller: 'gallery', action: 'uploadImage', id: galleryInstance.id]}"
+			multiple="true" 
+			sizeLimit="5000000">
+			<uploader:onSubmit>
+				ongoingUploads += 1;
+				console.log('obSubmit: ' +ongoingUploads)
+			</uploader:onSubmit>
+			<uploader:onComplete>
+				ongoingUploads -= 1;
+				console.log('onComplete :' +ongoingUploads)
 
-	<div class="row">
-		<div class="span12">
-			<uploader:uploader 
-				id="${galleryInstance.id}"
-				url="${[controller: 'gallery', action: 'uploadImage', id: galleryInstance.id]}"
-				multiple="true" 
-				sizeLimit="5000000">
-				<uploader:onSubmit>
-					ongoingUploads += 1;
-					console.log('obSubmit: ' +ongoingUploads)
-				</uploader:onSubmit>
-				<uploader:onComplete>
-					ongoingUploads -= 1;
-					console.log('onComplete :' +ongoingUploads)
+				if (ongoingUploads == 0) {
+					window.location.reload(true);
+					console.log('refresh :' +ongoingUploads)
 
-					if (ongoingUploads == 0) {
-						window.location.reload(true);
-						console.log('refresh :' +ongoingUploads)
-
-					}
-
-				</uploader:onComplete>
-			</uploader:uploader>
-		</div>
+				}
+			</uploader:onComplete>
+		</uploader:uploader>
+	  </div>
+	  <div class="modal-footer">
+	  </div>
 	</div>
+
 
 		<style type="text/css" media="screen">
 		
-			.oc-wrapper {
+			.ac-wrapper {
 				position:relative;
 				z-index:2;
 			}
 
-			.oc-overlay {
+			.ac-overlay {
 				display:none; 
 				z-index:3;
 				
@@ -240,32 +253,32 @@
 				filter:alpha(opacity=60); /* IE transparency */
 			}
 			
-			.oc-delete {
+			.ac-delete {
 				background-image: url(${resource(dir:'images',file:'delete.png')});
 			}
 
-			.oc-gallery {
+			.ac-gallery {
 				background-image: url(${resource(dir:'images',file:'gallery.png')});
 			}
 
-			.oc-select{
+			.ac-select{
 				background-image: url(${resource(dir:'images',file:'download.png')});
 			}
 
-			.oc-social {
+			.ac-social {
 				background-image: url(${resource(dir:'images',file:'social.png')});
 			}			
 
-			.oc-top {
+			.ac-top {
 				top:0px;
 			}
-			.oc-bottom {
+			.ac-bottom {
 				
 			}
-			.oc-left {
+			.ac-left {
 				float:left;
 			}
-			.oc-right {
+			.ac-right {
 				float:right;
 			}
 		
@@ -284,16 +297,16 @@
 					divs.css({height:hpx,width:wpx});
 
 					//TODO select only this children
-					$(".oc-wrapper").css('margin-top',"-"+h+"px");
-					$(".oc-bottom").css('top', hpx);
-					$(".oc-overlay").css({height:hpx,width:wpx});
+					$(".ac-wrapper").css('margin-top',"-"+h+"px");
+					$(".ac-bottom").css('top', hpx);
+					$(".ac-overlay").css({height:hpx,width:wpx});
 				},
 				function(){
 					return null;
 				}
 			);			
 
-			$(".oc-wrapper").hover(
+			$(".ac-wrapper").hover(
 			  function(){
 				$(this).find(':first-child').show();
 
@@ -303,18 +316,21 @@
 			  }
 			);
 			
-			$('.oc-gallery').click(function () {
+			$('.ac-gallery').click(function () {
 				var a = $(this).parent().siblings(':first');
 				a.click();
 			
 			});
 
-			$('.oc-delete').click(function () {
+			$('.ac-delete').click(function () {
 				var img = $(this).parent().parent().find('a:first-child').find('img').get(0);
-				 $(this).parent().parent().remove();
+				var hidden = $(this).children(':first');
+				hidden.attr('value','');
+				$(this).parent().parent().remove();
+				//TODO make a remote call to delete
 			});
 
-			$('.oc-select').click(function () {
+			$('.ac-select').click(function () {
 				var a = $(this).parent().siblings(':first');
 				var img = $(this).parent().parent().find('a:first-child').find('img').get(0);
 				var hidden = $(this).children(':first');
@@ -327,26 +343,24 @@
 					a.css('background-color', '#fff');
 					hidden.attr('value','');
 				}
-
 			});
 		
-			$('.oc-social').click(function () {
-			 });
+			$('.ac-social').click(function () {
+				//TODO
+			});
 
+			//reset overlay on window resize
 			$(window).bind("resize", resizeWindow);
-	 
 			function resizeWindow( e ) {
-				$(".oc-wrapper").css({height:'0px',width:'0px'});
+				$(".ac-wrapper").css({height:'0px',width:'0px'});
 			};
-		</script>
 
-	<script type="text/javascript" charset="utf-8">
-		$(function(){
-			$(".thumbnail").colorbox({rel: 'group1', preloading: true, scalePhotos: true, maxWidth: "100%", maxHeight: "100%"});
-			<g:if test="$showImage}">
-				$("#img_${showImage}").click();
-			</g:if>
-		})
+			$(function(){
+				$(".thumbnail").colorbox({rel: 'group1', preloading: true, scalePhotos: true, maxWidth: "100%", maxHeight: "100%"});
+				<g:if test="$showImage}">
+					$("#img_${showImage}").click();
+				</g:if>
+			});
 	</script>
 </body>
 </html>
