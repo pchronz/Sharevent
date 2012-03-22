@@ -846,6 +846,10 @@ class GalleryController {
 		redirect action: "view", params: [key: gallery.creatorId, id: gallery.id]
 	}
 
+	def deleteImage = {
+		
+	}
+
     def deleteGallery = {
 		def gallery = Gallery.get(params.id)
 		if(!gallery) {
