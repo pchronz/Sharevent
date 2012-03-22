@@ -85,12 +85,25 @@
 
 		<div class="row control">
 			<g:if test="${urls.size() > 0}">
-				<div class="span3">
+				<%--
 					<g:actionSubmit 
 						class="btn btn-primary span3" 
 						name="Download" 
 						value="${message(code: 'userDef.downloadImages')}"
 						action="download"  />
+				--%>
+				<div class="span3">
+					<div class="btn-group dropdown-toggle" data-toggle="dropdown" >
+						<button class="span2 btn btn-primary btn-large">
+							<i class="icon-download-alt icon-white"></i> Download
+						</button>	
+						<button class="btn btn-primary dropdown-toggle btn-large" data-toggle="dropdown">
+							<span class="caret"></span>
+						</button> 	
+						<ul class="dropdown-menu">
+							<li><a href="#">selected only</a></li>
+						</ul>
+					</div>
 				</div>
 			</g:if>
 		</div>
@@ -124,9 +137,9 @@
 										<span class="help-inline addthis_toolbox addthis_default_style addthis_32x32_style">
 										<a class="addthis_button_twitter"></a>
 										<a class="addthis_button_facebook"></a>
-										<br>
-										<a class="addthis_button_mailto"></a>
+										<br><br>
 										<a class="addthis_button_google_plusone"></a>
+										<a class="addthis_button_mailto"></a>
 										</span>
 									</div>
 								</div>
@@ -148,6 +161,7 @@
 		
 		<g:if test="${urls.size() > 0}">
 			<div class="row">
+				<%--
 				<div class="span3">
 					<g:actionSubmit 
 						name="Download" 
@@ -173,6 +187,7 @@
 							class="btn span3" />
 					</div>
 				</g:if>
+				--%>
 			</div>
 		</g:if>	
 		
