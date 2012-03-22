@@ -326,8 +326,13 @@
 				var img = $(this).parent().parent().find('a:first-child').find('img').get(0);
 				var hidden = $(this).children(':first');
 				hidden.attr('value','');
-				$(this).parent().parent().remove();
-				//TODO make a remote call to delete
+
+				var elem = $(this).parent().parent();
+
+				//TODO remove from dom only onSuccess
+				var galId = '${galleryInstance.id}';
+				${remoteFunction(action: 'deleteImage', onSuccess: 'hure();' , params: '\'imageId=\' + img.id + \'&id=\'+ galId')}
+				elem.remove();
 			});
 
 			$('.ac-select').click(function () {

@@ -856,7 +856,12 @@ class GalleryController {
 	}
 
 	def deleteImage = {
-		
+		println "deleteImage: "
+		println params
+
+		def imageId = Long.valueOf(params.imageId.split('_')[1])
+		def image = Image.get(imageId)
+		imageService.deleteImage(image)	
 	}
 
     def deleteGallery = {
