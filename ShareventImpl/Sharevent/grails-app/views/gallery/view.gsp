@@ -22,30 +22,35 @@
 				<div class="control-group">
 					<label class="control-label"><sv:shortLink gallery="${galleryInstance}"><g:message code="userDef.participationLink"/></sv:shortLink></label>
 					<div class="controls">
-						<input class="span3 gallery-short-url" type="text" value="${shortUrl}"></input>
-						<!-- AddThis Button BEGIN -->
-						<span class="help-inline addthis_toolbox addthis_default_style addthis_32x32_style">
-							<a class="addthis_button_twitter"></a>
-							<a class="addthis_button_facebook"></a>
-							<a class="addthis_button_mailto"></a>
-							<a class="addthis_button_google_plusone"></a>
-						</span>
-						<script type="text/javascript">
-							var addthis_config = {"data_track_addressbar":true, services_overlay:'facebook,twitter,mailto'};
-							var addthis_share = {
-							   url_transforms: {
-								 clean: true,
-								 remove: ['key'],
-								 shorten: { twitter: 'bitly' } 
-							   },
-								shorteners : {
-										bitly : { 
-											username: 'o_2146m4g6q1',
-											apiKey: 'R_c16d074693b049fec0ee2c5a8944c11b'
-										}
-									}
-							};
-						</script>
+						<input class="span4 gallery-short-url" type="text" value="${shortUrl}"></input>
+
+							<div style="display:inline">
+								<div class="g-plusone"
+									style="display:inline"
+									data-annotation="none"
+									data-size="medium"
+									data-href="${createLink(action: 'view', id: galleryInstance.id)}">
+								</div>
+								<div id="name" style="display:inline">
+									<a href="https://twitter.com/share" 
+										class="twitter-share-button" 
+										data-lang="en" 
+										data-count="none"
+										data-url="${createLink(action: 'view', id: galleryInstance.id)}">
+										Tweet
+									</a>	
+								</div>
+
+								<div class="fb-like" 
+									style="display:inline"
+									data-href= "${createLink(action: 'view', id: galleryInstance.id)}"
+									data-send="false"
+									data-layout="button_count" 
+									data-width="450"
+									data-show-faces="true">
+								</div>
+							</div>
+
 					</div>
 				</div>
 				<g:if test="${isAdmin}">
@@ -87,29 +92,21 @@
 		</r:script>
 
 		
-		<div class="row control">
+		<div class="row">
 			<g:if test="${urls.size() > 0}">
 				<div class="span3">
-					<div class="btn-group dropdown-toggle" data-toggle="dropdown" >
-						<g:actionSubmit 
+					<g:actionSubmit 
 						name="Download" 
 						value="${message(code: 'userDef.downloadImages')}" 
 						action="download"
-						class="btn btn-primary span2" />
-						<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-							<span class="caret"></span>
-						</button> 	
-						<ul class="dropdown-menu">
-							<li><a href="#">selected only</a></li>
-						</ul>
-					</div>
+						class="btn btn-primary span3" />
 				</div>
-				<div class="span2">
-					<a class="btn btn-primary" data-toggle="modal" href="#upload-modal">Upload images</a>
-				</div>
-			</g:if>
+			</g:if>	
+			<div class="span2">
+				<a class="btn btn-primary" data-toggle="modal" href="#upload-modal">Upload images</a>
+			</div>
 		</div>
-	
+<br>	
 		<div class="row">
 			<div class="span12">
 				<g:if test="${urls.size() > 0}">
@@ -135,14 +132,28 @@
 								</div>
 								<div class="ac-wrapper ac-bottom ac-right">
 									<div class="ac-overlay ac-social">
-										<br>
-										<span class="help-inline addthis_toolbox addthis_default_style addthis_32x32_style">
-										<a class="addthis_button_twitter"></a>
-										<a class="addthis_button_facebook"></a>
-										<br><br>
-										<a class="addthis_button_google_plusone"></a>
-										<a class="addthis_button_mailto"></a>
-										</span>
+										<div class="g-plusone"
+											data-annotation="none"
+											data-size="medium"
+											data-href="${createLink(action: 'view', id: galleryInstance.id, params:[showImage:imageUrl.key] )}">
+										</div>
+										<div id="name">
+											<a href="https://twitter.com/share" 
+												class="twitter-share-button" 
+												data-lang="en" 
+												data-count="none"
+												data-url="${createLink(action: 'view', id: galleryInstance.id, params:[showImage:imageUrl.key] )}">
+												Tweet
+											</a>	
+										</div>
+
+										<div class="fb-like" 
+											data-href= "${createLink(action: 'view', id: galleryInstance.id, params:[showImage:imageUrl.key] )}"
+											data-send="false"
+											data-layout="button_count" 
+											data-width="450"
+											data-show-faces="true">
+										</div>
 									</div>
 								</div>
 							</li>				 
@@ -160,40 +171,49 @@
 			</div>			
 		</div>
 
-			<div class="row">
-				<g:if test="${urls.size() > 0}">
-					<div class="span3">
-						<g:actionSubmit 
-							name="Download" 
-							value="${message(code: 'userDef.downloadImages')}" 
-							action="download"
-							class="btn btn-primary span3" />
-					</div>
-				</g:if>	
+		<%-- g-plusone: generatet code --%>
+		<script type="text/javascript">
+		  (function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		  })();
+		</script>
+		<%-- END g-plusone --%>
+
+		<%-- twitter tweet --%>
+		<script>
+			!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+		</script>
+		<%-- END twitter tweet--%>
+
+		<%-- Faceboook like --%>
+		<div id="fb-root"></div>
+		<script>
+		(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+		</script>
+		<%-- END facebook like --%>
+
+		<div class="row">
+			<g:if test="${urls.size() > 0}">
+				<div class="span3">
+					<g:actionSubmit 
+						name="Download" 
+						value="${message(code: 'userDef.downloadImages')}" 
+						action="download"
+						class="btn btn-primary span3" />
+				</div>
+			</g:if>	
 
 			<div class="span2">
 				<a class="btn btn-primary" data-toggle="modal" href="#upload-modal" >Upload images</a>
 			</div>
-			<%--
-			<g:if test="${isAdmin}">
-				<div class="span3">
-					<g:actionSubmit 
-						name="removeImages" 
-						value="${message(code: 'userDef.deleteSelection')}" 
-						action="deleteImages"
-						onclick="if(!confirm('Are you sure?')) return false" 
-						class="btn btn-info span3" />
-				</div>
-				<div class="span3">
-					<g:actionSubmit 
-						name="removeGallery" 
-						value="${message(code: 'userDef.deleteGallery')}" 
-						action="deleteGallery"
-						onclick="if(!confirm('Are you sure?')) return false"
-						class="btn span3" />
-				</div>
-			</g:if>
-			--%>
 		</div>
 
 		<g:hiddenField name="key" value="${galleryInstance.creatorId}" />
@@ -375,6 +395,11 @@
 					$("#img_${showImage}").click();
 				</g:if>
 			});
+			
+			$(document).bind('click', function(e) {
+				
+				console.log( e );
+			    });
 	</script>
 </body>
 </html>
