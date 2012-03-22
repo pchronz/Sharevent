@@ -9,7 +9,6 @@
 	<r:require module="fileuploader" />
   </head>
   <body>
-
 	<div class="row">
 		<div class="span12 galleryTitle">
 			<h2>${galleryInstance.title}</h2>
@@ -98,6 +97,9 @@
 						action="download"  />
 				</div>
 				<div class="span2">
+					<a class="btn btn-primary" data-toggle="modal" href="#upload-modal">Upload images</a>
+				</div>
+				<div class="span2">
 					<g:checkBox id="selectAll" 
 						name="selectAll"
 						value="${true}"
@@ -145,6 +147,11 @@
 						action="download"
 						class="btn btn-primary span3" />
 				</div>
+
+				<div class="span2">
+					<a class="btn btn-primary" data-toggle="modal" href="#upload-modal" >Upload images</a>
+				</div>
+
 				<g:if test="${isAdmin}">
 					<div class="span3">
 						<g:actionSubmit 
@@ -173,32 +180,38 @@
 		var ongoingUploads = 0;
 	</script>
 
+	<div class="modal hide fade" id="upload-modal">
+	  <div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Upload images</h3>
+	  </div>
+	  <div class="modal-body">
+		<uploader:uploader 
+			id="${galleryInstance.id}"
+			url="${[controller: 'gallery', action: 'uploadImage', id: galleryInstance.id]}"
+			multiple="true" 
+			sizeLimit="5000000">
+			<uploader:onSubmit>
+				ongoingUploads += 1;
+				console.log('obSubmit: ' +ongoingUploads)
+			</uploader:onSubmit>
+			<uploader:onComplete>
+				ongoingUploads -= 1;
+				console.log('onComplete :' +ongoingUploads)
 
-	<div class="row">
-		<div class="span12">
-			<uploader:uploader 
-				id="${galleryInstance.id}"
-				url="${[controller: 'gallery', action: 'uploadImage', id: galleryInstance.id]}"
-				multiple="true" 
-				sizeLimit="5000000">
-				<uploader:onSubmit>
-					ongoingUploads += 1;
-					console.log('obSubmit: ' +ongoingUploads)
-				</uploader:onSubmit>
-				<uploader:onComplete>
-					ongoingUploads -= 1;
-					console.log('onComplete :' +ongoingUploads)
+				if (ongoingUploads == 0) {
+					window.location.reload(true);
+					console.log('refresh :' +ongoingUploads)
 
-					if (ongoingUploads == 0) {
-						window.location.reload(true);
-						console.log('refresh :' +ongoingUploads)
+				}
 
-					}
-
-				</uploader:onComplete>
-			</uploader:uploader>
-		</div>
+			</uploader:onComplete>
+		</uploader:uploader>
+	  </div>
+	  <div class="modal-footer">
+	  </div>
 	</div>
+
 
 	<script type="text/javascript" charset="utf-8">
 		$(function(){
@@ -206,7 +219,7 @@
 			<g:if test="$showImage}">
 				$("#img_${showImage}").click();
 			</g:if>
-		})
+		});
 	</script>
 </body>
 </html>
