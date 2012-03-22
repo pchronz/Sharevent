@@ -215,6 +215,9 @@
 			multiple="true" 
 			sizeLimit="5000000">
 			<uploader:onSubmit>
+				$('.qq-upload-drop-area').hide();
+				$('.qq-upload-button').hide();
+				$('#upload-modal .close').hide();
 				ongoingUploads += 1;
 				console.log('obSubmit: ' +ongoingUploads)
 			</uploader:onSubmit>
@@ -229,6 +232,12 @@
 				}
 			</uploader:onComplete>
 		</uploader:uploader>
+
+		<script type="text/javascript" charset="utf-8">
+			$(function(){
+				$('.qq-upload-drop-area').css('display', 'inline');
+			});
+		</script>
 	  </div>
 	  <div class="modal-footer">
 	  </div>
