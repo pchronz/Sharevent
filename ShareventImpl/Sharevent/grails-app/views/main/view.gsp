@@ -147,11 +147,10 @@
 
 				document.body.style['background-image'] = 'url("${resource(dir:'images', file:'blue_bg.jpg')}")';
 				document.body.style['backgroundImage'] = 'url("${resource(dir:'images', file:'blue_bg.jpg')}")';
-				document.body.style['background-repeat'] = 'no-repeat;';
-				document.body.style['background-position'] = 'center center;';
+				document.body.style['background-attachment'] = 'fixed';
 
 				// object colors, chosen at random
-				var colours = ['#CCCCFF', '#05C', '#99CCFF', '#0074CC'];
+				var colours = ['#CFFFFF', '#3366ff', '#0099ff', '#0074CC'];
 
 				// preparing the canvas
 				maxX = screen.availWidth + 40;
