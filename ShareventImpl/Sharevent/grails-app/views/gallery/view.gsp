@@ -20,47 +20,48 @@
 	<div class="row">
 		<div class="span12 galleryTitle">
 			<h1 style="color: #FFFFFF;">${galleryInstance.title}</h1>
+			<div class="g-plusone"
+				style="display:inline"
+				data-annotation="none"
+				data-size="medium"
+				data-href="${createLink(action: 'view', id: galleryInstance.id)}">
+			</div>
+			<div id="name" style="display:inline">
+				<a href="https://twitter.com/share" 
+					class="twitter-share-button" 
+					data-lang="en" 
+					data-count="none"
+					data-url="${createLink(action: 'view', id: galleryInstance.id)}">
+					Tweet
+				</a>	
+			</div>
+
+			<div class="fb-like" 
+				style="display:inline;position:relative;top:-3px;"
+				data-href= "${createLink(action: 'view', id: galleryInstance.id)}"
+				data-send="false"
+				data-layout="button_count" 
+				data-width="450"
+				data-show-faces="true">
+			</div>
 		</div>
+
 	</div>
 	
 	<div class="row">
-	  <form class="form-horizontal">
-		<div class="span12">
+	  <form class="form">
+		<div class="span3">
 			<fieldset>
 				<div class="control-group">
 					<label class="control-label"><sv:shortLink gallery="${galleryInstance}"><g:message code="userDef.participationLink"/></sv:shortLink></label>
 					<div class="controls">
-						<input class="span4 gallery-short-url" type="text" value="${shortUrl}"></input>
-
-							<div style="display:inline">
-								<div class="g-plusone"
-									style="display:inline"
-									data-annotation="none"
-									data-size="medium"
-									data-href="${createLink(action: 'view', id: galleryInstance.id)}">
-								</div>
-								<div id="name" style="display:inline">
-									<a href="https://twitter.com/share" 
-										class="twitter-share-button" 
-										data-lang="en" 
-										data-count="none"
-										data-url="${createLink(action: 'view', id: galleryInstance.id)}">
-										Tweet
-									</a>	
-								</div>
-
-								<div class="fb-like" 
-									style="display:inline"
-									data-href= "${createLink(action: 'view', id: galleryInstance.id)}"
-									data-send="false"
-									data-layout="button_count" 
-									data-width="450"
-									data-show-faces="true">
-								</div>
-							</div>
-
+						<input class="span3 gallery-short-url" type="text" value="${shortUrl}"></input>
 					</div>
 				</div>
+			</fieldset>
+		</div>
+		<div class="span3">
+			<fieldset>
 				<g:if test="${isAdmin}">
 					<div class="control-group">
 						<label class="control-label"><sv:shortAdminLink gallery="${galleryInstance}"><g:message code="userDef.administrationLink"/></sv:shortAdminLink></label>
@@ -70,24 +71,18 @@
 					</div>
 				</g:if>
 			</fieldset>
-
-			
-			<script type="text/javascript" charset="utf-8">
-				$(function() {
-					$(".gallery-short-url").focus(function() {
-						this.select();
-					});
-					$(".gallery-short-url").mouseup(function(e) {
-						e.preventDefault();
-					});
-				});
-			</script>
-			
-			<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f69a3e22612bf8e"></script>
-			<%-- image overlay --%>
-			<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f69a3e22612bf8e"></script> 
-			<!-- AddThis Button END -->
 		</div>
+			
+		<script type="text/javascript" charset="utf-8">
+			$(function() {
+				$(".gallery-short-url").focus(function() {
+					this.select();
+				});
+				$(".gallery-short-url").mouseup(function(e) {
+					e.preventDefault();
+				});
+			});
+		</script>
 	  </form>
 	</div>
 
@@ -325,8 +320,12 @@
 
 			$('.thumbnail').hover(
 				function(){
-					var h = this.clientHeight;
+					var ww = $(window).width();	
+					if( ww <= 480)
+						return null;
 
+
+					var h = this.clientHeight;
 					var divs = $(this).nextAll();
 					
 					var hpx = h/2+'px';

@@ -25,23 +25,25 @@ class ImageService {
 	
     static transactional = true
 
-	def deleteImage(Image image) {
+	def deleteImage(imageId) {
 		// TODO refrain from deleting data, mark as deleted instead
-		def session = SessionFactoryUtils.getSession(sessionFactory, true);
-		session.setFlushMode(FlushMode.COMMIT)
+		//def session = SessionFactoryUtils.getSession(sessionFactory, true);
+		//session.setFlushMode(FlushMode.COMMIT)
 
-		imageDBService.delete(image)
-		log.info "Deleted image.id == ${image.id} from imageDB."
+		def image = Image.findById(imageId,[lock:true])			
+		def galleryUser = GalleryUser.findById(image.galleryUser.id, [lock:true])
+		def gallery = Gallery.findById(image.gallery.id, [lock:true])
 
+		def galUserId = image.galleryUser.id
 
-		def galleryUser = image.galleryUser
-		def gallery = image.gallery
 		galleryUser.removeFromImages(image)
 		gallery.removeFromImages(image)
 
-		def imageId = image.id
 		image.delete(flush: true)
-		log.info "Deleted domain instance image.id == ${imageId}"
+		
+		log.info "Deleted image.id == ${imageId} from imageDB."
+		imageDBService.delete(imageId, galUserId)
+
 	}
 
 	def uploadImage(def request, def image, def user) {
