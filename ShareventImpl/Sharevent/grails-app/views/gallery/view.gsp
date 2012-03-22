@@ -9,9 +9,17 @@
 	<r:require module="fileuploader" />
 </head>
   <body>
+	  <div class="row">
+		  <div class="span8" style="margin-top: 50px;">
+			<g:link controller="main" action="view" style="text-decoration: none;">
+				<span style="font-family: 'Sonsie One', cursive; font-size: 96px; text-decoration: none; margin-left: 20pxk">SharEvent</span>
+			</g:link>
+		  </div>
+	  </div>
+	  
 	<div class="row">
 		<div class="span12 galleryTitle">
-			<h2>${galleryInstance.title}</h2>
+			<h1>${galleryInstance.title}</h1>
 		</div>
 	</div>
 	
@@ -213,7 +221,8 @@
 			id="${galleryInstance.id}"
 			url="${[controller: 'gallery', action: 'uploadImage', id: galleryInstance.id]}"
 			multiple="true" 
-			sizeLimit="5000000">
+			sizeLimit="5000000"
+			allowedExtensions=" [ 'jpg', 'jpeg', 'JPG', 'JPEG' ]">
 			<uploader:onSubmit>
 				$('.qq-upload-drop-area').hide();
 				$('.qq-upload-button').hide();
