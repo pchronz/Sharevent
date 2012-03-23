@@ -604,8 +604,10 @@ class GalleryController {
 		// to the images in the image DB here and associate the images with those
 		def urls = [:]
 		def urlsFull = [:]
-	
-		def images = Image.findAllByGallery(gallery,[sort:'dateCreated',order:'desc'])
+
+		params.max = params.max ?:16	
+
+		def images = Image.findAllByGallery(gallery,[sort:'dateCreated',order:'desc',max:params.max,offset:params.offset])
 		images?.each { image ->
 			def url = imageDBService.getImageThumbURL(image)
 			def urlFull = imageDBService.getImageURL(image)
@@ -638,7 +640,7 @@ class GalleryController {
 			def shortAdminUrl = gallery.urlMap.shortAdminUrl
 			shortAdminUrl = serverUrl.toString() + "/" + shortAdminUrl
 
-            render view:"view", model:[galleryInstance:gallery, urls: urls, urlsFull: urlsFull, isAdmin: isAdmin, shortUrl: shortUrl, shortAdminUrl: shortAdminUrl, showImage: params.showImage ?: null] 
+            render view:"view", model:[galleryInstance:gallery, urls: urls, urlsFull: urlsFull, isAdmin: isAdmin, shortUrl: shortUrl, shortAdminUrl: shortAdminUrl, showImage: params.showImage ?: null, totalImages: gallery.images.size()] 
 		}
         else {
 			flash.message = "Error while loading the gallery"

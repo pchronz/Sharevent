@@ -12,7 +12,7 @@
 	  <div class="row">
 		  <div class="span8" style="margin-top: 50px;">
 			<g:link controller="main" action="view" style="text-decoration: none;">
-				<span style="font-family: 'Sonsie One', cursive; font-size: 96px; text-decoration: none; color: #FFFFFF;">SharEvent</span>
+				<span class="sharevent-title" >SharEvent</span>
 			</g:link>
 		  </div>
 	  </div>
@@ -50,7 +50,7 @@
 	
 	<div class="row">
 	  <form class="form">
-		<div class="span3">
+		<div >
 			<fieldset>
 				<div class="control-group">
 					<label class="control-label"><sv:shortLink gallery="${galleryInstance}"><g:message code="userDef.participationLink"/></sv:shortLink></label>
@@ -93,7 +93,6 @@
 			}		
 		</r:script>
 
-		
 		<div class="row">
 				<div class="span3">
 					<div class="btn-group">
@@ -106,11 +105,16 @@
 					</div>
 				</div>
 				<div class="span3">
-					<bt:paginate next="Forward" prev="Back"
-							id="${galleryInstance.id}"
-							maxsteps="16"					
-							action="view" 
-							total="${16}" />
+					<g:if test="${totalImages > 16}">
+							<tb:paginate next="Forward" prev="Back"
+									id="${galleryInstance.id}"
+									params="${isAdmin?[key:galleryInstance.creatorId]:[]}"
+									maxsteps="6"
+									max="16"					
+									action="view" 
+									total="${totalImages}"
+									 />
+					</g:if>
 				</div>
 		</div>
 <br>	
@@ -207,7 +211,7 @@
 		</script>
 		<%-- END facebook like --%>
 		<div class="row">
-				<div class="span6">
+				<div class="span2">
 					<div class="btn-group">
 						<g:actionSubmit 
 							name="Download" 
@@ -216,6 +220,18 @@
 							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' }" />
 						<a class="btn btn-large" data-toggle="modal" href="#upload-modal">Upload </a>
 					</div>
+				</div>
+				<div class="span3">
+					<g:if test="${totalImages > 16}">
+							<tb:paginate next="Forward" prev="Back"
+									id="${galleryInstance.id}"
+									params="${isAdmin?[key:galleryInstance.creatorId]:[]}"
+									maxsteps="6"
+									max="16"					
+									action="view" 
+									total="${totalImages}"
+									 />
+					</g:if>
 				</div>
 		</div>
 		
@@ -327,7 +343,7 @@
 
 					var h = this.clientHeight;
 					var divs = $(this).nextAll();
-					
+				
 					var hpx = h/2+'px';
 					var wpx = h/2+'px';
 
@@ -391,6 +407,7 @@
 				//TODO
 			});
 
+			$('.thumbnail').css('background-color', '#fff');
 			//reset overlay on window resize
 			$(window).bind("resize", resizeWindow);
 			function resizeWindow( e ) {
@@ -512,8 +529,9 @@
 					bit = new Bit(minSize + maxDelta * Math.random(), colours[Math.floor(colours.length * Math.random())]);
 					bits[i] = bit;
 				}
+				reDraw();
+				setInterval(reDraw, 10000);
 
-				setInterval(reDraw, 50);
 			}
 		});
 	</script>

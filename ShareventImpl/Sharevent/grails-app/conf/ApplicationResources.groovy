@@ -2,6 +2,7 @@ def isDev = grails.util.GrailsUtil.isDevelopmentEnv()
 
 modules = {
 	application {
+		dependsOn 'jquery'
 		resource url:'js/application.js'
 	}
 

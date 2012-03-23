@@ -13,12 +13,12 @@ hibernate {
 environments {
     development {
         dataSource {
-        dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
-        url = "jdbc:h2:mem:devDb;MVCC=TRUE"
-//	url = "jdbc:mysql://localhost:3306/sharevent"
-        //driverClassName = "com.mysql.jdbc.Driver"
-        //username = "root"
-        //password = "pimpsWin88"
+        dbCreate = "update"// "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
+        //url = "jdbc:h2:mem:devDb;MVCC=TRUE"
+		url = "jdbc:mysql://localhost:3306/sharevent"
+        driverClassName = "com.mysql.jdbc.Driver"
+        username = "root"
+        password = "pimpsWin88"
         }
     }
     test {

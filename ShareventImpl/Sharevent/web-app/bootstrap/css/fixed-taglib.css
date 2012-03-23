@@ -39,6 +39,10 @@ select[name*='_year'] {
 }
 
 /* Fix Bootstrap Pagination Bug */
+.pagination-sv{
+	padding:0 0 0 0;
+	margin:0 0 0 0;
+}
 .pagination span {
   float: left;
   padding: 0 14px;
