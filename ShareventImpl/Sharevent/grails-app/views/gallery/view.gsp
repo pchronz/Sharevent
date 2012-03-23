@@ -50,7 +50,7 @@
 	
 	<div class="row">
 	  <form class="form">
-		<div >
+		<div class="span3" >
 			<fieldset>
 				<div class="control-group">
 					<label class="control-label"><sv:shortLink gallery="${galleryInstance}"><g:message code="userDef.participationLink"/></sv:shortLink></label>
