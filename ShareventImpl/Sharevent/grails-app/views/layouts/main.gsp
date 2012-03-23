@@ -55,7 +55,7 @@
 				color: #FFFFFF;
 			}
 		</style>
-	<canvas id="background" width="100%" height="100%" style="position: absolute; top: 0px; left: 0px; z-index: -1;"></canvas>
+	<canvas id="background" width="1800" height="1800" style="position: absolute; top: 0px; left: 0px; z-index: -1;"></canvas>
 	<g:if test="${flash.message}">
 		<div class="message">${flash.message}</div>
 	</g:if>

@@ -12,7 +12,7 @@
 	  <div class="row">
 		  <div class="span8" style="margin-top: 50px;">
 			<g:link controller="main" action="view" style="text-decoration: none;">
-				<span style="font-family: 'Sonsie One', cursive; font-size: 96px; text-decoration: none; margin-left: 20px; color: #FFFFFF;">SharEvent</span>
+				<span style="font-family: 'Sonsie One', cursive; font-size: 96px; text-decoration: none; color: #FFFFFF;">SharEvent</span>
 			</g:link>
 		  </div>
 	  </div>
@@ -417,56 +417,71 @@
 			{
 				function Bit(size, color){
 					this.size = size;
-					if (size < 20)
-					{
-						this.speed = 1.5;
-					}
-					else if(size < 30)
-					{
-						this.speed = 1;
-					}
-					else
-					{
-						this.speed = 0.5;
-					}
 					this.color = color;
-					// horizontal position is at random on the canvas
+					// uniform distribution across the whole canvas
 					this.xpos = Math.random() * screen.availWidth - this.size;
-					// vertical position is linear combination of 100, linear function of horizontal position, and sine that depends on horizontal position
-					this.ypos = 100 + 500 * (canvas.width-this.xpos)/canvas.width + 100 * Math.sin(this.offset + this.xpos / 500);
+					this.ypos = Math.random() * screen.availHeight - this.size;
 					this.offset = new Number(100 * Math.random());
+
+					// give it a random vector
+					this.xDir = 2 * (Math.random() - 0.5);
+					this.yDir = 2 * (Math.random() - 0.5);
+
+					// growing vs. shrinking
+					this.down = Math.random() > 0.5;
 				}
 
 				function tick(bit)
 				{
-					if(bit.xpos > maxX)
-					{
-						bit.xpos = -bit.size;
-						bit.offset = new Number(100 * Math.random());
-					}
-					else
-					{
-						bit.xpos += bit.speed;
-					}
-					var scrollX = window.pageXOffset;
-					var scrollY = window.pageYOffset;
-					bit.ypos = scrollY + 100 + 500 * (canvas.width-bit.xpos)/canvas.width + 100 * Math.sin(bit.offset + bit.xpos / 500);
 					context.shadowColor = bit.color;
 					context.fillStyle = bit.color;
+
+					var scrollX = window.pageXOffset;
+					var scrollY = window.pageYOffset;
+
+					if(bit.size >= 75) {
+						bit.down = true;
+					}
+					if(bit.size <= 1) {
+						bit.down = false;
+						// relocate
+						bit.xpos = scrollX + Math.random() * screen.availWidth - bit.size;
+						bit.ypos = scrollY + Math.random() * screen.availHeight - bit.size;
+					}
+
+					if(bit.down) {
+						bit.size -= 0.1;
+					}
+					else {
+						bit.size += 0.1;
+					}
+
+					// move the object a little
+					bit.xpos += 0.1 * bit.xDir;
+					bit.ypos += 0.1 * bit.yDir;
 
 					context.beginPath();  
 					context.arc(bit.xpos,bit.ypos,bit.size,0,Math.PI*2,true); // Outer circle  
 					context.fill();
-					
 				}
 
 				function reDraw()
 				{
 					var scrollX = window.pageXOffset;
 					var scrollY = window.pageYOffset;
-					context.clearRect(scrollX,scrollY,canvas.width, canvas.height);
+					context.clearRect(0,0,canvas.width, canvas.height);
 					bits.map(tick);
 				}
+
+				function getDocHeight() {
+					var D = document;
+					return Math.max(
+						Math.max(D.body.scrollHeight, D.documentElement.scrollHeight),
+						Math.max(D.body.offsetHeight, D.documentElement.offsetHeight),
+						Math.max(D.body.clientHeight, D.documentElement.clientHeight)
+					);
+				}
+				
 
 				document.body.style['background-image'] = 'url("${resource(dir:'images', file:'blue_bg.jpg')}")';
 				document.body.style['backgroundImage'] = 'url("${resource(dir:'images', file:'blue_bg.jpg')}")';
@@ -478,21 +493,21 @@
 				// preparing the canvas
 				maxX = screen.availWidth + 40;
 				var canvas = document.getElementById('background');
-				canvas.width = screen.availWidth;
-				console.log(canvas.width)
-				canvas.height = 800;
+				canvas.width = screen.width;
+				//canvas.height = getDocHeight();
+				canvas.height = 2400;
 				var context = canvas.getContext('2d');
 				context.globalAlpha = 0.7;
 				context.shadowBlur = 7;
 
 				// creating the objects
-				var numObjects = 60;
+				var numObjects = 15;
 				var bits = new Array(numObjects);
 				var bit;
 				for(var i = 0; i < numObjects; ++i)
 				{
 					var minSize = 10;
-					var maxDelta = 40;
+					var maxDelta = 20;
 					// get a random size and a random from our list
 					bit = new Bit(minSize + maxDelta * Math.random(), colours[Math.floor(colours.length * Math.random())]);
 					bits[i] = bit;
