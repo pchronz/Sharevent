@@ -85,7 +85,6 @@
 		</script>
 	  </form>
 	</div>
-
         <g:form controller="gallery" id="${galleryInstance.id}">
 
 		<r:script type="text/javascript" charset="utf-8">
@@ -96,7 +95,7 @@
 
 		
 		<div class="row">
-				<div class="span6">
+				<div class="span3">
 					<div class="btn-group">
 						<g:actionSubmit 
 							name="Download" 
@@ -105,6 +104,13 @@
 							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' }" />
 						<a class="btn btn-large" data-toggle="modal" href="#upload-modal">Upload </a>
 					</div>
+				</div>
+				<div class="span3">
+					<bt:paginate next="Forward" prev="Back"
+							id="${galleryInstance.id}"
+							maxsteps="16"					
+							action="view" 
+							total="${16}" />
 				</div>
 		</div>
 <br>	
@@ -362,7 +368,7 @@
 
 				//TODO remove from dom only onSuccess
 				var galId = '${galleryInstance.id}';
-				${remoteFunction(action: 'deleteImage', onSuccess: 'hure();' , params: '\'imageId=\' + img.id + \'&id=\'+ galId')}
+				${remoteFunction(action: 'deleteImage', params: '\'imageId=\' + img.id + \'&id=\'+ galId')}
 				elem.remove();
 			});
 
