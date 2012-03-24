@@ -730,6 +730,24 @@ class GalleryController {
 		}
 	}
 
+	def downloadImage = {
+		def image = Image.get(params.imageId)
+		def inputStream = imageDBService.getImageInputStream(image)
+
+		if (inputStream == null) {
+			log.error "ImageDB is null"
+			flash.message = "Some of the selected images could not be downloaded."
+			return
+		}
+
+		BufferedInputStream origin = new BufferedInputStream(inputStream, 2048)
+
+		response.setContentType("application/octet-stream")
+		response.setHeader("Content-disposition", "attachment;filename=${image.id}.jpg")
+
+		response.outputStream << origin
+	}
+
     def download = {
     	// TODO what happens if someone tries to upload and someone else tries to download at the same time?
 		// might not happen ever; even then only images would not be uploaded properly. no big deal!...?

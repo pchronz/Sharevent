@@ -83,20 +83,23 @@ class ImageService {
 		int maxImageHeight = grailsApplication.config.sharevent.maxImageHeight
 		int maxImageWidth = grailsApplication.config.sharevent.maxImageWidth
 
+		// uploading the original image
+		def baos = new ByteArrayOutputStream()
+		def byteArray = baos.toByteArray()
+		def bais = new ByteArrayInputStream(byteArray)
+		ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(baos))
+		byteArray = baos.toByteArray()
+		bais = new ByteArrayInputStream(byteArray)
+		imageDBService.storeImage(bais, image, user)
+
 		// resize the images
-		def bais = scaleImage(maxImageHeight, maxImageWidth, bsrc)
+		bais = scaleImage(maxImageHeight, maxImageWidth, bsrc)
 		bsrc = ImageIO.read(bais)
 		bais = cropImage(maxImageHeight, maxImageWidth, bsrc)
 
 		// uploading the scaled image
 		imageDBService.storeImageThumbnail(bais, image, user)
 
-		// uploading the original image
-		def baos = new ByteArrayOutputStream()
-		ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(baos))
-		def byteArray = baos.toByteArray()
-		bais = new ByteArrayInputStream(byteArray)
-		imageDBService.storeImage(bais, image, user)
 		log.info 'image upload successfull'
 	}
 
