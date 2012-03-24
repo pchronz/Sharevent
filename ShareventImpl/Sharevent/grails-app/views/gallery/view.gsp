@@ -12,7 +12,7 @@
 	  <div class="row">
 		  <div class="span8" style="margin-top: 50px;">
 			<g:link controller="main" action="view" style="text-decoration: none;">
-				<span class="sharevent-title" >SharEvent</span>
+				<span style="font-family: 'Sonsie One', cursive; font-size: 96px; text-decoration: none; color: #FFFFFF;text-shadow: 2px 2px #000077;">SharEvent</span>
 			</g:link>
 		  </div>
 	  </div>
@@ -109,8 +109,9 @@
 					<ul class="thumbnails">
 						<g:each var="imageUrl" in="${urls}">
 							<li class="span3 thumbwall">
+								<g:link controller="gallery" action="downloadImage" params="${[imageId: imageUrl.key]}">GetImage</g:link>
 								<a href="${urlsFull[imageUrl.key]}" class="thumbnail">
-									<img src="${imageUrl.value}" id="img_${imageUrl.key}"/>
+									<img width="270px" height="270px" src="${imageUrl.value}" id="img_${imageUrl.key}"/>
 								</a>
 								
 								<div class="ac-wrapper ac-top ac-left">	
@@ -444,15 +445,15 @@
 					}
 
 					if(bit.down) {
-						bit.size -= 0.1;
+						bit.size -= 0.2;
 					}
 					else {
-						bit.size += 0.1;
+						bit.size += 0.2;
 					}
 
 					// move the object a little
-					bit.xpos += 0.1 * bit.xDir;
-					bit.ypos += 0.1 * bit.yDir;
+					bit.xpos += 0.5 * bit.xDir;
+					bit.ypos += 0.5 * bit.yDir;
 
 					context.beginPath();  
 					context.arc(bit.xpos,bit.ypos,bit.size,0,Math.PI*2,true); // Outer circle  
@@ -468,12 +469,7 @@
 				}
 
 				function getDocHeight() {
-					var D = document;
-					return Math.max(
-						Math.max(D.body.scrollHeight, D.documentElement.scrollHeight),
-						Math.max(D.body.offsetHeight, D.documentElement.offsetHeight),
-						Math.max(D.body.clientHeight, D.documentElement.clientHeight)
-					);
+					return "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
 				}
 				
 
@@ -488,8 +484,7 @@
 				maxX = screen.availWidth + 40;
 				var canvas = document.getElementById('background');
 				canvas.width = screen.width;
-				//canvas.height = getDocHeight();
-				canvas.height = 2400;
+				canvas.height = getDocHeight();
 				var context = canvas.getContext('2d');
 				context.globalAlpha = 0.7;
 				context.shadowBlur = 7;
@@ -506,9 +501,9 @@
 					bit = new Bit(minSize + maxDelta * Math.random(), colours[Math.floor(colours.length * Math.random())]);
 					bits[i] = bit;
 				}
-				reDraw();
-				setInterval(reDraw, 50);
 
+				reDraw();
+				setInterval(reDraw, 500);
 			}
 		});
 	</script>

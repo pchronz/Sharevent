@@ -19,7 +19,7 @@
 		<div class="row">
 			<div class="span8 offset1">
 				<g:link controller="main" action="view" style="text-decoration: none;">
-					<span style="font-family: 'Sonsie One', cursive; font-size: 96px; text-decoration: none; margin-left: 20px; color: #FFFFFF;">SharEvent</span>
+					<span style="font-family: 'Sonsie One', cursive; font-size: 96px; text-decoration: none; margin-left: 20px; color: #FFFFFF;text-shadow: 2px 2px #000077;">SharEvent</span>
 				</g:link>
 			</div>
 		</div>
@@ -56,7 +56,7 @@
 	<div class="row">
 		<div class="span12 offset1" style="margin-left: 150px">
 			<%-- Twitter --%>
-			<a href="https://twitter.com/share" class="twitter-share-button" data-related="jasoncosta" data-lang="en" data-size="small" data-count="none">Tweet</a>
+			<a href="https://twitter.com/share" class="twitter-share-button" data-related="jasoncosta" data-lang="en" data-size="small" data-count="none" data-url="http://www.sharevent.com">Tweet</a>
 			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
 			<%-- Google plus one --%>
@@ -77,7 +77,7 @@
 			  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
 			  fjs.parentNode.insertBefore(js, fjs);
 			}(document, 'script', 'facebook-jssdk'));</script>
-			<div class="fb-like" style="display: inline; position: relative; top: -2px;" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
+			<div class="fb-like" style="display: inline; position: relative; top: -3px;" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
 			<div id="fb-root"></div>
 		</div>
 	</div>

@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
 		<%-- Google web fonts --%>
-		<link href='http://fonts.googleapis.com/css?family=Fugaz+One|Sonsie+One|Exo|Megrim|Orbitron' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Sonsie+One' rel='stylesheet' type='text/css'>
 		<g:javascript library="jquery" plugin="jquery"/>
         <g:layoutHead />
 		<r:require modules="bootstrap, sharevent, colorbox"/>
