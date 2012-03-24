@@ -109,7 +109,6 @@
 					<ul class="thumbnails">
 						<g:each var="imageUrl" in="${urls}">
 							<li class="span3 thumbwall">
-								<g:link controller="gallery" action="downloadImage" params="${[imageId: imageUrl.key]}">GetImage</g:link>
 								<a href="${urlsFull[imageUrl.key]}" class="thumbnail">
 									<img width="270px" height="270px" src="${imageUrl.value}" id="img_${imageUrl.key}"/>
 								</a>
@@ -120,6 +119,7 @@
 								</div>
 								<div class="ac-wrapper ac-top ac-right">
 									<div class="ac-overlay ${isAdmin?'ac-delete':'ac-download'}">
+										<g:link controller="gallery" action="downloadImage" params="${[imageId: imageUrl.key]}" />
 									</div>
 								</div>
 								<div class="ac-wrapper ac-bottom ac-left">
@@ -267,7 +267,6 @@
 			$(".ac-wrapper").hover(
 			  function(){
 				$(this).find(':first-child').show();
-
 			  }, 
 			  function(){
 				$(this).find(':first-child').hide();
@@ -281,12 +280,11 @@
 			$('.ac-gallery').click(function () {
 				var a = $(this).parent().siblings(':first');
 				a.click();
-			
 			});
 
 			$('.ac-download').click(function () {
-				alert('juhu');
-			
+				var a = $(this).children();
+				window.location.href = a.attr('href');
 			});
 
 			$('.ac-delete').click(function () {
