@@ -43,6 +43,7 @@ body {
 /* overlay for thumbwall */
 .ac-wrapper {
 		position:relative;
+		padding: 0 5px 0 5px;
 		z-index:2;
 }
 
@@ -66,7 +67,11 @@ body {
 }
 
 .ac-select{
-		background-image: url('../images/download.png');
+		background-image: url('../images/check.png');
+}
+
+.ac-download{
+			background-image: url('../images/download.png');
 }
 
 .ac-social {
@@ -108,9 +113,10 @@ body {
 	background-image: url('../images/social-media/mailTo_128.png');
 }
 #social-frame {
-	height:32px;
+	height:22px;
 	width:120px;
 	border:none;
+	padding:0;
 }
 .countSelect {
 	margin-top:18px;

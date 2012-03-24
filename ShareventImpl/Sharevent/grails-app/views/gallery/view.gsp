@@ -100,9 +100,7 @@
 					</div>
 				</div>
 				<div class="span3">
-					<span class="countSelect badge badge-inverse"/>
 				</div>
-				
 		</div>
 		<br>	
 		<div class="row">
@@ -111,7 +109,6 @@
 					<ul class="thumbnails">
 						<g:each var="imageUrl" in="${urls}">
 							<li class="span3 thumbwall">
-								<g:link controller="gallery" action="downloadImage" params="${[imageId: imageUrl.key]}">GetImage</g:link>
 								<a href="${urlsFull[imageUrl.key]}" class="thumbnail">
 									<img width="270px" height="270px" src="${imageUrl.value}" id="img_${imageUrl.key}"/>
 								</a>
@@ -121,7 +118,8 @@
 									</div>
 								</div>
 								<div class="ac-wrapper ac-top ac-right">
-									<div class="ac-overlay ac-delete">
+									<div class="ac-overlay ${isAdmin?'ac-delete':'ac-download'}">
+										<g:link controller="gallery" action="downloadImage" params="${[imageId: imageUrl.key]}" />
 									</div>
 								</div>
 								<div class="ac-wrapper ac-bottom ac-left">
@@ -164,7 +162,6 @@
 					</div>
 				</div>
 				<div class="span3">
-					<span class="countSelect badge badge-inverse"/>
 				</div>
 		</div>
 		
@@ -259,13 +256,14 @@
 					var w = this.clientWidth;
 					var divs = $(this).nextAll();
 				
-					var hpx = h/2+'px';
-					var wpx = h/2+'px';
+					var hpx = h/2 -4+'px';
+					var wpx = h/2 -4+'px';
+					var offset = "-" + (h-3) +"px";
 
 					divs.css({height:hpx,width:wpx});
 
 					//TODO select only this children
-					$(".ac-wrapper").css('margin-top',"-"+h+"px");
+					$(".ac-wrapper").css('margin-top',offset);
 					$(".ac-bottom").css('top', hpx);
 					$(".ac-overlay").css({height:hpx,width:wpx});
 
@@ -278,7 +276,6 @@
 			$(".ac-wrapper").hover(
 			  function(){
 				$(this).find(':first-child').show();
-
 			  }, 
 			  function(){
 				$(this).find(':first-child').hide();
@@ -292,7 +289,11 @@
 			$('.ac-gallery').click(function () {
 				var a = $(this).parent().siblings(':first');
 				a.click();
-			
+			});
+
+			$('.ac-download').click(function () {
+				var a = $(this).children();
+				window.location.href = a.attr('href');
 			});
 
 			$('.ac-delete').click(function () {
@@ -304,9 +305,12 @@
 
 				//TODO remove from dom only onSuccess
 				var galId = '${galleryInstance.id}';
-				${remoteFunction(action: 'deleteImage', params: '\'imageId=\' + img.id + \'&id=\'+ galId')}
+				var key = '${isAdmin?galleryInstance.creatorId:-1}'
+				${remoteFunction(action: 'deleteImage', params: '\'imageId=\' + img.id + \'&id=\'+ galId +\'&key=\' + key')}
 				elem.remove();
 			});
+
+			var countSelected = 0;
 
 			$('.ac-select').click(function () {
 				var a = $(this).parent().siblings(':first');
@@ -314,22 +318,17 @@
 				var hidden = $(this).children(':first');
 				var value = hidden.attr('value');
 
-				var count = $('.countSelect:first').text().trim();
-
-				if(count == "" || isNaN(count)){
-					count=0;
-				}
-				
 				if(value == ""){
 					a.css('background-color', '#0069d6');
 					hidden.attr('value',img.id);
 					
-					$('.countSelect').text(++count);
+					countSelected++;
+	
 				}else{
 					a.css('background-color', '#fff');
 					hidden.attr('value','');
 
-					$('.countSelect').text(--count);
+					countSelected--;
 				}
 			});
 	
@@ -347,7 +346,7 @@
 				
 				$('#social-modal-image').attr('src',img.attr('src'));
 				$("#social-frame").attr('src',gLink );
-				$('#social-modal').modal('toggle');
+				$('#social-modal').modal({show:true});
 			});
 			
 			$('.ac-twitter').click(function () {
@@ -359,7 +358,7 @@
 				var twLink = src.replace(/${galleryInstance.id}/g,'${galleryInstance.id}?showImage=' + img.attr('id'));
 				$('#social-modal-image').attr('src',img.attr('src'));
 				$("#social-frame").attr('src',twLink );
-				$('#social-modal').modal('toggle');
+				$('#social-modal').modal({show:true});
 			});
 
 			$('.ac-facebook').click(function () {
@@ -372,7 +371,7 @@
 				var fbLink = src.replace(/${galleryInstance.id}/g,'${galleryInstance.id}?showImage=' + img.attr('id'));
 				$('#social-modal-image').attr('src',img.attr('src'));
 				$("#social-frame").attr('src',fbLink );
-				$('#social-modal').modal('toggle');
+				$('#social-modal').modal({show:true});
 				
 			});
 
