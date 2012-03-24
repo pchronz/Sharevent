@@ -396,7 +396,7 @@
 			};
 
 			$(function(){
-				$(".thumbnail").colorbox({rel: 'group1', preloading: true, scalePhotos: true, maxWidth: "100%", maxHeight: "100%"});
+				$(".thumbnail").not('#social-modal .thumbnail').colorbox({rel: 'group1', preloading: true, scalePhotos: true, maxWidth: "100%", maxHeight: "100%"});
 				<g:if test="${showImage}">
 					$("#${showImage}").click();
 				</g:if>
