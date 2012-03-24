@@ -39,6 +39,7 @@ class Gallery {
 
     static mapping = {
 		id generator: 'uuid'
+		version false
     }
 
 	Gallery() {

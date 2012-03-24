@@ -59,18 +59,18 @@ class ImageDBService {
 		return new BufferedInputStream(s3InputStream, 2048)
 	}
 
-	def storeImageThumbnail(bais, image, user) {
-		bais.s3upload(image.id + '.jpg') {
+	def storeImageThumbnail(bais, imageId, userId) {
+		bais.s3upload(imageId + '.jpg') {
 			bucket 'com.sharevent.imagethumbs'
-			path user.id + '/'
+			path userId + '/'
 		}
 		bais.close()
 	}
 
-	def storeImage(bais, image, user) {
-		bais.s3upload(image.id + '.jpg') {
+	def storeImage(bais, imageId, userId) {
+		bais.s3upload(imageId + '.jpg') {
 			bucket 'com.sharevent.images'
-			path user.id + '/'
+			path userId + '/'
 		}
 		bais.close()
 	}

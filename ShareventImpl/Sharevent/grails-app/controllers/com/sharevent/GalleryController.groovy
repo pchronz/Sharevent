@@ -647,7 +647,6 @@ class GalleryController {
     }
 
 	def uploadImage= {
-		synchronized(this.getClass()) {
 			def image = null
 			// TODO check whether the user is logged in
 
@@ -661,28 +660,30 @@ class GalleryController {
 				// XXX BOTTLENECK!
 				// TODO update once multiple contributions are allowed
 				Gallery galleryInstance = Gallery.get(params.id)
+
+				log.info "galleryInstance loaded locked"
+
 				if(!galleryInstance) {
 					log.info 'Could not retrieve gallery to upload image to'
 					render status: 500
 					return
 				}
 
-				def user = null
 				def c = GalleryUser.createCriteria()
-				def users = c {
+				def user = c.get {
 					eq('firstName', GalleryUser.INCOGNITO)
 					galleries {
 						eq('id', galleryInstance.id)
 					}
+					lock true
 				}
-				if(users.size() > 0)
-					log.warn 'Found multiples incognito users for one gallery. Taking the first one.'
-				if(users.size() == 0) {
+
+
+				if(user == null) {
 					log.info "Did not find any incognito users for gallery ${galleryInstance.id}"
 					render status: 500
 					return
 				}
-				user = users[0]
 
 				if(!user.galleries.contains(galleryInstance))
 					user.addToGalleries galleryInstance
@@ -692,6 +693,7 @@ class GalleryController {
 				user.addToImages(image)
 				galleryInstance.addToImages image
 
+				if(user.isDirty())user.merge()
 				if(!user.save(flush: true)) {
 					user.errors.each {
 						log.info  it
@@ -700,6 +702,7 @@ class GalleryController {
 					redirect(controller:'main')
 					return
 				}
+
 				if(!galleryInstance.save(flush: true)) {
 					log.info 'Error while saving Gallery with new image.' 
 					galleryInstance.errors.each {
@@ -710,7 +713,7 @@ class GalleryController {
 					return
 				}
 				
-				imageService.uploadImage(request, image, user)
+				imageService.uploadImage(request, image.id, user.id)
 			}
 			catch(Exception e) {
 				e.printStackTrace()
@@ -727,7 +730,6 @@ class GalleryController {
 			def imageURL = imageDBService.getImageThumbURL(image)
 			log.info  'imageURL == ' + imageURL
 			render(text: [success: true, imageURL: imageURL] as JSON, contentType: 'text/JSON')
-		}
 	}
 
 	def downloadImage = {
