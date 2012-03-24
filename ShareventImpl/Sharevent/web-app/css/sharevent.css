@@ -115,3 +115,11 @@ body {
 .countSelect {
 	margin-top:18px;
 }
+
+.upload-spinning {
+	background: url('../images/spinner.gif') !important;
+	background-color: whiteSmoke !important;
+	background-repeat: no-repeat !important;
+	background-position: center center !important;
+	color: whiteSmoke !important; 
+}
