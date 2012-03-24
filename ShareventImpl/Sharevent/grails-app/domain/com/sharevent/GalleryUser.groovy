@@ -24,6 +24,7 @@ class GalleryUser {
 
     static mapping = {
 		id generator: 'uuid'
+		version false
     }
 }
 

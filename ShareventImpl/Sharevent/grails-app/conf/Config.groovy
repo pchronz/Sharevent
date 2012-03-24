@@ -90,6 +90,10 @@ log4j = {
            'org.springframework',
            'org.hibernate',
            'net.sf.ehcache.hibernate'
+
+	debug 'grails.app'
+
+	info  'grails.app'
 }
 sharevent = [maxImageWidth: 300, maxImageHeight: 300, imageDBCollection: "images", imageDBThumbsCollection: "imageThumbs", imageDB: "${appName}".toLowerCase(), imageDBImageId: "imageKey"]
 // Added by the Spring Security Core plugin:

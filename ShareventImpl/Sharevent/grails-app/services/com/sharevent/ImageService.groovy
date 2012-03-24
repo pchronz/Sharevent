@@ -46,7 +46,7 @@ class ImageService {
 
 	}
 
-	def uploadImage(def request, def image, def user) {
+	def uploadImage(def request, def imageId, def userId) {
 		InputStream inputStream = null
 		if (request instanceof MultipartHttpServletRequest) {
 				MultipartFile uploadedFile = ((MultipartHttpServletRequest) request).getFile('qqfile')
@@ -75,7 +75,7 @@ class ImageService {
 		// the image could not be read. probably a wrong type to begin with.
 		// delete it
 		if(bsrc == null) {
-			log.error "Could not read an image. Deleting it. Image.id== " + image.id
+			log.error "Could not read an image. Deleting it. Image.id== " + imageId
 			imageDBService.deleteImage(image)
 			throw new Exception("${message(code: 'userdef.couldNotReadImage')}")
 		}
@@ -90,7 +90,7 @@ class ImageService {
 		ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(baos))
 		byteArray = baos.toByteArray()
 		bais = new ByteArrayInputStream(byteArray)
-		imageDBService.storeImage(bais, image, user)
+		imageDBService.storeImage(bais, imageId, userId)
 
 		// resize the images
 		bais = scaleImage(maxImageHeight, maxImageWidth, bsrc)
@@ -98,7 +98,7 @@ class ImageService {
 		bais = cropImage(maxImageHeight, maxImageWidth, bsrc)
 
 		// uploading the scaled image
-		imageDBService.storeImageThumbnail(bais, image, user)
+		imageDBService.storeImageThumbnail(bais, imageId, userId)
 
 		log.info 'image upload successfull'
 	}
