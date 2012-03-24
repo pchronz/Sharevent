@@ -88,12 +88,6 @@
 	</div>
         <g:form controller="gallery" id="${galleryInstance.id}">
 
-		<r:script type="text/javascript" charset="utf-8">
-			function selectAllImages(boxId){
-				$('input[type=checkbox]').attr('checked',$('#'+boxId).is(':checked'));
-			}		
-		</r:script>
-
 		<div class="row">
 				<div class="span3 up-down-toolbar">
 					<div class="btn-group">
@@ -105,20 +99,12 @@
 						<a class="btn btn-large" data-toggle="modal" href="#upload-modal">Upload </a>
 					</div>
 				</div>
-				<div class="span6">
-					<g:if test="${totalImages > 16}">
-							<tb:paginate next="Forward" prev="Back"
-									id="${galleryInstance.id}"
-									params="${isAdmin?[key:galleryInstance.creatorId]:[]}"
-									maxsteps="6"
-									max="16"					
-									action="view" 
-									total="${totalImages}"
-									 />
-					</g:if>
+				<div class="span3">
+					<span class="countSelect badge badge-inverse"/>
 				</div>
+				
 		</div>
-<br>	
+		<br>	
 		<div class="row">
 			<div class="span12">
 				<g:if test="${urls.size() > 0}">
@@ -176,17 +162,8 @@
 						<a class="btn btn-large" data-toggle="modal" href="#upload-modal">Upload </a>
 					</div>
 				</div>
-				<div class="span6">
-					<g:if test="${totalImages > 16}">
-							<tb:paginate next="Forward" prev="Back"
-									id="${galleryInstance.id}"
-									params="${isAdmin?[key:galleryInstance.creatorId]:[]}"
-									maxsteps="6"
-									max="16"					
-									action="view" 
-									total="${totalImages}"
-									 />
-					</g:if>
+				<div class="span3">
+					<span class="countSelect badge badge-inverse"/>
 				</div>
 		</div>
 		
@@ -268,7 +245,6 @@
 					if( ww <= 480)
 						return null;
 
-
 					var h = this.clientHeight;
 					var w = this.clientWidth;
 					var divs = $(this).nextAll();
@@ -298,7 +274,11 @@
 				$(this).find(':first-child').hide();
 			  }
 			);
-			
+		
+
+			<%-- #################################--%>
+			<%-- BEGINN functions for image overlay--%>
+			<%-- #################################--%>
 			$('.ac-gallery').click(function () {
 				var a = $(this).parent().siblings(':first');
 				a.click();
@@ -324,21 +304,28 @@
 				var hidden = $(this).children(':first');
 				var value = hidden.attr('value');
 
+				var count = $('.countSelect:first').text().trim();
+
+				if(count == "" || isNaN(count)){
+					count=0;
+				}
+				
 				if(value == ""){
 					a.css('background-color', '#0069d6');
 					hidden.attr('value',img.id);
+					
+					$('.countSelect').text(++count);
 				}else{
 					a.css('background-color', '#fff');
 					hidden.attr('value','');
+
+					$('.countSelect').text(--count);
 				}
 			});
 	
-			/*	
-			$('.ac-social').click(function () {
-			});
-			*/
-
+			<%-- ################################--%>
 			<%-- connect social network to images--%>
+			<%-- ################################--%>
 			$('.ac-google').click(function () {
 
 				var iframe = $('iframe[title="+1"]');
@@ -392,8 +379,7 @@
 
 				var mailContent = subject + body;
 				var a = $('#sendMail');
-				a.attr('href','mailto:la@la.de'+ mailContent);
-				a.html(url);
+				a.attr('href','mailto:'+ mailContent);
 				window.location.href = a.attr('href');
 			});
 			
@@ -410,7 +396,10 @@
 					$("#${showImage}").click();
 				</g:if>
 			});
-			
+			<%-- ################################--%>
+			<%-- END events for image overlay    --%>
+			<%-- ################################--%>
+
 
 	</script>
 
