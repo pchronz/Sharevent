@@ -20,29 +20,30 @@
 	<div class="row">
 		<div class="span12 galleryTitle">
 			<h1 style="color: #FFFFFF;display:inline;margin-right:12px;">${galleryInstance.title}</h1>
-			<div class="g-plusone"
-				style="display:inline"
-				data-annotation="none"
-				data-size="medium"
-				data-href="${createLink(action: 'view', id: galleryInstance.id)}">
-			</div>
-			<div id="name" style="display:inline">
-				<a href="https://twitter.com/share" 
-					class="twitter-share-button" 
-					data-lang="en" 
-					data-count="none"
-					data-url="${createLink(action: 'view', id: galleryInstance.id)}">
-					Tweet
-				</a>	
-			</div>
+			<div class="social-bar">
+					<div class="g-plusone"
+						data-annotation="none"
+						data-size="medium"
+						data-href="${createLink(action: 'view', id: galleryInstance.id)}">
+					</div>
+					<div id="name">
+						<a href="https://twitter.com/share" 
+							class="twitter-share-button" 
+							data-lang="en" 
+							data-count="none"
+							data-url="${createLink(action: 'view', id: galleryInstance.id)}">
+							Tweet
+						</a>	
+					</div>
 
-			<div class="fb-like" 
-				style="display:inline;position:relative;top:-3px;"
-				data-href= "${createLink(action: 'view', id: galleryInstance.id)}"
-				data-send="false"
-				data-layout="button_count" 
-				data-width="450"
-				data-show-faces="true">
+					<div class="fb-like" 
+						style="display:inline;position:relative;top:-3px;"
+						data-href= "${createLink(action: 'view', id: galleryInstance.id)}"
+						data-send="false"
+						data-layout="button_count" 
+						data-width="450"
+						data-show-faces="true">
+					</div>
 			</div>
 		</div>
 
@@ -50,7 +51,7 @@
 	
 	<div class="row">
 	  <form class="form">
-		<div class="span3">
+		<div class="span3" >
 			<fieldset>
 				<div class="control-group">
 					<label class="control-label"><sv:shortLink gallery="${galleryInstance}"><g:message code="userDef.participationLink"/></sv:shortLink></label>
@@ -61,7 +62,7 @@
 			</fieldset>
 		</div>
 		<div class="span3">
-			<fieldset>
+			<fieldset> 
 				<g:if test="${isAdmin}">
 					<div class="control-group">
 						<label class="control-label"><sv:shortAdminLink gallery="${galleryInstance}"><g:message code="userDef.administrationLink"/></sv:shortAdminLink></label>
@@ -85,18 +86,10 @@
 		</script>
 	  </form>
 	</div>
-
         <g:form controller="gallery" id="${galleryInstance.id}">
 
-		<r:script type="text/javascript" charset="utf-8">
-			function selectAllImages(boxId){
-				$('input[type=checkbox]').attr('checked',$('#'+boxId).is(':checked'));
-			}		
-		</r:script>
-
-		
 		<div class="row">
-				<div class="span6">
+				<div class="span3 up-down-toolbar">
 					<div class="btn-group">
 						<g:actionSubmit 
 							name="Download" 
@@ -106,15 +99,19 @@
 						<a class="btn btn-large" data-toggle="modal" href="#upload-modal">Upload </a>
 					</div>
 				</div>
+				<div class="span3">
+					<span class="countSelect badge badge-inverse"/>
+				</div>
+				
 		</div>
-<br>	
+		<br>	
 		<div class="row">
 			<div class="span12">
 				<g:if test="${urls.size() > 0}">
 					<ul class="thumbnails">
 						<g:each var="imageUrl" in="${urls}">
-							<li class="span3">
-							<g:link controller="gallery" action="downloadImage" params="${[imageId: imageUrl.key]}">GetImage</g:link>
+							<li class="span3 thumbwall">
+								<g:link controller="gallery" action="downloadImage" params="${[imageId: imageUrl.key]}">GetImage</g:link>
 								<a href="${urlsFull[imageUrl.key]}" class="thumbnail">
 									<img width="270px" height="270px" src="${imageUrl.value}" id="img_${imageUrl.key}"/>
 								</a>
@@ -134,30 +131,10 @@
 								</div>
 								<div class="ac-wrapper ac-bottom ac-right">
 									<div class="ac-overlay ac-social">
-										<%--
-										<div class="g-plusone"
-											data-annotation="none"
-											data-size="medium"
-											data-href="${createLink(action: 'view', id: galleryInstance.id, params:[showImage:imageUrl.key] )}">
-										</div>
-										<div id="name">
-											<a href="https://twitter.com/share" 
-												class="twitter-share-button" 
-												data-lang="en" 
-												data-count="none"
-												data-url="${createLink(action: 'view', id: galleryInstance.id, params:[showImage:imageUrl.key] )}">
-												Tweet
-											</a>	
-										</div>
-
-										<div class="fb-like" 
-											data-href= "${createLink(action: 'view', id: galleryInstance.id, params:[showImage:imageUrl.key] )}"
-											data-send="false"
-											data-layout="button_count" 
-											data-width="450"
-											data-show-faces="true">
-										</div>
-										--%>
+										<div class="ac-top ac-left ac-google"></div>
+										<div class="ac-top ac-right ac-twitter"></div>
+										<div class="ac-top ac-left ac-facebook"></div>
+										<div class="ac-top ac-right ac-mailTo"></div>
 									</div>
 								</div>
 							</li>				 
@@ -175,36 +152,8 @@
 			</div>			
 		</div>
 
-		<%-- g-plusone: generatet code --%>
-		<script type="text/javascript">
-		  (function() {
-		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-		    po.src = 'https://apis.google.com/js/plusone.js';
-		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-		  })();
-		</script>
-		<%-- END g-plusone --%>
-
-		<%-- twitter tweet --%>
-		<script>
-			!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-		</script>
-		<%-- END twitter tweet--%>
-
-		<%-- Faceboook like --%>
-		<div id="fb-root"></div>
-		<script>
-		(function(d, s, id) {
-		  var js, fjs = d.getElementsByTagName(s)[0];
-		  if (d.getElementById(id)) return;
-		  js = d.createElement(s); js.id = id;
-		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-		  fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));
-		</script>
-		<%-- END facebook like --%>
 		<div class="row">
-				<div class="span6">
+				<div class="span3 up-down-toolbar">
 					<div class="btn-group">
 						<g:actionSubmit 
 							name="Download" 
@@ -213,6 +162,9 @@
 							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' }" />
 						<a class="btn btn-large" data-toggle="modal" href="#upload-modal">Upload </a>
 					</div>
+				</div>
+				<div class="span3">
+					<span class="countSelect badge badge-inverse"/>
 				</div>
 		</div>
 		
@@ -246,6 +198,7 @@
 				ongoingUploads -= 1;
 				console.log('onComplete :' +ongoingUploads)
 
+
 				if (ongoingUploads == 0) {
 					window.location.reload(true);
 					console.log('refresh :' +ongoingUploads)
@@ -264,55 +217,27 @@
 	  </div>
 	</div>
 
+	<%-- needed to send image links via mail --%>
+	<a id="sendMail" href="mailto:"></a>
 
-		<style type="text/css" media="screen">
-		
-			.ac-wrapper {
-				position:relative;
-				z-index:2;
-			}
 
-			.ac-overlay {
-				display:none; 
-				z-index:3;
-				
-				background-repeat:no-repeat;
-				background-size: 100%;
+	<%-- modal dialogue for social network --%>
 
-				opacity:0.6;
-				filter:alpha(opacity=60); /* IE transparency */
-			}
-			
-			.ac-delete {
-				background-image: url(${resource(dir:'images',file:'delete.png')});
-			}
+		<div class="modal hide fade span3" id="social-modal">
+		  <div class="modal-header">
+			<a class="close" data-dismiss="modal">×</a>
+			<h3>Share this image now</h3>
+		  </div>
+		  <div class="modal-body">
+			<div class="thumbnail">
+				<img id="social-modal-image" src="">
+				<div class="caption">
+					<iframe src="" id="social-frame"></iframe>
+				</div>
+			</div>
+		  </div>
+		</div>
 
-			.ac-gallery {
-				background-image: url(${resource(dir:'images',file:'gallery.png')});
-			}
-
-			.ac-select{
-				background-image: url(${resource(dir:'images',file:'download.png')});
-			}
-
-			.ac-social {
-				background-image: url(${resource(dir:'images',file:'social.png')});
-			}			
-
-			.ac-top {
-				top:0px;
-			}
-			.ac-bottom {
-				
-			}
-			.ac-left {
-				float:left;
-			}
-			.ac-right {
-				float:right;
-			}
-		
-		</style>
 		<script type="text/javascript" charset="utf-8">
 
 			$('.thumbnail').hover(
@@ -321,10 +246,10 @@
 					if( ww <= 480)
 						return null;
 
-
 					var h = this.clientHeight;
+					var w = this.clientWidth;
 					var divs = $(this).nextAll();
-					
+				
 					var hpx = h/2+'px';
 					var wpx = h/2+'px';
 
@@ -334,6 +259,7 @@
 					$(".ac-wrapper").css('margin-top',"-"+h+"px");
 					$(".ac-bottom").css('top', hpx);
 					$(".ac-overlay").css({height:hpx,width:wpx});
+
 				},
 				function(){
 					return null;
@@ -349,7 +275,11 @@
 				$(this).find(':first-child').hide();
 			  }
 			);
-			
+		
+
+			<%-- #################################--%>
+			<%-- BEGINN functions for image overlay--%>
+			<%-- #################################--%>
 			$('.ac-gallery').click(function () {
 				var a = $(this).parent().siblings(':first');
 				a.click();
@@ -365,7 +295,7 @@
 
 				//TODO remove from dom only onSuccess
 				var galId = '${galleryInstance.id}';
-				${remoteFunction(action: 'deleteImage', onSuccess: 'hure();' , params: '\'imageId=\' + img.id + \'&id=\'+ galId')}
+				${remoteFunction(action: 'deleteImage', params: '\'imageId=\' + img.id + \'&id=\'+ galId')}
 				elem.remove();
 			});
 
@@ -375,18 +305,85 @@
 				var hidden = $(this).children(':first');
 				var value = hidden.attr('value');
 
+				var count = $('.countSelect:first').text().trim();
+
+				if(count == "" || isNaN(count)){
+					count=0;
+				}
+				
 				if(value == ""){
 					a.css('background-color', '#0069d6');
 					hidden.attr('value',img.id);
+					
+					$('.countSelect').text(++count);
 				}else{
 					a.css('background-color', '#fff');
 					hidden.attr('value','');
+
+					$('.countSelect').text(--count);
 				}
 			});
-		
-			$('.ac-social').click(function () {
-				//TODO
+	
+			<%-- ################################--%>
+			<%-- connect social network to images--%>
+			<%-- ################################--%>
+			$('.ac-google').click(function () {
+
+				var iframe = $('iframe[title="+1"]');
+				var src = iframe.attr('src');
+
+				var a = $(this).parent().parent().siblings(':first');
+				var img = a.children(':first');
+
+				var gLink = src.replace(/${galleryInstance.id}/g,'${galleryInstance.id}?showImage=' + img.attr('id'));
+				
+				$('#social-modal-image').attr('src',img.attr('src'));
+				$("#social-frame").attr('src',gLink );
+				$('#social-modal').modal('toggle');
 			});
+			
+			$('.ac-twitter').click(function () {
+				var iframe = $('iframe[title~="Tweet"]');
+				var src = iframe.attr('src');
+
+				var a = $(this).parent().parent().siblings(':first');
+				var img = a.children(':first');
+				
+				var twLink = src.replace(/${galleryInstance.id}/g,'${galleryInstance.id}?showImage=' + img.attr('id'));
+				$('#social-modal-image').attr('src',img.attr('src'));
+				$("#social-frame").attr('src',twLink );
+				$('#social-modal').modal('toggle');
+			});
+
+			$('.ac-facebook').click(function () {
+
+				var iframe = $('iframe.fb_ltr');
+				var src = iframe.attr('src');
+
+				var a = $(this).parent().parent().siblings(':first');
+				var img = a.children(':first');
+
+				var fbLink = src.replace(/${galleryInstance.id}/g,'${galleryInstance.id}?showImage=' + img.attr('id'));
+				$('#social-modal-image').attr('src',img.attr('src'));
+				$("#social-frame").attr('src',fbLink );
+				$('#social-modal').modal('toggle');
+				
+			});
+
+			$('.ac-mailTo').click(function () {
+				var a = $(this).parent().parent().siblings(':first');
+				var img = a.children(':first');
+				var url = "${createLink(action: 'view', id: galleryInstance.id)}?showImage=" + img.attr('id');
+		
+				var subject = '?subject=Sharenvent shared link'	
+				var body= '&body='+url;
+
+				var mailContent = subject + body;
+				var a = $('#sendMail');
+				a.attr('href','mailto:'+ mailContent);
+				window.location.href = a.attr('href');
+			});
+			
 
 			//reset overlay on window resize
 			$(window).bind("resize", resizeWindow);
@@ -396,15 +393,15 @@
 
 			$(function(){
 				$(".thumbnail").colorbox({rel: 'group1', preloading: true, scalePhotos: true, maxWidth: "100%", maxHeight: "100%"});
-				<g:if test="$showImage}">
-					$("#img_${showImage}").click();
+				<g:if test="${showImage}">
+					$("#${showImage}").click();
 				</g:if>
 			});
-			
-			$(document).bind('click', function(e) {
-				
-				console.log( e );
-			    });
+			<%-- ################################--%>
+			<%-- END events for image overlay    --%>
+			<%-- ################################--%>
+
+
 	</script>
 
 	<script type="text/javascript" charset="utf-8">
@@ -509,5 +506,37 @@
 			}
 		});
 	</script>
+
+<%-- #################################################################### --%>
+<%-- g-plusone: generatet code --%>
+<script type="text/javascript">
+  (function() {
+	var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+	po.src = 'https://apis.google.com/js/plusone.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+<%-- END g-plusone --%>
+
+<%-- twitter tweet --%>
+<script>
+	!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+</script>
+<%-- END twitter tweet--%>
+
+<%-- Faceboook like --%>
+<div id="fb-root"></div>
+<script>
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+<%-- #################################################################### --%>
+<%-- END facebook like --%>
+
 </body>
 </html>

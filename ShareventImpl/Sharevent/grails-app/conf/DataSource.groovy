@@ -12,13 +12,17 @@ hibernate {
 // environment specific settings
 environments {
     development {
-        dataSource {
-        dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
-        url = "jdbc:h2:mem:devDb;MVCC=TRUE"
-//	url = "jdbc:mysql://localhost:3306/sharevent"
+        //dataSource {
+        //dbCreate = "update"// "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
+        ////url = "jdbc:h2:mem:devDb;MVCC=TRUE"
+		//url = "jdbc:mysql://localhost:3306/sharevent"
         //driverClassName = "com.mysql.jdbc.Driver"
         //username = "root"
         //password = "pimpsWin88"
+        //}
+        dataSource {
+            dbCreate = "update"
+            url = "jdbc:h2:mem:testDb;MVCC=TRUE"
         }
     }
     test {

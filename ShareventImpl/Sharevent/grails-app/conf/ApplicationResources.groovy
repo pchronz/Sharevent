@@ -2,6 +2,7 @@ def isDev = grails.util.GrailsUtil.isDevelopmentEnv()
 
 modules = {
 	application {
+		dependsOn 'jquery'
 		resource url:'js/application.js'
 	}
 
@@ -18,8 +19,13 @@ modules = {
 		resource url:[dir:'bootstrap/js', file:"bootstrap.${isDev?'js':'min.js'}"], disposition: 'head', exclude:'minify'	
 	}
 
+	'bootstrap-fixed-taglib'{
+		resource url:[dir:'bootstrap/css', file:'fixed-taglib.css']
+	}
+
 	bootstrap {
 		defaultBundle 'bs'
+		dependsOn 'bootstrap-fixed-taglib'
 		dependsOn 'bootstrap-responsive'
 		dependsOn 'bootstrap-css'
 		dependsOn 'bootstrap-js'	

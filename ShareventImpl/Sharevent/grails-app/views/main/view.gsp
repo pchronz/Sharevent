@@ -77,7 +77,7 @@
 			  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
 			  fjs.parentNode.insertBefore(js, fjs);
 			}(document, 'script', 'facebook-jssdk'));</script>
-			<div class="fb-like" style="display: inline; position: relative; top: -2px;" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
+			<div class="fb-like" style="display: inline; position: relative; top: -3px;" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
 			<div id="fb-root"></div>
 		</div>
 	</div>

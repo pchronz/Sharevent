@@ -604,8 +604,8 @@ class GalleryController {
 		// to the images in the image DB here and associate the images with those
 		def urls = [:]
 		def urlsFull = [:]
-	
-		def images = Image.findAllByGallery(gallery,[sort:'dateCreated',order:'desc'])
+
+		def images = Image.findAllByGallery(gallery,[sort:'dateCreated'])
 		images?.each { image ->
 			def url = imageDBService.getImageThumbURL(image)
 			def urlFull = imageDBService.getImageURL(image)

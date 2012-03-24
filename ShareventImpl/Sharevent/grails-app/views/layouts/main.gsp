@@ -2,6 +2,7 @@
 <html>
     <head>
         <title><g:layoutTitle default="Sharevent" /></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
 		<%-- Google web fonts --%>
 		<link href='http://fonts.googleapis.com/css?family=Sonsie+One' rel='stylesheet' type='text/css'>
@@ -10,44 +11,35 @@
 		<r:require modules="bootstrap, sharevent, colorbox"/>
         <r:layoutResources/>
 <style type="text/css">
-		// Landscape phones and down
+					// Landscape phones and down
 			@media (max-width: 480px) {
-				.logo1 {
-					width:10%;
-					max-width:37px;
+				.sharevent-title{
+					font-size:54px;
 				}
+
 			}
 
 			// Landscape phone to portrait tablet
-			@media (max-width: 768px) {
-				.logo1 {
-					width:10%;
-					max-width:37px;
+			@media (min-width: 481px) and (max-width: 768px) {
+				.sharevent-title{
+					font-size:54px;
 				}
-
 			}
 
 			// Portrait tablet to landscape and desktop
-			@media (min-width: 768px) and (max-width: 1200px) {
-
-				.logo1 {
-					width:10%;
-					max-width:37px;
+			@media (max-width: 980px) {
+				#sharevent-title{
+					font-size:54px;
 				}
-
 			}
 
 			// Large desktop
-			@media (min-width: 1201px) {
-				.logo1 {
-					width:10%;
-					max-width:37px;
-				}
+			@media (min-width: 981px) {
+
 			}
-			.logo1 {
-					max-width:437px;
-				}
-	</style>
+
+			
+</style>
     </head>
     <body>
 		<style>
