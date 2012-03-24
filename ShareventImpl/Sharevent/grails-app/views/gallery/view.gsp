@@ -100,9 +100,7 @@
 					</div>
 				</div>
 				<div class="span3">
-					<span class="countSelect badge badge-inverse"/>
 				</div>
-				
 		</div>
 		<br>	
 		<div class="row">
@@ -120,7 +118,7 @@
 									</div>
 								</div>
 								<div class="ac-wrapper ac-top ac-right">
-									<div class="ac-overlay ac-delete">
+									<div class="ac-overlay ${isAdmin?'ac-delete':'ac-download'}">
 									</div>
 								</div>
 								<div class="ac-wrapper ac-bottom ac-left">
@@ -163,7 +161,6 @@
 					</div>
 				</div>
 				<div class="span3">
-					<span class="countSelect badge badge-inverse"/>
 				</div>
 		</div>
 		
@@ -222,13 +219,13 @@
 
 	<%-- modal dialogue for social network --%>
 
-		<div class="modal hide fade span3" id="social-modal">
+		<div class="modal hide fade" id="social-modal">
 		  <div class="modal-header">
 			<a class="close" data-dismiss="modal">×</a>
 			<h3>Share this image now</h3>
 		  </div>
 		  <div class="modal-body">
-			<div class="thumbnail">
+			<div class="thumbnail span2">
 				<img id="social-modal-image" src="">
 				<div class="caption">
 					<iframe src="" id="social-frame"></iframe>
@@ -285,6 +282,11 @@
 			
 			});
 
+			$('.ac-download').click(function () {
+				alert('juhu');
+			
+			});
+
 			$('.ac-delete').click(function () {
 				var img = $(this).parent().parent().find('a:first-child').find('img').get(0);
 				var hidden = $(this).children(':first');
@@ -294,9 +296,12 @@
 
 				//TODO remove from dom only onSuccess
 				var galId = '${galleryInstance.id}';
-				${remoteFunction(action: 'deleteImage', params: '\'imageId=\' + img.id + \'&id=\'+ galId')}
+				var key = '${isAdmin?galleryInstance.creatorId:-1}'
+				${remoteFunction(action: 'deleteImage', params: '\'imageId=\' + img.id + \'&id=\'+ galId +\'&key=\' + key')}
 				elem.remove();
 			});
+
+			var countSelected = 0;
 
 			$('.ac-select').click(function () {
 				var a = $(this).parent().siblings(':first');
@@ -304,22 +309,17 @@
 				var hidden = $(this).children(':first');
 				var value = hidden.attr('value');
 
-				var count = $('.countSelect:first').text().trim();
-
-				if(count == "" || isNaN(count)){
-					count=0;
-				}
-				
 				if(value == ""){
 					a.css('background-color', '#0069d6');
 					hidden.attr('value',img.id);
 					
-					$('.countSelect').text(++count);
+					countSelected++;
+	
 				}else{
 					a.css('background-color', '#fff');
 					hidden.attr('value','');
 
-					$('.countSelect').text(--count);
+					countSelected--;
 				}
 			});
 	
@@ -338,7 +338,7 @@
 				
 				$('#social-modal-image').attr('src',img.attr('src'));
 				$("#social-frame").attr('src',gLink );
-				$('#social-modal').modal('toggle');
+				$('#social-modal').modal({show:true});
 			});
 			
 			$('.ac-twitter').click(function () {
@@ -351,7 +351,7 @@
 				var twLink = src.replace(/${galleryInstance.id}/g,'${galleryInstance.id}?showImage=' + img.attr('id'));
 				$('#social-modal-image').attr('src',img.attr('src'));
 				$("#social-frame").attr('src',twLink );
-				$('#social-modal').modal('toggle');
+				$('#social-modal').modal({show:true});
 			});
 
 			$('.ac-facebook').click(function () {
@@ -365,7 +365,7 @@
 				var fbLink = src.replace(/${galleryInstance.id}/g,'${galleryInstance.id}?showImage=' + img.attr('id'));
 				$('#social-modal-image').attr('src',img.attr('src'));
 				$("#social-frame").attr('src',fbLink );
-				$('#social-modal').modal('toggle');
+				$('#social-modal').modal({show:true});
 				
 			});
 

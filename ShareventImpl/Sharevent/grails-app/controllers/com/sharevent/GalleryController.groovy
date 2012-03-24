@@ -858,7 +858,20 @@ class GalleryController {
 	}
 
 	def deleteImage = {
+		def gallery = Gallery.get(params?.id)
+		if(!gallery) {
+			log.error "Could not find requested gallery with id == " + params?.id
+			flash.message = "Oooops, we could not find the requested gallery."
+			redirect controller: "main"
+			return
+		}
 
+		if(params.key != gallery.creatorId) {
+			log.info "Unauthorized user tried to delete images from gallery with id ${gallery.id}"
+			flash.message = "Only the gallery's creator may delete images."
+			redirect controller: "gallery", action: "view", params: [id: gallery.id]
+			return
+		}
 		def imageId = Long.valueOf(params.imageId.split('_')[1])
 		imageService.deleteImage(imageId)	
 	}
