@@ -96,7 +96,7 @@
 							value="${message(code: 'userDef.downloadImages')}" 
 							action="download"
 							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' }" />
-						<a class="btn btn-large" data-toggle="modal" href="#upload-modal">Upload </a>
+							<a class="btn btn-large upload-button" data-toggle="modal" href="#upload-modal" style="">Upload</a>
 					</div>
 				</div>
 				<div class="span3">
@@ -158,7 +158,7 @@
 							value="${message(code: 'userDef.downloadImages')}" 
 							action="download"
 							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' }" />
-						<a class="btn btn-large" data-toggle="modal" href="#upload-modal">Upload </a>
+						<a class="btn btn-large upload-button" data-toggle="modal" href="#upload-modal">Upload </a>
 					</div>
 				</div>
 				<div class="span3">
@@ -188,6 +188,9 @@
 				$('.qq-upload-drop-area').hide();
 				$('.qq-upload-button').hide();
 				$('#upload-modal .close').hide();
+				$('.upload-button').addClass('upload-spinning');
+				$('.upload-button').addClass('disabled');
+				$('.upload-button').html('.');
 				ongoingUploads += 1;
 				console.log('obSubmit: ' +ongoingUploads)
 			</uploader:onSubmit>
@@ -199,7 +202,9 @@
 				if (ongoingUploads == 0) {
 					window.location.reload(true);
 					console.log('refresh :' +ongoingUploads)
-
+					$('.upload-button').removeClass('upload-spinning');
+					$('.upload-button').removeClass('disabled');
+					$('.upload-button').html('Upload');
 				}
 			</uploader:onComplete>
 		</uploader:uploader>
@@ -223,14 +228,18 @@
 		<div class="modal hide fade" id="social-modal">
 		  <div class="modal-header">
 			<a class="close" data-dismiss="modal">×</a>
-			<h3>Share this image now</h3>
+			<h3>Share this image</h3>
 		  </div>
 		  <div class="modal-body">
-			<div class="thumbnail span2">
-				<img id="social-modal-image" src="">
-				<div class="caption">
-					<iframe src="" id="social-frame"></iframe>
-				</div>
+			<ul class="thumbnails" style="position: relative; left: 130px; width: 300px;">
+				<li class="thumbwall">
+					<div class="thumbnail">
+						<img id="social-modal-image" src="">
+					</div>
+				</li>
+			</ul>
+			<div class="caption">
+				<iframe src="" id="social-frame"></iframe>
 			</div>
 		  </div>
 		</div>
@@ -331,8 +340,7 @@
 				var iframe = $('iframe[title="+1"]');
 				var src = iframe.attr('src');
 
-				var a = $(this).parent().parent().siblings(':first');
-				var img = a.children(':first');
+				var img = $(this).parent().parent().siblings('a').children('img');
 
 				var gLink = src.replace(/${galleryInstance.id}/g,'${galleryInstance.id}?showImage=' + img.attr('id'));
 				
@@ -345,8 +353,7 @@
 				var iframe = $('iframe[title~="Tweet"]');
 				var src = iframe.attr('src');
 
-				var a = $(this).parent().parent().siblings(':first');
-				var img = a.children(':first');
+				var img = $(this).parent().parent().siblings('a').children('img');
 				
 				var twLink = src.replace(/${galleryInstance.id}/g,'${galleryInstance.id}?showImage=' + img.attr('id'));
 				$('#social-modal-image').attr('src',img.attr('src'));
@@ -359,8 +366,7 @@
 				var iframe = $('iframe.fb_ltr');
 				var src = iframe.attr('src');
 
-				var a = $(this).parent().parent().siblings(':first');
-				var img = a.children(':first');
+				var img = $(this).parent().parent().siblings('a').children('img');
 
 				var fbLink = src.replace(/${galleryInstance.id}/g,'${galleryInstance.id}?showImage=' + img.attr('id'));
 				$('#social-modal-image').attr('src',img.attr('src'));
@@ -370,8 +376,7 @@
 			});
 
 			$('.ac-mailTo').click(function () {
-				var a = $(this).parent().parent().siblings(':first');
-				var img = a.children(':first');
+				var img = $(this).parent().parent().siblings('a').children('img');
 				var url = "${createLink(action: 'view', id: galleryInstance.id)}?showImage=" + img.attr('id');
 		
 				var subject = '?subject=Sharenvent shared link'	
