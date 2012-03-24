@@ -246,13 +246,14 @@
 					var w = this.clientWidth;
 					var divs = $(this).nextAll();
 				
-					var hpx = h/2+'px';
-					var wpx = h/2+'px';
+					var hpx = h/2 -4+'px';
+					var wpx = h/2 -4+'px';
+					var offset = "-" + (h-3) +"px";
 
 					divs.css({height:hpx,width:wpx});
 
 					//TODO select only this children
-					$(".ac-wrapper").css('margin-top',"-"+h+"px");
+					$(".ac-wrapper").css('margin-top',offset);
 					$(".ac-bottom").css('top', hpx);
 					$(".ac-overlay").css({height:hpx,width:wpx});
 
