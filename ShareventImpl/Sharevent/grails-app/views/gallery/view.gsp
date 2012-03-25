@@ -89,7 +89,7 @@
         <g:form controller="gallery" id="${galleryInstance.id}">
 
 		<div class="row">
-				<div class="span3 up-down-toolbar">
+				<div class="span7 up-down-toolbar">
 					<div class="btn-group">
 						<g:actionSubmit 
 							name="Download" 
@@ -98,8 +98,6 @@
 							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' }" />
 							<a class="btn btn-large upload-button" data-toggle="modal" href="#upload-modal" style="">Upload</a>
 					</div>
-				</div>
-				<div class="span3">
 				</div>
 		</div>
 		<br>	
@@ -151,7 +149,7 @@
 		</div>
 
 		<div class="row">
-				<div class="span3 up-down-toolbar">
+				<div class="span7 up-down-toolbar">
 					<div class="btn-group">
 						<g:actionSubmit 
 							name="Download" 
@@ -160,8 +158,6 @@
 							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' }" />
 						<a class="btn btn-large upload-button" data-toggle="modal" href="#upload-modal">Upload </a>
 					</div>
-				</div>
-				<div class="span3">
 				</div>
 		</div>
 		
@@ -319,16 +315,26 @@
 				var value = hidden.attr('value');
 
 				if(value == ""){
-					a.css('background-color', '#0069d6');
+					a.css({'background-color':'#f89a07','border-color':'#f89a07'});
 					hidden.attr('value',img.id);
 					
 					countSelected++;
 	
 				}else{
-					a.css('background-color', '#fff');
+					a.css({'background-color':'#fff','border-color':'#fff'});
 					hidden.attr('value','');
 
 					countSelected--;
+				}
+				
+				var countAll = $('.thumbnail').not('#social-modal .thumbnail').size();
+
+				if(countSelected > 0){
+					var bText = "Download (" + countSelected +"/"+countAll+")";
+					$('input[name=_action_download]').attr('value',bText);
+				}else{
+					var	bText = "Download"
+					$('input[name=_action_download]').attr('value',bText);
 				}
 			});
 	
@@ -385,7 +391,9 @@
 				var mailContent = subject + body;
 				var a = $('#sendMail');
 				a.attr('href','mailto:'+ mailContent);
-				window.location.href = a.attr('href');
+
+				window.open(a.attr('href'),'_blank');
+
 			});
 			
 
