@@ -304,10 +304,13 @@
 				var key = '${isAdmin?galleryInstance.creatorId:-1}'
 				${remoteFunction(action: 'deleteImage', params: '\'imageId=\' + img.id + \'&id=\'+ galId +\'&key=\' + key')}
 				elem.remove();
+				
+				
+				if(setCounter() == 0){
+					$('input[name=_action_download]').addClass('disabled');
+				}
 			});
-
-			var countSelected = 0;
-
+			
 			$('.ac-select').click(function () {
 				var a = $(this).parent().siblings(':first');
 				var img = $(this).parent().parent().find('a:first-child').find('img').get(0);
@@ -318,15 +321,18 @@
 					a.css({'background-color':'#f89a07','border-color':'#f89a07'});
 					hidden.attr('value',img.id);
 					
-					countSelected++;
-	
 				}else{
 					a.css({'background-color':'#fff','border-color':'#fff'});
 					hidden.attr('value','');
-
-					countSelected--;
 				}
 				
+				setCounter();	
+				
+			});
+
+			function setCounter(){
+
+				var countSelected =  $('.ac-select input[value^="img_"]').size();
 				var countAll = $('.thumbnail').not('#social-modal .thumbnail').size();
 
 				if(countSelected > 0){
@@ -336,7 +342,8 @@
 					var	bText = "Download"
 					$('input[name=_action_download]').attr('value',bText);
 				}
-			});
+				return countAll;
+			}
 	
 			<%-- ################################--%>
 			<%-- connect social network to images--%>
