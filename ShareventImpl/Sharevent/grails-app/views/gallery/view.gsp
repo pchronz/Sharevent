@@ -557,5 +557,13 @@
 <%-- #################################################################### --%>
 <%-- END facebook like --%>
 
+<%-- Corrupt image detector --%>
+<script type="text/javascript" charset="utf-8">
+	$('.thumbnails .thumbnail img').error(function() {
+			console.log('error');
+			$(this).parent().parent().remove();
+	});
+</script>
+
 </body>
 </html>
