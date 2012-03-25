@@ -45,10 +45,10 @@
 	<g:form controller="gallery" action="createNew">
 		<div class="row">
 			<div class="span8 offset1">
-				<input class="span8" placeholder="Please enter the gallery title..." type="text" id="gallery_title_input" name="gallery_title" style="height: 50px; font-size: 25px; margin: 15px;"/>
+				<input class="span8" size="54" maxlength="54" placeholder="Please enter the gallery title..." type="text" id="gallery_title_input" name="gallery_title" style="height: 50px; font-size: 25px; margin: 15px;"/>
 			</div>
 			<div class="span2">
-				<input class="btn span2" type="submit" value="${message(code:'view.main.view.create')}" style="height: 55px; margin: 15px;" />
+				<input class="btn span2" type="submit" value="${message(code:'view.main.view.create')}" style="height: 62px; margin: 15px;font-size:22px;font-weight:bold;color:#888" />
 			</div>
 		</div>
 	</g:form>

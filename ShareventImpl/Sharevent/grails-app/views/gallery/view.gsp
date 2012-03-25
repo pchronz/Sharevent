@@ -41,7 +41,7 @@
 						data-href= "${createLink(action: 'view', id: galleryInstance.id)}"
 						data-send="false"
 						data-layout="button_count" 
-						data-width="450"
+						data-width="25"
 						data-show-faces="true">
 					</div>
 			</div>
