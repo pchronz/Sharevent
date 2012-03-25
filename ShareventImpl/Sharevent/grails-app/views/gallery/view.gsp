@@ -12,7 +12,7 @@
 	  <div class="row">
 		  <div class="span8" style="margin-top: 50px;">
 			<g:link controller="main" action="view" style="text-decoration: none;">
-				<span style="font-family: 'Sonsie One', cursive; font-size: 96px; text-decoration: none; color: #FFFFFF;text-shadow: 2px 2px #000077;">Sharemories</span>
+				<span style="font-family: 'Sonsie One', cursive; font-size: 96px; text-decoration: none; color: #FFFFFF;text-shadow: 2px 2px #000077;">SharEvent</span>
 			</g:link>
 		  </div>
 	  </div>
