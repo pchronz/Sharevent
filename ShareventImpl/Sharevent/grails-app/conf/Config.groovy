@@ -66,7 +66,7 @@ environments {
     }
     production {
         grails.logging.jul.usebridge = false
-        // TODO: grails.serverURL = "http://www.changeme.com"
+        grails.serverURL = "http://107.21.211.231:8080/Sharevent"
     }
 }
 

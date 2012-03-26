@@ -34,7 +34,10 @@ environments {
     production {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:h2:prodDb;MVCC=TRUE"
+	url = "jdbc:mysql://localhost:3306/sharevent"
+        driverClassName = "com.mysql.jdbc.Driver"
+        username = "sharevent"
+        password = "sharevent"
             pooled = true
             properties {
                maxActive = -1
