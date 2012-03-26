@@ -729,6 +729,7 @@ class GalleryController {
 			}
 			def imageURL = imageDBService.getImageThumbURL(image)
 			log.info  'imageURL == ' + imageURL
+			flash.message = "It may take a few moments before all images are processed and available in the gallery."
 			render(text: [success: true, imageURL: imageURL] as JSON, contentType: 'text/JSON')
 	}
 

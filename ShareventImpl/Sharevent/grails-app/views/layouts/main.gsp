@@ -65,12 +65,29 @@
 			}
 		</style>
 	<canvas id="background" width="1800" height="1800" style="position: absolute; top: 0px; left: 0px; z-index: -1;"></canvas>
-	<g:if test="${flash.message}">
-		<div class="message">${flash.message}</div>
-	</g:if>
-	
 	<div class="container">
+		<g:if test="${flash.message}">
+			<div class="row" style="margin-top: 20px;">
+				<div class="span12">
+					<div class="alert alert-info">
+						<a class="close" data-dismiss="alert">×</a>
+						${flash.message}
+					</div>
+				</div>
+			</div>
+		</g:if>
 		
+		<g:if test="${flash.error}">
+			<div class="row" style="margin-top: 20px;">
+				<div class="span12">
+					<div class="alert alert">
+						<a class="close" data-dismiss="alert">×</a>
+						${flash.error}
+					</div>
+				</div>
+			</div>
+		</g:if>
+
 		<div class="row">
 			<div class="span12">
 				<g:layoutBody />	
@@ -79,5 +96,25 @@
 	</div>
         
 	<r:layoutResources/>
+	<g:link elementId="a-impress" controller="impress" action="view">${message(code: 'impress.impress')}</g:link>
+	<script type="text/javascript" charset="utf-8">
+		function getDocHeight() {
+			return "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
+		}
+
+		function getDocWidth() {
+			return "innerWidth" in window ? window.innerWidth : document.documentElement.offsetWidth;
+		}
+
+		$(function() {
+			var linkHeight = $('#a-impress').height();
+			var linkWidth = $('#a-impress').width();
+			var docHeight = getDocHeight();
+			var docWidth = getDocWidth();
+			$('#a-impress').css('position', 'absolute');
+			$('#a-impress').css('top', docHeight - linkHeight - 20);
+			$('#a-impress').css('left', docWidth/2 - linkWidth/2);
+		});
+	</script>
     </body>
-</html>
+</html>	

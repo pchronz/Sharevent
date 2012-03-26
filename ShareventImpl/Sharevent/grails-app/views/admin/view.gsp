@@ -1,9 +1,3 @@
-<%--
-  User: peterandreaschronz
-  Date: 21.05.11
-  Time: 10:18
---%>
-
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
   <head>
@@ -15,14 +9,16 @@
     </title>
   </head>
   <body>
-	  <div style="position: absolute; top: 20%;">
+	  <div style="position: absolute; top: 50px;">
 		<div class="row">
-			<div class="span8 offset1">
+			<div class="span8">
 				<g:link controller="main" action="view" style="text-decoration: none;">
 					<span style="font-family: 'Sonsie One', cursive; font-size: 96px; text-decoration: none; margin-left: 20px; color: #FFFFFF;text-shadow: 2px 2px #000077;">SharEvent</span>
 				</g:link>
 			</div>
 		</div>
+	</div>
+
 	<div class="row">
 		<div class="span6">
 			<g:if test="${flash.error}">
@@ -41,49 +37,31 @@
 			</g:if>
 		</div>
 	</div>
-	
-	<g:form controller="gallery" action="createNew">
-		<div class="row">
-			<div class="span8 offset1">
-				<input class="span8" size="54" maxlength="54" placeholder="${message(code: 'main.entergallerytitle')}" type="text" id="gallery_title_input" name="gallery_title" style="height: 50px; font-size: 25px; margin: 15px;"/>
-			</div>
-			<div class="span3">
-				<input class="btn span2" type="submit" value="${message(code:'view.main.view.create')}" style="height: 62px; margin: 15px;font-size:22px;font-weight:bold;color:#888" />
-			</div>
-		</div>
-	</g:form>
 
-	<div class="row">
-		<div class="span12 offset1" style="margin-left: 150px">
-			<%-- Twitter --%>
-			<a href="https://twitter.com/share" class="twitter-share-button" data-related="jasoncosta" data-lang="en" data-size="small" data-count="none" data-url="http://www.sharevent.com">Tweet</a>
-			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-
-			<%-- Google plus one --%>
-			<div class="g-plusone" data-size="medium" data-annotation="none"></div>
-			<script type="text/javascript">
-			  (function() {
-				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-				po.src = 'https://apis.google.com/js/plusone.js';
-				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-			  })();
-			</script>
-		
-			<%-- Facebook like --%>
-			<script>(function(d, s, id) {
-			  var js, fjs = d.getElementsByTagName(s)[0];
-			  if (d.getElementById(id)) return;
-			  js = d.createElement(s); js.id = id;
-			  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
-			  fjs.parentNode.insertBefore(js, fjs);
-			}(document, 'script', 'facebook-jssdk'));</script>
-			<div class="fb-like" style="display: inline; position: relative; top: -3px;" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
-			<div id="fb-root"></div>
+	<div class="row" style="position: absolute; top: 150px;">
+		<div class="span12">
+			<table class="table table-condensed">
+			  <thead>
+				<tr>
+					<th>ID</th>
+					<th>Admin Link</th>
+					<th>Num Images</th>
+				</tr>
+			  </thead>
+			  <tbody>
+				<g:each in="${galleries}" var="gallery">
+					<tr>
+					  <td>${gallery.id}</td>
+					  <td><sv:shortAdminLink gallery="${gallery}"><sv:shortAdminUrl gallery="${gallery}" /></sv:shortAdminLink></td>
+					  <td>${gallery.images.size()}</td>
+					</tr>
+				</g:each>
+			  </tbody>
+			</table>
 		</div>
 	</div>
-
-
-</div>
+	
+	
 
 	<script type="text/javascript" charset="utf-8">
 		$(function()

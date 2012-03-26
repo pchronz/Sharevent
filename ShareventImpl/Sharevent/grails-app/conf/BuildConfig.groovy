@@ -40,12 +40,13 @@ grails.project.dependency.resolution = {
         runtime ":hibernate:$grailsVersion"
         runtime ":jquery:1.7.1"
         runtime ":resources:1.1.6"
-	runtime (':aws:1.1.9.2') {
-		excludes( name: 'jackson-core-asl')
-	}
+		runtime (':aws:1.1.9.2') {
+			excludes( name: 'jackson-core-asl')
+		}
+		compile ":executor:0.3"
         compile ":lesscss-resources:0.6.1"
-	compile ":spring-security-core:1.2.7.2"
-	compile ":ajax-uploader:1.1"
+		compile ":spring-security-core:1.2.7.2"
+		compile ":ajax-uploader:1.1"
 
         // Uncomment these (or add new ones) to enable additional resources capabilities
         //runtime ":zipped-resources:1.0"
