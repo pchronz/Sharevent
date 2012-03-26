@@ -37,7 +37,6 @@ class BaseTagLib {
 
 	def shortAdminLink = {attr, body ->
 		def serverUrl = grailsApplication.config.grails.serverURL
-		def appName = grailsApplication.metadata['app.name']
 		def shortAdminUrl = attr.gallery.urlMap.shortAdminUrl
 		out << "<a href=\""
 		out << serverUrl

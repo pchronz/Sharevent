@@ -69,37 +69,45 @@ class ImageService {
 
 		// read the image from inputstream
 		// if it does not work, post a flash message, log it and remove the image domain class instance
-
+		// using Grails Executor to run the scaling and upload asynchronously
 		BufferedImage bsrc = ImageIO.read(inputStream)
+		runAsync {
 
-		// the image could not be read. probably a wrong type to begin with.
-		// delete it
-		if(bsrc == null) {
-			log.error "Could not read an image. Deleting it. Image.id== " + imageId
-			imageDBService.deleteImage(image)
-			throw new Exception("${message(code: 'userdef.couldNotReadImage')}")
+			// the image could not be read. probably a wrong type to begin with.
+			// delete it
+			if(bsrc == null) {
+				log.error "Could not read an image. Deleting it. Image.id== " + imageId
+				imageDBService.deleteImage(imageId, userId)
+				throw new Exception("${message(code: 'userdef.couldNotReadImage')}")
+			}
+
+			int maxImageHeight = grailsApplication.config.sharevent.maxImageHeight
+			int maxImageWidth = grailsApplication.config.sharevent.maxImageWidth
+
+			// uploading the original image
+			def baos = new ByteArrayOutputStream()
+			def byteArray = baos.toByteArray()
+			def bais = new ByteArrayInputStream(byteArray)
+			ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(baos))
+			byteArray = baos.toByteArray()
+			bais = new ByteArrayInputStream(byteArray)
+			imageDBService.storeImage(bais, imageId, userId)
+
+			// resize the images
+			// first crop to save performance when scaling
+			if(bsrc.width < bsrc.height) {
+				bais = cropImage(bsrc.width, bsrc.width, bsrc)
+			}
+			else {
+				bais = cropImage(bsrc.height, bsrc.height, bsrc)
+			}
+			bsrc = ImageIO.read(bais)
+			bais = scaleImage(maxImageHeight, maxImageWidth, bsrc)
+
+			// uploading the scaled image
+			imageDBService.storeImageThumbnail(bais, imageId, userId)
+
 		}
-
-		int maxImageHeight = grailsApplication.config.sharevent.maxImageHeight
-		int maxImageWidth = grailsApplication.config.sharevent.maxImageWidth
-
-		// uploading the original image
-		def baos = new ByteArrayOutputStream()
-		def byteArray = baos.toByteArray()
-		def bais = new ByteArrayInputStream(byteArray)
-		ImageIO.write(bsrc, "JPG", new MemoryCacheImageOutputStream(baos))
-		byteArray = baos.toByteArray()
-		bais = new ByteArrayInputStream(byteArray)
-		imageDBService.storeImage(bais, imageId, userId)
-
-		// resize the images
-		bais = scaleImage(maxImageHeight, maxImageWidth, bsrc)
-		bsrc = ImageIO.read(bais)
-		bais = cropImage(maxImageHeight, maxImageWidth, bsrc)
-
-		// uploading the scaled image
-		imageDBService.storeImageThumbnail(bais, imageId, userId)
-
 		log.info 'image upload successfull'
 	}
 

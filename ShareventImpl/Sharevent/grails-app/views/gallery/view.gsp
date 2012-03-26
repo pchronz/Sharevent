@@ -96,7 +96,7 @@
 							value="${message(code: 'userDef.downloadImages')}" 
 							action="download"
 							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' }" />
-							<a class="btn btn-large upload-button" data-toggle="modal" href="#upload-modal" style="">Upload</a>
+							<a class="btn btn-large upload-button" data-toggle="modal" href="#upload-modal" style="">${message(code: 'gallery.upload')}</a>
 					</div>
 				</div>
 		</div>
@@ -156,7 +156,7 @@
 							value="${message(code: 'userDef.downloadImages')}" 
 							action="download"
 							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' }" />
-						<a class="btn btn-large upload-button" data-toggle="modal" href="#upload-modal">Upload </a>
+							<a class="btn btn-large upload-button" data-toggle="modal" href="#upload-modal">${message(code: 'gallery.upload')}</a>
 					</div>
 				</div>
 		</div>
@@ -171,7 +171,7 @@
 	<div class="modal hide fade" id="upload-modal">
 	  <div class="modal-header">
 		<a class="close" data-dismiss="modal">×</a>
-		<h3>Upload images</h3>
+		<h3>${message(code: 'userDef.uploadImages')}</h3>
 	  </div>
 	  <div class="modal-body">
 		<uploader:uploader 
@@ -564,6 +564,5 @@
 			$(this).parent().parent().remove();
 	});
 </script>
-
 </body>
 </html>
