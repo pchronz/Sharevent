@@ -82,7 +82,7 @@
 		</div>
 	</div>
 
-	<g:if test="${adminGalleries.size() > 0 || userGalleries.size() >0}">
+	<g:if test="${adminGalleries?.size() > 0 || userGalleries?.size() >0}">
 		<div class="row" style="margin-top: 30px;">
 			<div class="span8 offset2">
 <div class="modal" id="modal-recent" style="position: relative; top: auto; left: auto; margin: 0 auto;">
