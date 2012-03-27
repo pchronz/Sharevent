@@ -8,6 +8,7 @@ import uk.co.desirableobjects.ajaxuploader.AjaxUploaderService
 import grails.converters.JSON
 import grails.plugins.springsecurity.Secured
 import grails.plugins.springsecurity.Secured
+import javax.servlet.http.Cookie
 
 
 class GalleryController {
@@ -637,6 +638,13 @@ class GalleryController {
 			shortUrl = serverUrl.toString() + "/" + shortUrl
 			def shortAdminUrl = gallery.urlMap.shortAdminUrl
 			shortAdminUrl = serverUrl.toString() + "/" + shortAdminUrl
+
+			// add this gallery to the user cookies
+			// TODO provide admin/participation urls depending on user
+			def c = new Cookie(gallery.id, isAdmin ? "admin" : "user")
+			c.maxAge = 60*60*24*7*52
+			c.path = "/"
+			response.addCookie(c)
 
             render view:"view", model:[galleryInstance:gallery, urls: urls, urlsFull: urlsFull, isAdmin: isAdmin, shortUrl: shortUrl, shortAdminUrl: shortAdminUrl, showImage: params.showImage ?: null] 
 		}

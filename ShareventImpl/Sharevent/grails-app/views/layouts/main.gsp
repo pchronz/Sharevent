@@ -10,7 +10,7 @@
         <g:layoutHead />
 		<r:require modules="bootstrap, sharevent, colorbox"/>
         <r:layoutResources/>
-<style type="text/css">
+		<style type="text/css">
 					// Landscape phones and down
 			@media (max-width: 480px) {
 				.sharevent-title{
@@ -56,14 +56,6 @@
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		  })();
 		</script>
-				
-		
-
-		<style>
-			a {
-				color: #FFFFFF;
-			}
-		</style>
 	<canvas id="background" width="1800" height="1800" style="position: absolute; top: 0px; left: 0px; z-index: -1;"></canvas>
 	<div class="container">
 		<g:if test="${flash.message}">

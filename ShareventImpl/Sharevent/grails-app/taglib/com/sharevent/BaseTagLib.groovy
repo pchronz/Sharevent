@@ -29,8 +29,11 @@ class BaseTagLib {
 		def shortUrl = attr.gallery.urlMap.shortUrl
 		out << "<a href=\""
 		out << serverUrl
-		out << "/" + shortUrl
-		out << "\">"
+		out << "/" + shortUrl + "\""
+		attr.each {
+			if(it != attr.gallery) out << it.key + "=\"" + it.value + "\""
+		}
+		out << ">"
 		out << body()
 		out << "</a>"
 	}
@@ -40,8 +43,11 @@ class BaseTagLib {
 		def shortAdminUrl = attr.gallery.urlMap.shortAdminUrl
 		out << "<a href=\""
 		out << serverUrl
-		out << "/" + shortAdminUrl
-		out << "\">"
+		out << "/" + shortAdminUrl + "\""
+		attr.each {
+			if(it != attr.gallery) out << it.key + "=\"" + it.value + "\""
+		}
+		out << ">"
 		out << body()
 		out << "</a>"
 	}

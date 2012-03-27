@@ -44,14 +44,16 @@
 			  <thead>
 				<tr>
 					<th>ID</th>
+					<th>Title</th>
 					<th>Admin Link</th>
 					<th>Num Images</th>
 				</tr>
 			  </thead>
 			  <tbody>
-				<g:each in="${galleries}" var="gallery">
+				  <g:each in="${galleries.sort{x,y -> x.date <=> y.date }}" var="gallery">
 					<tr>
 					  <td>${gallery.id}</td>
+					  <td>${gallery.title}</td>
 					  <td><sv:shortAdminLink gallery="${gallery}"><sv:shortAdminUrl gallery="${gallery}" /></sv:shortAdminLink></td>
 					  <td>${gallery.images.size()}</td>
 					</tr>

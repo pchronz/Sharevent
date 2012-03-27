@@ -41,7 +41,7 @@
 			</g:if>
 		</div>
 	</div>
-	
+
 	<g:form controller="gallery" action="createNew">
 		<div class="row">
 			<div class="span8 offset1">
@@ -82,7 +82,46 @@
 		</div>
 	</div>
 
-
+	<g:if test="${adminGalleries.size() > 0 || userGalleries.size() >0}">
+		<div class="row" style="margin-top: 30px;">
+			<div class="span8 offset2">
+<div class="modal" id="modal-recent" style="position: relative; top: auto; left: auto; margin: 0 auto;">
+  <div class="modal-header">
+	<h2>Recent galleries</h2>
+  </div>
+  <div class="modal-body">
+	<table class="table table-condensed table-striped">
+	  <thead>
+		<tr>
+			<th>Title</th>
+			<th>Status</th>
+		</tr>
+	  </thead>
+	  <tbody>
+		<g:each in="${adminGalleries}" var="adminGallery">
+			<tr>
+				<td>
+					<sv:shortAdminLink gallery="${adminGallery}">${adminGallery.title}</sv:shortAdminLink>
+				</td>
+				<td>Admin</td>
+			</tr>
+		</g:each>
+		<g:each in="${userGalleries}" var="userGallery">
+			<tr>
+				<td>
+				<sv:shortLink gallery="${userGallery}">${userGallery.title}</sv:shortLink>
+				</td>
+				<td>User</td>
+			</tr>
+		</g:each>
+	  </tbody>
+	</table>
+  </div>
+</div>
+			</div>
+		</div>
+	</g:if>
+	
 </div>
 
 	<script type="text/javascript" charset="utf-8">

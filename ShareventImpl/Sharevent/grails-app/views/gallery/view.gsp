@@ -54,7 +54,7 @@
 		<div class="span3" >
 			<fieldset>
 				<div class="control-group">
-					<label class="control-label"><sv:shortLink gallery="${galleryInstance}"><g:message code="userDef.participationLink"/></sv:shortLink></label>
+					<label class="control-label"><sv:shortLink style="color: #fff;" gallery="${galleryInstance}"><g:message code="userDef.participationLink"/></sv:shortLink></label>
 					<div class="controls">
 						<input class="span3 gallery-short-url" type="text" value="${shortUrl}"></input>
 					</div>
@@ -65,7 +65,7 @@
 			<fieldset> 
 				<g:if test="${isAdmin}">
 					<div class="control-group">
-						<label class="control-label"><sv:shortAdminLink gallery="${galleryInstance}"><g:message code="userDef.administrationLink"/></sv:shortAdminLink></label>
+						<label class="control-label"><sv:shortAdminLink style="color: #fff;" gallery="${galleryInstance}"><g:message code="userDef.administrationLink"/></sv:shortAdminLink></label>
 						<div class="controls">
 							<input class="span3 gallery-short-url" type="text" value="${shortAdminUrl}"></input>
 						</div>
