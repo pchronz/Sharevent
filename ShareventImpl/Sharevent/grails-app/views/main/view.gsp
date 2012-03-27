@@ -87,14 +87,15 @@
 			<div class="span8 offset2">
 <div class="modal" id="modal-recent" style="position: relative; top: auto; left: auto; margin: 0 auto;">
   <div class="modal-header">
-	<h2>Recent galleries</h2>
+	  <h2>${message(code: 'main.recentgalleries')}</h2>
   </div>
   <div class="modal-body">
 	<table class="table table-condensed table-striped">
 	  <thead>
 		<tr>
-			<th>Title</th>
-			<th>Status</th>
+			<th>${message(code: 'main.title')}</th>
+			<th>${message(code: 'main.status')}</th>
+			<th></th>
 		</tr>
 	  </thead>
 	  <tbody>
@@ -103,7 +104,8 @@
 				<td>
 					<sv:shortAdminLink gallery="${adminGallery}">${adminGallery.title}</sv:shortAdminLink>
 				</td>
-				<td>Admin</td>
+				<td>${message(code: 'main.admin')}</td>
+				<td><g:link controller="main" action="removeCookie" id="${adminGallery.id}" class="close">×</g:link></td>
 			</tr>
 		</g:each>
 		<g:each in="${userGalleries}" var="userGallery">
@@ -112,6 +114,7 @@
 				<sv:shortLink gallery="${userGallery}">${userGallery.title}</sv:shortLink>
 				</td>
 				<td>User</td>
+				<td><g:link controller="main" action="removeCookie" id="${userGallery.id}" class="close">×</g:link></td>
 			</tr>
 		</g:each>
 	  </tbody>

@@ -1,6 +1,7 @@
 package com.sharevent
 
 import grails.plugins.springsecurity.Secured
+import javax.servlet.http.Cookie
 
 class MainController {
 
@@ -25,4 +26,19 @@ class MainController {
 		}
 		render view: "view", model: [adminGalleries: adminGalleries, userGalleries: userGalleries]
     }
+
+	def removeCookie = {
+		if(!params.id) {
+			redirect view: 'view'
+			return
+		}
+
+		def id = params.id 
+
+		def c = new Cookie(id, "user")
+		c.maxAge = 0
+		c.path = "/"
+		response.addCookie(c)
+		redirect action: 'view'
+	}
 }

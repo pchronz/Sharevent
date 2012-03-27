@@ -640,7 +640,6 @@ class GalleryController {
 			shortAdminUrl = serverUrl.toString() + "/" + shortAdminUrl
 
 			// add this gallery to the user cookies
-			// TODO provide admin/participation urls depending on user
 			def c = new Cookie(gallery.id, isAdmin ? "admin" : "user")
 			c.maxAge = 60*60*24*7*52
 			c.path = "/"
