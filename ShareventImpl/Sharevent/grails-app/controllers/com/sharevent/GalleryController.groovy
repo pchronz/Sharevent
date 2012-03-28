@@ -830,6 +830,7 @@ class GalleryController {
 			BufferedInputStream origin = new BufferedInputStream(inputStream, 2048)
 			String zipPath = image.gallery.title + '/' + image.id + '.jpg'
 			ZipEntry entry = new ZipEntry(zipPath)
+			entry.setMethod(ZipEntry.DEFLATED)
 			zos.putNextEntry(entry)
 			int count
 			while((count = origin.read(data, 0, 2048)) != -1) {
