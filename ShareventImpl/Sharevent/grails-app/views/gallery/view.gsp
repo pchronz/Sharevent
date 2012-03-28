@@ -95,7 +95,7 @@
 							name="Download" 
 							value="${message(code: 'userDef.downloadImages')}" 
 							action="download"
-							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' }" />
+							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' } download-button" />
 							<a class="btn btn-large upload-button" data-toggle="modal" href="#upload-modal" style="">${message(code: 'gallery.upload')}</a>
 					</div>
 				</div>
@@ -155,7 +155,7 @@
 							name="Download" 
 							value="${message(code: 'userDef.downloadImages')}" 
 							action="download"
-							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' }" />
+							class="btn btn-large ${urls.size() == 0 ? 'disabled':'' } download-button" />
 							<a class="btn btn-large upload-button" data-toggle="modal" href="#upload-modal">${message(code: 'gallery.upload')}</a>
 					</div>
 				</div>
@@ -163,6 +163,16 @@
 		
 		<g:hiddenField name="key" value="${galleryInstance.creatorId}" />
         </g:form>
+
+		<script type="text/javascript" charset="utf-8">
+			$('.download-button').tooltip({trigger: 'manual', title: "${message(code: 'gallery.waitForDownload')}"});
+			$('.download-button').click(function() {
+					$(this).tooltip('show');
+					setTimeout(function() {
+						$('.download-button').tooltip('hide');
+					}, 20000);
+			});
+		</script>
 
 	<script type="text/javascript" charset="utf-8">
 		var ongoingUploads = 0;

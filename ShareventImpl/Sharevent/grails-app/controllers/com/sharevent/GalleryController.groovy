@@ -811,11 +811,10 @@ class GalleryController {
 		}
 
 		// now zip the selected images to the response stream
-		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(response.outputStream))
+		def zipFile = File.createTempFile('Tem', '.zip')
+		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(zipFile.newOutputStream()))
 		def data = new byte[2048]
 		def galleryInstance = Gallery.get(params.id)
-//		response.setContentType("application/octet-stream")
-//		response.setHeader("Content-disposition", "attachment;filename=${gallery.title}")
 		
 		images.each { image ->
 			def inputStream = imageDBService.getImageInputStream(image)
@@ -824,7 +823,7 @@ class GalleryController {
 				// delete the image from the imageDBService
 				imageService.deleteImage(image.id)
 				log.error "ImageDB is null"
-				flash.message = "Some of the selected images could not be downloaded."
+	//			flash.message = "Some of the selected images could not be downloaded."
 				return
 			}
 
@@ -839,6 +838,10 @@ class GalleryController {
 			origin.close();
 		}
 		zos.close()
+		// TODO XXX
+		response.setContentType("application/octet-stream")
+		response.setHeader("Content-disposition", "attachment;filename=${galleryInstance.title}.zip")
+		response.outputStream << zipFile.newInputStream()
     }
 
 

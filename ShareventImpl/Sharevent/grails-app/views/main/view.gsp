@@ -23,6 +23,15 @@
 				</g:link>
 			</div>
 		</div>
+		<div class="row">
+			<div class="span8 offset2">
+				<h1 id="tagline" data-content="<ol><li>Upload your images.</li><li>Let your friends upload their images.</li><li>Download all images in full quality.</li></ol>" data-original-title="How it works" style="color: white;"><em>"Use SharEvent, help save USB drives."</em></h1>
+				<script type="text/javascript" charset="utf-8">
+					$('#tagline').popover({placement: 'top'});
+				</script>
+			</div>
+		</div>
+		
 	<div class="row">
 		<div class="span6">
 			<g:if test="${flash.error}">
