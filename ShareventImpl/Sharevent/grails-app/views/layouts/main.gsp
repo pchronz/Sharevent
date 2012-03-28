@@ -88,7 +88,10 @@
 	</div>
         
 	<r:layoutResources/>
-	<g:link style="color: white;" elementId="a-impress" controller="impress" action="view">${message(code: 'impress.impress')}</g:link>
+	<div class="footer">
+		<g:link controller="impress" action="view">${message(code: 'impress.impress')}</g:link>
+	</div>
+
 	<script type="text/javascript" charset="utf-8">
 		function getDocHeight() {
 			return "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;

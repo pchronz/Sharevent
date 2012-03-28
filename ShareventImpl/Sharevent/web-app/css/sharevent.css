@@ -23,6 +23,14 @@ body {
 	text-decoration: none;
 	color: #FFFFFF;"
 }
+.footer {
+	position:fixed;
+	top:100%;
+	margin-top:-18px;
+	margin-left:50%;
+	margin-right:50%;	
+}
+
 .thumbwall{
 	max-width:270px;
 	max-height:270px;
