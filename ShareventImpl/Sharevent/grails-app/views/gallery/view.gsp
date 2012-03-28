@@ -289,6 +289,7 @@
 
 			$('.ac-download').click(function () {
 				var a = $(this).children();
+				$(this).hide();
 				window.location.href = a.attr('href');
 			});
 
