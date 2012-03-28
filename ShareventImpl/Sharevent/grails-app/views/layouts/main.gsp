@@ -111,5 +111,6 @@
 			$('#a-impress').css('left', docWidth/2 - linkWidth/2);
 		});
 	</script>
+--%>
     </body>
 </html>	
