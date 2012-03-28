@@ -40,23 +40,33 @@ class ImageDBService {
 
 
 	def getImageThumbInputStream(image) {
-		def s3Image = aws.s3().on('com.sharevent.imagethumbs').get(image.id + ".jpg", image.galleryUser.id + "/")
-		def s3InputStream = s3Image.getDataInputStream()
-		if(!s3InputStream) {
-			log.error "Could not retrieve inputStream for downloading image.id == " + image.id
-			throw new Exception("Could not retrieve inputStream for downloading image.id == " + image.id)
+		try {
+			def s3Image = aws.s3().on('com.sharevent.imagethumbs').get(image.id + ".jpg", image.galleryUser.id + "/")
+			def s3InputStream = s3Image.getDataInputStream()
+			if(!s3InputStream) {
+				log.error "Could not retrieve inputStream for downloading image.id == " + image.id
+				throw new Exception("Could not retrieve inputStream for downloading image.id == " + image.id)
+			}
+			return new BufferedInputStream(s3InputStream, 2048)
 		}
-		return new BufferedInputStream(s3InputStream, 2048)
+		catch(e) {
+			return null
+		}
 	}
 
 	def getImageInputStream(image) {
-		def s3Image = aws.s3().on('com.sharevent.images').get(image.id + ".jpg", image.galleryUser.id + "/")
-		def s3InputStream = s3Image.getDataInputStream()
-		if(!s3InputStream) {
-			log.error "Could not retrieve inputStream for downloading image.id == " + image.id
-			throw new Exception("Could not retrieve inputStream for downloading image.id == " + image.id)
+		try {
+			def s3Image = aws.s3().on('com.sharevent.images').get(image.id + ".jpg", image.galleryUser.id + "/")
+			def s3InputStream = s3Image.getDataInputStream()
+			if(!s3InputStream) {
+				log.error "Could not retrieve inputStream for downloading image.id == " + image.id
+				throw new Exception("Could not retrieve inputStream for downloading image.id == " + image.id)
+			}
+			return new BufferedInputStream(s3InputStream, 2048)
 		}
-		return new BufferedInputStream(s3InputStream, 2048)
+		catch(e) {
+			return null
+		}
 	}
 
 	def storeImageThumbnail(bais, imageId, userId) {
