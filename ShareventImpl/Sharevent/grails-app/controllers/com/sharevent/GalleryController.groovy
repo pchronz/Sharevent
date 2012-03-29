@@ -584,6 +584,14 @@ class GalleryController {
 			return
 		}
 
+		// let me know, that a new gallery has been created
+		sendMail {     
+			to "peter.chronz@gmail.com"     
+			subject "New gallery!"     
+			body g.createLink(controller: 'gallery', action: 'view', id: gallery.id).toString()
+		}
+		log.info "Sent email to you with the new gallery."
+
 		// entering creatorId as params.key, so that the administration link will be shown
 		redirect action: 'view', params: [id: gallery.id, key: gallery.creatorId]
 	}
@@ -607,7 +615,7 @@ class GalleryController {
 		def urls = [:]
 		def urlsFull = [:]
 
-		def images = Image.findAllByGallery(gallery,[sort:'dateCreated'])
+		def images = Image.findAllByGallery(gallery,[sort:'dateCreated', order: 'desc'])
 		images?.each { image ->
 			def url = imageDBService.getImageThumbURL(image)
 			def urlFull = imageDBService.getImageURL(image)
