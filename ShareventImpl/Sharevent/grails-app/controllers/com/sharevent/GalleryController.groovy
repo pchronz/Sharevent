@@ -9,6 +9,7 @@ import grails.converters.JSON
 import grails.plugins.springsecurity.Secured
 import grails.plugins.springsecurity.Secured
 import javax.servlet.http.Cookie
+import org.codehaus.groovy.grails.plugins.qrcode.QRCodeRenderer
 
 
 class GalleryController {
@@ -958,5 +959,24 @@ class GalleryController {
 				redirect action: "view"
 			}
 		}
+	}
+
+	def saveQrCode = {
+		if(!params.id) {
+			log.error 'No id provided to save QR code for.'
+			return null
+		}
+		def gallery = Gallery.get(params.id)
+		if(!gallery) {
+			log.error "Could not Gallery.get(${parms.id})"
+			return null
+		}
+
+		//response.contentType = "image/png"
+		response.setContentType("application/octet-stream")
+		response.setHeader("Content-disposition", "attachment;filename=${gallery.title}.png")
+		def outputStream = response.outputStream
+		QRCodeRenderer qrcodeRenderer = new QRCodeRenderer()
+		qrcodeRenderer.renderPng(g.createLink(controller: 'gallery', action: 'view', id: 'params.id').toString(), 300, outputStream)
 	}
 }

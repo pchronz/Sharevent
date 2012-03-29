@@ -89,10 +89,9 @@
         
 	<r:layoutResources/>
 	<div class="footer">
-		<g:link controller="impress" action="view">${message(code: 'impress.impress')}</g:link>
+		<g:link controller="impress" action="view" style="color: white;">${message(code: 'impress.impress')}</g:link>
 	</div>
 
-<%--
 	<script type="text/javascript" charset="utf-8">
 		function getDocHeight() {
 			return "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
@@ -112,6 +111,5 @@
 			$('#a-impress').css('left', docWidth/2 - linkWidth/2);
 		});
 	</script>
---%>
     </body>
 </html>	

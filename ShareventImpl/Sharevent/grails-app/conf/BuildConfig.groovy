@@ -47,6 +47,7 @@ grails.project.dependency.resolution = {
         compile ":lesscss-resources:0.6.1"
 		compile ":spring-security-core:1.2.7.2"
 		compile ":ajax-uploader:1.1"
+		compile ":qrcode:0.3"
 
         // Uncomment these (or add new ones) to enable additional resources capabilities
         //runtime ":zipped-resources:1.0"
