@@ -21,6 +21,17 @@
 		<div class="span12 galleryTitle">
 			<h1 style="color: #FFFFFF;display:inline;margin-right:12px;">${galleryInstance.title}</h1>
 			<div class="social-bar">
+					<div class="div-qr">
+						<a data-toggle="modal" href="#qr-code-modal" ><img src="${resource(dir: 'images/social-media', file: 'qr.png')}" style="margin-top: -20px;"/></a>
+						<script type="text/javascript" charset="utf-8">
+							$('#qr-code-modal').modal();
+						</script>
+					</div>
+					<div>
+						<a href="#" class="ac-gallery-mailto">
+							<img src="${resource(dir: 'images/social-media', file: 'mailTo_25.png')}" style="margin-top: -17px;"></img>
+						</a>
+					</div>
 					<div class="g-plusone"
 						data-annotation="none"
 						data-size="medium"
@@ -48,6 +59,30 @@
 		</div>
 
 	</div>
+
+	<%-- QR code modal --%>
+	<div class="modal hide" id="qr-code-modal">
+	  <div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>QR Code</h3>
+	  </div>
+	  <div class="modal-body">
+		 <ul class="thumbnails" style="position: relative; left: 130px; width: 300px;">
+			 <li class="span3">
+				 <div class="thumbnail" id="qr-link">
+					 <qrcode:image text="${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id)}" />
+					 <script type="text/javascript" charset="utf-8">
+						 $('#qr-link').click(function(){return false;});
+					 </script>
+				</div>
+			</li>
+		</ul>
+	  </div>
+	  <div class="modal-footer">
+		  <g:link class="btn btn-info" controller="gallery" action="saveQrCode" id="${galleryInstance.id}">Save</g:link>
+	  </div>
+	</div>
+	
 	
 	<div class="row">
 	  <form class="form">
@@ -163,16 +198,6 @@
 		
 		<g:hiddenField name="key" value="${galleryInstance.creatorId}" />
         </g:form>
-
-		<script type="text/javascript" charset="utf-8">
-			$('.download-button').tooltip({trigger: 'manual', title: "${message(code: 'gallery.waitForDownload')}"});
-			$('.download-button').click(function() {
-					$(this).tooltip('show');
-					setTimeout(function() {
-						$('.download-button').tooltip('hide');
-					}, 20000);
-			});
-		</script>
 
 	<script type="text/javascript" charset="utf-8">
 		var ongoingUploads = 0;
@@ -403,8 +428,22 @@
 				var img = $(this).parent().parent().siblings('a').children('img');
 				var url = "${createLink(action: 'view', id: galleryInstance.id)}?showImage=" + img.attr('id');
 		
-				var subject = '?subject=Sharenvent shared link'	
-				var body= '&body='+url;
+				var subject = '?subject=Sharevent shared event'	
+				var body= '&body='+'Check out this gallery: '+url;
+
+				var mailContent = subject + body;
+				var a = $('#sendMail');
+				a.attr('href','mailto:'+ mailContent);
+
+				window.open(a.attr('href'),'_blank');
+
+			});
+
+			$('.ac-gallery-mailto').click(function () {
+				var url = "${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id)}";
+		
+				var subject = '?subject=Sharevent shared event'	
+				var body= '&body='+'Check out this gallery: '+url+'';
 
 				var mailContent = subject + body;
 				var a = $('#sendMail');
