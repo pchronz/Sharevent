@@ -40,8 +40,6 @@
 
 			
 </style>
-    </head>
-    <body>
 		<%-- Google Analytics --%>
 		<script type="text/javascript">
 		  var _gaq = _gaq || [];
@@ -56,6 +54,8 @@
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		  })();
 		</script>
+    </head>
+    <body>
 	<canvas id="background" width="1800" height="1800" style="position: absolute; top: 0px; left: 0px; z-index: -1;"></canvas>
 	<div class="container">
 		<g:if test="${flash.message}">
