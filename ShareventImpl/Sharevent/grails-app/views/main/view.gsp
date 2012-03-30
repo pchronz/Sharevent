@@ -139,7 +139,7 @@
 	<script type="text/javascript" charset="utf-8">
 		$(function()
 		{
-			if(document.createElement('canvas') && navigator && !(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/iPad/i)))
+			if(document.createElement('canvas') && navigator && (!(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/msie/i) || navigator.userAgent.match(/Safari/i) || navigator.userAgent.match(/Android/i)) || navigator.userAgent.match(/Chrome/i) || navigator.userAgent.match(/Firefox/i)))
 			{
 				function Bit(size, color){
 					this.size = size;
@@ -227,6 +227,11 @@
 				}
 
 				setInterval(reDraw, 50);
+			}
+			else {
+				document.body.style['background-image'] = 'url("${resource(dir:'images', file:'blue_bg.jpg')}")';
+				document.body.style['backgroundImage'] = 'url("${resource(dir:'images', file:'blue_bg.jpg')}")';
+				document.body.style['background-attachment'] = 'fixed';
 			}
 		});
 	</script>

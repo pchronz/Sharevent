@@ -588,7 +588,7 @@ class GalleryController {
 		sendMail {     
 			to "peter.chronz@gmail.com"     
 			subject "New gallery!"     
-			body g.createLink(controller: 'gallery', action: 'view', id: gallery.id).toString()
+			body g.createLink(absolute: true, controller: 'gallery', action: 'view', id: gallery.id).toString()
 		}
 		log.info "Sent email to you with the new gallery."
 

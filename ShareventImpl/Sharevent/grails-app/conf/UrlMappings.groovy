@@ -8,7 +8,7 @@ class UrlMappings {
 		}
 
 		"/$shortUrl"(controller: "gallery", action: "viewShortUrl")
-		"/"(view:"/main/view")
+		"/"(controller: 'main', action: 'view')
 		"404"(view:"/main/view")
 		"500"(view:'/error')
 		"/login/$action?"(controller: "login")

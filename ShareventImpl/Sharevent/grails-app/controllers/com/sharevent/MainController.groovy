@@ -14,7 +14,7 @@ class MainController {
     def view = {
 		def userGalleries = []
 		def adminGalleries = []
-		request.cookies.each { cookie ->
+		request.cookies?.each { cookie ->
 			if(cookie.value == "admin") {
 				def gallery = Gallery.findById(cookie.name)
 				if(gallery) adminGalleries << gallery
