@@ -25,7 +25,7 @@
 		</div>
 		<div class="row">
 			<div class="span8 offset2">
-				<h1 id="tagline" data-content="<p><i class='icon-camera'></i> Upload your images.</p><p><i class='icon-share'></i> Let your friends upload their images.</p><p><i class='icon-download'></i> Download all images in full quality.</p>" data-original-title="How it works" style="color: white;"><em>"Use SharEvent, save USB drives."</em></h1>
+				<h1 id="tagline" data-content="<p><i class='icon-camera'></i> ${message(code: 'main.howitworks.upload')}</p><p><i class='icon-share'></i> ${message(code: 'main.howitworks.share')}</p><p><i class='icon-download'></i> ${message(code: 'main.howitworks.download')}</p>" data-original-title="${message(code: 'main.howitworks')}" style="color: white;"><em>"Use SharEvent, save USB drives."</em></h1>
 				<script type="text/javascript" charset="utf-8">
 					$('#tagline').popover({placement: 'top'});
 				</script>
@@ -139,7 +139,7 @@
 	<script type="text/javascript" charset="utf-8">
 		$(function()
 		{
-			if(document.createElement('canvas') && navigator && !(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/iPad/i)))
+			if(document.createElement('canvas') && navigator && (!(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/msie/i) || navigator.userAgent.match(/Safari/i) || navigator.userAgent.match(/Android/i)) || navigator.userAgent.match(/Chrome/i) || navigator.userAgent.match(/Firefox/i)))
 			{
 				function Bit(size, color){
 					this.size = size;
@@ -227,6 +227,11 @@
 				}
 
 				setInterval(reDraw, 50);
+			}
+			else {
+				document.body.style['background-image'] = 'url("${resource(dir:'images', file:'blue_bg.jpg')}")';
+				document.body.style['backgroundImage'] = 'url("${resource(dir:'images', file:'blue_bg.jpg')}")';
+				document.body.style['background-attachment'] = 'fixed';
 			}
 		});
 	</script>
