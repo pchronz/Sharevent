@@ -49,6 +49,7 @@ grails.project.dependency.resolution = {
 		compile ":ajax-uploader:1.1"
 		compile ":qrcode:0.3"
 		compile ":mail:1.0"
+		compile ":quartz:0.4.2"
 
         // Uncomment these (or add new ones) to enable additional resources capabilities
         //runtime ":zipped-resources:1.0"

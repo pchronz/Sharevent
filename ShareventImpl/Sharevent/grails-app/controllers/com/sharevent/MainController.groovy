@@ -41,4 +41,5 @@ class MainController {
 		response.addCookie(c)
 		redirect action: 'view'
 	}
+
 }

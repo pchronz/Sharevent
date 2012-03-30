@@ -120,14 +120,12 @@ grails {
 
 grails {
    mail {
-     host = "smtp.gmail.com"
-     port = 465
-     username = "sharemaster5000@gmail.com"
+     host = "smtp.udag.de"
+     port = 25
+     username = "shareventnet-0001"
      password = "pimpsFTW88"
-     props = ["mail.smtp.auth":"true", 					   
-              "mail.smtp.socketFactory.port":"465",
-              "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
-              "mail.smtp.socketFactory.fallback":"false"]
+     props = ["mail.smtp.starttls.enable":"true", 
+                  "mail.smtp.port":"587"]
    }
 }
 
