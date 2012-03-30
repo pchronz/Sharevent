@@ -35,21 +35,21 @@
 					<div class="g-plusone"
 						data-annotation="none"
 						data-size="medium"
-						data-href="${createLink(action: 'view', id: galleryInstance.id)}">
+						data-href="${createLink(absolute: true, action: 'view', id: galleryInstance.id)}">
 					</div>
 					<div id="name">
 						<a href="https://twitter.com/share" 
 							class="twitter-share-button" 
 							data-lang="en" 
 							data-count="none"
-							data-url="${createLink(action: 'view', id: galleryInstance.id)}">
+							data-url="${createLink(absolute: true, action: 'view', id: galleryInstance.id)}">
 							Tweet
 						</a>	
 					</div>
 
 					<div class="fb-like" 
 						style="display:inline;position:relative;top:-3px;"
-						data-href= "${createLink(action: 'view', id: galleryInstance.id)}"
+						data-href= "${createLink(absolute: true, action: 'view', id: galleryInstance.id)}"
 						data-send="false"
 						data-layout="button_count" 
 						data-width="25"
@@ -70,7 +70,7 @@
 		 <ul class="thumbnails" style="position: relative; left: 130px; width: 300px;">
 			 <li class="span3">
 				 <div class="thumbnail" id="qr-link">
-					 <qrcode:image text="${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id)}" />
+					 <qrcode:image text="${createLink(absolute: true, controller: 'gallery', action: 'view', id: galleryInstance.id)}" />
 					 <script type="text/javascript" charset="utf-8">
 						 $('#qr-link').click(function(){return false;});
 					 </script>
@@ -426,7 +426,7 @@
 
 			$('.ac-mailTo').click(function () {
 				var img = $(this).parent().parent().siblings('a').children('img');
-				var url = "${createLink(action: 'view', id: galleryInstance.id)}?showImage=" + img.attr('id');
+				var url = "${createLink(absolute: true, action: 'view', id: galleryInstance.id)}?showImage=" + img.attr('id');
 		
 				var subject = '?subject=Sharevent shared event'	
 				var body= '&body='+'Check out this gallery: '+url;
@@ -440,7 +440,7 @@
 			});
 
 			$('.ac-gallery-mailto').click(function () {
-				var url = "${createLink(controller: 'gallery', action: 'view', id: galleryInstance.id)}";
+				var url = "${createLink(absolute: true, controller: 'gallery', action: 'view', id: galleryInstance.id)}";
 		
 				var subject = '?subject=Sharevent shared event'	
 				var body= '&body='+'Check out this gallery: '+url+'';
