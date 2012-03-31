@@ -203,6 +203,17 @@ class GalleryController {
 					redirect(controller:'main')
 					return
 				}
+
+				// set the gallery subscriptions to dirty, so they will be updated by the Quartz job later on
+				galleryInstance.subscriptions.each {
+					it.needsUpdate = true
+					if(!it.save(flush: true)) {
+						log.error "Could not save subscription after image upload"
+						it.errors.each { error ->
+							log.error error
+						}
+					}
+				}
 				
 				imageService.uploadImage(request, image.id, user.id)
 			}
@@ -464,5 +475,89 @@ class GalleryController {
 		def outputStream = response.outputStream
 		QRCodeRenderer qrcodeRenderer = new QRCodeRenderer()
 		qrcodeRenderer.renderPng(g.createLink(controller: 'gallery', action: 'view', id: 'params.id').toString(), 300, outputStream)
+	}
+
+	def subscribe = {
+		def gallery = Gallery.get(params.id)
+		if(!gallery) {
+			log.error "Error while retrieving gallery for new subscription"
+			redirect controller: 'gallery', action: 'view', id: gallery.id
+			return
+		}
+
+		// make sure the user subscribes only once
+		boolean found = false
+		gallery.subscriptions.each {
+			if(it.email == params.email) found = true
+		}
+
+
+		if(!found) {
+			def subscription = new GallerySubscription(needsUpdate: false, email: params.email, gallery: gallery, url: g.createLink(absolute: true, controller: 'gallery', action: 'view', id: gallery.id), unsubscribe: g.createLink(absolute: true, controller: 'gallery', action: 'unsubscribe', id: gallery.id, params: [email: params.email]))
+			// unsubscription link
+
+			if(!subscription.save(flush: true)) {
+				log.error "Error while saving subscription"
+				subscription.errors.each {
+					log.error it
+				}
+				redirect controller: 'gallery', action: 'view', id: gallery.id
+				return
+			}
+
+			if(!gallery.save(flush: true)) {
+				log.error "Could not save gallery after adding subscription"
+				gallery.errors.each {
+					log.error it
+				}
+				redirect controller: 'gallery', action: 'view', id: gallery.id
+				return
+			}
+
+
+			log.info "New successful subscription to gallery ${gallery.id} by ${subscription.email}"
+		}
+		else {
+			log.info "User ${params.email} tried to subscribe a second time."
+		}
+
+		def adminLog = new AdminLog(dateCreated: new Date(), message: "New Gallery Subscription: ${g.createLink(absolute: true, controller: 'gallery', action: 'view', id: gallery.id).toString()} by ${params.email}")
+		adminLog.save(flush: true)
+
+		flash.message = "You have successfully subscribed to this gallery."
+		redirect controller: 'gallery', action: 'view', id: gallery.id
+		return
+	}
+
+	def unsubscribe = {
+		def gallery = Gallery.get(params.id)
+		if(!gallery || !params.email) {
+			redirect controller: 'main', action: 'view'
+			return
+		}
+
+		log.info "Number subscriptions for gallery ${gallery.id} == ${gallery.subscriptions.size()}"
+
+		def subscription = null
+		gallery.subscriptions.each {
+			if(it.email == params.email) {
+				subscription = it
+			}
+		}
+
+		if(subscription) {
+			gallery.removeFromSubscriptions(subscription)
+			subscription.delete()
+			if(!gallery.save(flush: true)) {
+				log.error "Could not save gallery after removing subscription"
+				gallery.errors.each {
+					log.error it
+				}
+			}
+		}
+
+		log.info "Number subscriptions for gallery ${gallery.id} after unsubscribing one user == ${gallery.subscriptions.size()}"
+		flash.message = "You have successfully unsubscribed yourself from this gallery."
+		redirect controller: 'gallery', action: 'view', id: gallery.id
 	}
 }

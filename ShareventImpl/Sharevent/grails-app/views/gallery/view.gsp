@@ -85,8 +85,8 @@
 	
 	
 	<div class="row">
-	  <form class="form">
 		<div class="span3" >
+		  <form class="form">
 			<fieldset>
 				<div class="control-group">
 					<label class="control-label"><sv:shortLink style="color: #fff;" gallery="${galleryInstance}"><g:message code="userDef.participationLink"/></sv:shortLink></label>
@@ -95,19 +95,33 @@
 					</div>
 				</div>
 			</fieldset>
+			</form>
 		</div>
-		<div class="span3">
-			<fieldset> 
-				<g:if test="${isAdmin}">
-					<div class="control-group">
-						<label class="control-label"><sv:shortAdminLink style="color: #fff;" gallery="${galleryInstance}"><g:message code="userDef.administrationLink"/></sv:shortAdminLink></label>
-						<div class="controls">
-							<input class="span3 gallery-short-url" type="text" value="${shortAdminUrl}"></input>
+		<g:if test="${isAdmin}">
+			<div class="span3">
+			  <form class="form">
+				<fieldset> 
+						<div class="control-group">
+							<label class="control-label"><sv:shortAdminLink style="color: #fff;" gallery="${galleryInstance}"><g:message code="userDef.administrationLink"/></sv:shortAdminLink></label>
+							<div class="controls">
+								<input class="span3 gallery-short-url" type="text" value="${shortAdminUrl}"></input>
+							</div>
 						</div>
-					</div>
-				</g:if>
-			</fieldset>
+				</fieldset>
+				</form>
+			</div>
+		</g:if>
+		<div class="span6">
+			<g:form class="form" name="subscriptionForm" controller="gallery" action="subscribe" id="${galleryInstance.id}">
+						<label class="control-label" style="color: #fff;">Email-Notification</label>
+						<input type="text" name="email" class="input-large subscription-tooltip" title="We can notify you when new images are uploaded." placeholder="Email" />
+						<button type="submit" class="btn" style="margin-top: -8px;">Subscribe</button>
+						<script type="text/javascript" charset="utf-8">
+							$('.subscription-tooltip').tooltip();
+						</script>
+			</g:form>
 		</div>
+		
 			
 		<script type="text/javascript" charset="utf-8">
 			$(function() {

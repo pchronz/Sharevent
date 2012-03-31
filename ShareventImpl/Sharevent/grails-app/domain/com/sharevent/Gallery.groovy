@@ -13,7 +13,7 @@ class Gallery {
 
 	UrlMap urlMap
 
-    static hasMany = [users:GalleryUser, images:Image]
+    static hasMany = [users:GalleryUser, images:Image, subscriptions: GallerySubscription]
 	static belongsTo = GalleryUser
 
     static constraints = {
@@ -40,6 +40,7 @@ class Gallery {
     static mapping = {
 		id generator: 'uuid'
 		version false
+		subscriptions cascade: 'all-delete-orphan'
     }
 
 	Gallery() {
