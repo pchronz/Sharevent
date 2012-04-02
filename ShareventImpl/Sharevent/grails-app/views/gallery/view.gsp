@@ -156,7 +156,7 @@
 					<ul class="thumbnails">
 						<g:each var="imageUrl" in="${urls}">
 							<li class="span3 thumbwall">
-								<a href="${urlsFull[imageUrl.key]}" class="thumbnail">
+								<a href="${urlsFull[imageUrl.key]}" class="thumbnail gallery-image">
 									<img width="270px" height="270px" src="${imageUrl.value}" id="img_${imageUrl.key}"/>
 								</a>
 								
@@ -475,7 +475,7 @@
 			};
 
 			$(function(){
-				$(".thumbnail").not('#social-modal .thumbnail').colorbox({rel: 'group1', preloading: true, scalePhotos: true, maxWidth: "100%", maxHeight: "100%"});
+				$(".gallery-image").colorbox({rel: 'group1', preloading: true, scalePhotos: true, maxWidth: "100%", maxHeight: "100%"});
 				<g:if test="${showImage}">
 					$("#${showImage}").click();
 				</g:if>
