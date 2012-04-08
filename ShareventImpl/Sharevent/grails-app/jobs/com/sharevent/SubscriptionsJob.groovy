@@ -6,7 +6,7 @@ class SubscriptionsJob {
 
 	static triggers = {
 		// TODO set the interval higher
-		simple name: 'subscriptionDigestTrigger', startDelay: 30000, repeatInterval: 1000*30  
+		simple name: 'subscriptionDigestTrigger', startDelay: 30000, repeatInterval: 1000*30*15  
 	}
 	def group = "SubscriptionGroup"
 

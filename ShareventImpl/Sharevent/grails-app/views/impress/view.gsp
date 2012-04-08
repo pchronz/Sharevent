@@ -20,20 +20,7 @@
 	  <div class="row">
 		  <div class="span12" style="color: #000;">
 			<h1>Impressum</h1><p>Angaben gemäß § 5 TMG:<br/><br/></p>
-			<p>Peter Chronz<br />
-			Hermann-Rein-Str.<br />
-			8a<br />
-			37075 Göttingen<br />
-			</p>
-			<h2>Kontakt:</h2>
-			<table><tr>
-			<td><p>Telefon:</p></td>
-			<td><p>004915125368735</p></td></tr>
-			<tr><td><p></p></td>
-			<td><p></p></td></tr>
-			<tr><td><p>E-Mail:</p></td>
-			<td><p>peter@sharevent.net</p></td>
-			</tr></table>
+		    <img src="${resource(dir: 'images', file: 'impress.png')}" />
 			<p> </p>
 			<p>Quelle: <i>Erstellt mit dem Impressum Generator von <a href="http://www.e-recht24.de">http://www.e-recht24.de</a></i></p>
 			<h2>Haftungsausschluss:</h2>
