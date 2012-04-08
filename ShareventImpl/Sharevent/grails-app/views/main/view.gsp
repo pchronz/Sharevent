@@ -5,6 +5,7 @@
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" %>
+<g:set var="isNewUser" value="${adminGalleries?.size() == 0 && userGalleries?.size() == 0}" />
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -63,7 +64,7 @@
 	</g:form>
 
 	<div class="row">
-		<div class="span12 offset1" style="margin-left: 150px">
+		<div class="span8 offset1" style="margin-left: 150px">
 			<%-- Twitter --%>
 			<a href="https://twitter.com/share" class="twitter-share-button" data-related="jasoncosta" data-lang="en" data-size="small" data-count="none" data-url="http://www.sharevent.com">Tweet</a>
 			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
@@ -89,51 +90,58 @@
 			<div class="fb-like" style="display: inline; position: relative; top: -3px;" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
 			<div id="fb-root"></div>
 		</div>
+		<%--
+		
+		<div class="span2">
+			<g:if test="${isNewUser}">
+				<div style="display: inline; position: relative;"><g:link controller="gallery" action="viewExample" style="color: #FFF;">Example Gallery</g:link></div>
+			</g:if>
+		</div>
+		  --%>
 	</div>
 
-	<g:if test="${adminGalleries?.size() > 0 || userGalleries?.size() >0}">
+	<g:if test="${!isNewUser}">
 		<div class="row" style="margin-top: 30px;">
 			<div class="span8 offset2">
-<div class="modal" id="modal-recent" style="position: relative; top: auto; left: auto; margin: 0 auto;">
-  <div class="modal-header">
-	  <h2>${message(code: 'main.recentgalleries')}</h2>
-  </div>
-  <div class="modal-body">
-	<table class="table table-condensed table-striped">
-	  <thead>
-		<tr>
-			<th>${message(code: 'main.title')}</th>
-			<th>${message(code: 'main.status')}</th>
-			<th></th>
-		</tr>
-	  </thead>
-	  <tbody>
-		<g:each in="${adminGalleries}" var="adminGallery">
-			<tr>
-				<td>
-					<sv:shortAdminLink gallery="${adminGallery}">${adminGallery.title}</sv:shortAdminLink>
-				</td>
-				<td>${message(code: 'main.admin')}</td>
-				<td><g:link controller="main" action="removeCookie" id="${adminGallery.id}" class="close">×</g:link></td>
-			</tr>
-		</g:each>
-		<g:each in="${userGalleries}" var="userGallery">
-			<tr>
-				<td>
-				<sv:shortLink gallery="${userGallery}">${userGallery.title}</sv:shortLink>
-				</td>
-				<td>User</td>
-				<td><g:link controller="main" action="removeCookie" id="${userGallery.id}" class="close">×</g:link></td>
-			</tr>
-		</g:each>
-	  </tbody>
-	</table>
-  </div>
-</div>
+				<div class="modal" id="modal-recent" style="position: relative; top: auto; left: auto; margin: 0 auto;">
+				  <div class="modal-header">
+					  <h2>${message(code: 'main.recentgalleries')}</h2>
+				  </div>
+				  <div class="modal-body">
+					<table class="table table-condensed table-striped">
+					  <thead>
+						<tr>
+							<th>${message(code: 'main.title')}</th>
+							<th>${message(code: 'main.status')}</th>
+							<th></th>
+						</tr>
+					  </thead>
+					  <tbody>
+						<g:each in="${adminGalleries}" var="adminGallery">
+							<tr>
+								<td>
+									<sv:shortAdminLink gallery="${adminGallery}">${adminGallery.title}</sv:shortAdminLink>
+								</td>
+								<td>${message(code: 'main.admin')}</td>
+								<td><g:link controller="main" action="removeCookie" id="${adminGallery.id}" class="close">×</g:link></td>
+							</tr>
+						</g:each>
+						<g:each in="${userGalleries}" var="userGallery">
+							<tr>
+								<td>
+								<sv:shortLink gallery="${userGallery}">${userGallery.title}</sv:shortLink>
+								</td>
+								<td>User</td>
+								<td><g:link controller="main" action="removeCookie" id="${userGallery.id}" class="close">×</g:link></td>
+							</tr>
+						</g:each>
+					  </tbody>
+					</table>
+				  </div>
+				</div>
 			</div>
 		</div>
 	</g:if>
-	
 </div>
 
 	<script type="text/javascript" charset="utf-8">

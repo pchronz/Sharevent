@@ -16,12 +16,15 @@ import java.awt.geom.*;
 import java.awt.image.*;
 import javax.imageio.*;
 import javax.imageio.stream.MemoryCacheImageOutputStream
+import groovy.transform.Synchronized
 
 class ImageService {
 
 	def sessionFactory
 	def imageDBService
 	def grailsApplication
+
+	private static final staticLock = new Object[0]
 	
     static transactional = true
 
@@ -47,10 +50,10 @@ class ImageService {
 	}
 
 	def uploadImage(def request, def imageId, def userId) {
-		InputStream inputStream = null
+		File tmpFile = File.createTempFile('Tem', '.jpg')
 		if (request instanceof MultipartHttpServletRequest) {
 				MultipartFile uploadedFile = ((MultipartHttpServletRequest) request).getFile('qqfile')
-				inputStream = uploadedFile.inputStream
+				uploadedFile.transferTo(tmpFile)
 				log.info 'Handling MultipartHttpServletRequest'
 		} 
 		else {
@@ -59,10 +62,11 @@ class ImageService {
 			log.info 'Handling MultiPartHttpServerRequestMock'
 			try {
 				MultipartFile uploadedFile = request.getFile('qqfile')
-				inputStream = uploadedFile.inputStream
+				uploadedFile.transferTo(tmpFile)
 			}
 			catch(e) {
-				inputStream = request.inputStream
+				tmpFile.newOutputStream().leftShift(request.inputStream)
+				println tmpFile
 			}
 		}
 
@@ -70,9 +74,17 @@ class ImageService {
 		// read the image from inputstream
 		// if it does not work, post a flash message, log it and remove the image domain class instance
 		// using Grails Executor to run the scaling and upload asynchronously
-		BufferedImage bsrc = ImageIO.read(inputStream)
 		runAsync {
+			processImage(tmpFile, userId, imageId)
+		}
+		log.info 'image upload successfull'
+	}
 
+	def processImage(File tmpFile, userId, imageId) {
+		// to save spare resources (mostly memory) on the host, only load one image at a time into memory
+		synchronized(staticLock) {
+			println("Starting to process image")
+			BufferedImage bsrc = ImageIO.read(tmpFile)
 			// the image could not be read. probably a wrong type to begin with.
 			// delete it
 			if(bsrc == null) {
@@ -106,9 +118,8 @@ class ImageService {
 
 			// uploading the scaled image
 			imageDBService.storeImageThumbnail(bais, imageId, userId)
-
+			println("Processing image done")
 		}
-		log.info 'image upload successfull'
 	}
 
 	// sets the image so that the smaller of width and height is at least big enough

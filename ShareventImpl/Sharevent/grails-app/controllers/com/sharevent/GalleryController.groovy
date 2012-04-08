@@ -137,6 +137,21 @@ class GalleryController {
 		}
     }
 
+	def viewExample = {
+		def urlsFull = [:]
+		(1..14).each{ 
+			urlsFull["${it}"] = "http://com.sharevent.images.s3.amazonaws.com/example/${it}.jpg"
+		}
+		def urls= [:]
+		(1..14).each{
+			urls["${it}"] = "http://com.sharevent.imagethumbs.s3.amazonaws.com/example/${it}.jpg"
+		}
+		def thisUrl = g.createLink(absolute: true, controller: 'gallery', action: 'viewExample')
+		def galleryInstance = [:]
+		galleryInstance.title = "My nice example gallery"
+		render view:"viewExample", model:[galleryInstance: galleryInstance, urls: urls, urlsFull: urlsFull, isAdmin: false, shortUrl: thisUrl, shortAdminUrl: thisUrl, showImage: params.showImage ?: null] 
+	}
+
 	def uploadImage= {
 			def image = null
 			// TODO check whether the user is logged in
