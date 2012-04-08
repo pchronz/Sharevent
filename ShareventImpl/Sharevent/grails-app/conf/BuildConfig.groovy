@@ -43,7 +43,6 @@ grails.project.dependency.resolution = {
 		runtime (':aws:1.1.9.2') {
 			excludes( name: 'jackson-core-asl')
 		}
-		compile ":executor:0.3"
         compile ":lesscss-resources:0.6.1"
 		compile ":spring-security-core:1.2.7.2"
 		compile ":ajax-uploader:1.1"
