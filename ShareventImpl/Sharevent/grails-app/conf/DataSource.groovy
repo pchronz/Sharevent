@@ -34,7 +34,7 @@ environments {
     production {
         dataSource {
             dbCreate = "update"
-	url = "jdbc:mysql://localhost:3306/sharevent"
+	url = "jdbc:mysql://augmented-code.cxzbjpiwkidf.us-east-1.rds.amazonaws.com:3306/sharevent"
         driverClassName = "com.mysql.jdbc.Driver"
         username = "sharevent"
         password = "sharevent"
