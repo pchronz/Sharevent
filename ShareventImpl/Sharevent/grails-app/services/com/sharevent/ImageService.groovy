@@ -74,9 +74,11 @@ class ImageService {
 		// read the image from inputstream
 		// if it does not work, post a flash message, log it and remove the image domain class instance
 		// using Grails Executor to run the scaling and upload asynchronously
-		runAsync {
+		def t = new Thread({
 			processImage(tmpFile, userId, imageId)
-		}
+		})
+		t.priority = Thread.MIN_PRIORITY
+		t.start()
 		log.info 'image upload successfull'
 	}
 
