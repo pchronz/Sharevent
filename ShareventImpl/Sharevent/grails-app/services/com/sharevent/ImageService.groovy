@@ -20,7 +20,6 @@ import groovy.transform.Synchronized
 
 class ImageService {
 
-	def sessionFactory
 	def imageDBService
 	def grailsApplication
 
@@ -29,10 +28,6 @@ class ImageService {
     static transactional = true
 
 	def deleteImage(imageId) {
-		// TODO refrain from deleting data, mark as deleted instead
-		//def session = SessionFactoryUtils.getSession(sessionFactory, true);
-		//session.setFlushMode(FlushMode.COMMIT)
-
 		def image = Image.findById(imageId,[lock:true])			
 		def galleryUser = GalleryUser.findById(image.galleryUser.id, [lock:true])
 		def gallery = Gallery.findById(image.gallery.id, [lock:true])
@@ -74,6 +69,8 @@ class ImageService {
 		// read the image from inputstream
 		// if it does not work, post a flash message, log it and remove the image domain class instance
 		// using Grails Executor to run the scaling and upload asynchronously
+		// TODO split this: stream throught he request directly to S3, POST on the worker
+		// XXX maybe as a backup check whether the service is available before relying on it, else run the processing locally
 		def t = new Thread({
 			processImage(tmpFile, userId, imageId)
 		})
