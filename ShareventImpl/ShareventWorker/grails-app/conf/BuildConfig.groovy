@@ -33,10 +33,6 @@ grails.project.dependency.resolution = {
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
-		compile('org.codehaus.groovy.modules.http-builder:http-builder:0.5.1') {
-			excludes "xml-apis", "groovy"
-		}
-
         // runtime 'mysql:mysql-connector-java:5.1.16'
     }
 
@@ -44,6 +40,10 @@ grails.project.dependency.resolution = {
         runtime ":hibernate:$grailsVersion"
         runtime ":jquery:1.7.1"
         runtime ":resources:1.1.6"
+
+		runtime (':aws:1.1.9.2') {
+			excludes( name: 'jackson-core-asl')
+		}
 
         // Uncomment these (or add new ones) to enable additional resources capabilities
         //runtime ":zipped-resources:1.0"
