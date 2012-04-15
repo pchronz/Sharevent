@@ -66,7 +66,7 @@ class ImageService {
 		}
 
 		// call the worker node to process the image
-		def worker = new HTTPBuilder("http://localhost:8090/ShareventWorker/")
+		def worker = new HTTPBuilder("http://23.23.198.70/")
 		try {
 			def resp = worker.post(path:"image", requestContentType: URLENC, body: [userId: userId, imageId: imageId])
 
