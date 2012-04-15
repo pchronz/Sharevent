@@ -227,7 +227,7 @@
 			id="${galleryInstance.id}"
 			url="${[controller: 'gallery', action: 'uploadImage', id: galleryInstance.id]}"
 			multiple="true" 
-			sizeLimit="9000000"
+			sizeLimit="15000000"
 			allowedExtensions=" [ 'jpg', 'jpeg', 'JPG', 'JPEG' ]">
 			<uploader:onSubmit>
 				$('.qq-upload-drop-area').hide();
