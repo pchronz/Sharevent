@@ -69,22 +69,6 @@ class ImageDBService {
 		}
 	}
 
-	def storeImageThumbnail(bais, imageId, userId) {
-		bais.s3upload(imageId + '.jpg') {
-			bucket 'com.sharevent.imagethumbs'
-			path userId + '/'
-		}
-		bais.close()
-	}
-
-	def storeImage(bais, imageId, userId) {
-		bais.s3upload(imageId + '.jpg') {
-			bucket 'com.sharevent.images'
-			path userId + '/'
-		}
-		bais.close()
-	}
-
 	// remove all entries from imageDB, which have no counterpart in the main data source
 	def synchronizeImageDB() {
 		// TODO S3

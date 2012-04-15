@@ -4,7 +4,7 @@ grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
 grails.project.target.level = 1.6
 grails.project.source.level = 1.6
-grails.project.war.file = "target/${appName}.war"
+//grails.project.war.file = "target/${appName}-${appVersion}.war"
 
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
@@ -33,27 +33,17 @@ grails.project.dependency.resolution = {
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
-        runtime 'mysql:mysql-connector-java:5.1.18'
-
-	// needed for the REST call to the worker node
-	compile('org.codehaus.groovy.modules.http-builder:http-builder:0.5.1') {
-		excludes "xml-apis", "groovy"
-	}
+        // runtime 'mysql:mysql-connector-java:5.1.16'
     }
 
     plugins {
         runtime ":hibernate:$grailsVersion"
         runtime ":jquery:1.7.1"
         runtime ":resources:1.1.6"
+
 		runtime (':aws:1.1.9.2') {
 			excludes( name: 'jackson-core-asl')
 		}
-        compile ":lesscss-resources:0.6.1"
-		compile ":spring-security-core:1.2.7.2"
-		compile ":ajax-uploader:1.1"
-		compile ":qrcode:0.3"
-		compile ":mail:1.0"
-		compile ":quartz:0.4.2"
 
         // Uncomment these (or add new ones) to enable additional resources capabilities
         //runtime ":zipped-resources:1.0"

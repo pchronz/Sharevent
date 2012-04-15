@@ -153,102 +153,102 @@ class GalleryController {
 	}
 
 	def uploadImage= {
-			def image = null
-			// TODO check whether the user is logged in
+		def image = null
+		// TODO check whether the user is logged in
 
-			try {
-				log.info 'Creating new Image instance' 
-				image = new Image()
-				// locking image set to prevent conflicts due to optimistic locking
-				// when upload multiple files at once
-				// HSQLDB does not support pessimistic locking ==> synchronizing the whole procedure
-				// this might be one of the first bottlenecks!
-				// XXX BOTTLENECK!
-				// TODO update once multiple contributions are allowed
-				Gallery galleryInstance = Gallery.get(params.id)
+		try {
+			log.info 'Creating new Image instance' 
+			image = new Image()
+			// locking image set to prevent conflicts due to optimistic locking
+			// when upload multiple files at once
+			// HSQLDB does not support pessimistic locking ==> synchronizing the whole procedure
+			// this might be one of the first bottlenecks!
+			// XXX BOTTLENECK!
+			// TODO update once multiple contributions are allowed
+			Gallery galleryInstance = Gallery.get(params.id)
 
-				log.info "galleryInstance loaded locked"
+			log.info "galleryInstance loaded locked"
 
-				if(!galleryInstance) {
-					log.info 'Could not retrieve gallery to upload image to'
-					render status: 500
-					return
-				}
-
-				def c = GalleryUser.createCriteria()
-				def user = c.get {
-					eq('firstName', GalleryUser.INCOGNITO)
-					galleries {
-						eq('id', galleryInstance.id)
-					}
-					lock true
-				}
-
-
-				if(user == null) {
-					log.info "Did not find any incognito users for gallery ${galleryInstance.id}"
-					render status: 500
-					return
-				}
-
-				if(!user.galleries.contains(galleryInstance))
-					user.addToGalleries galleryInstance
-				if(!galleryInstance.users.contains(user))
-					galleryInstance.addToUsers user
-
-				user.addToImages(image)
-				galleryInstance.addToImages image
-
-				if(user.isDirty())user.merge()
-				if(!user.save(flush: true)) {
-					user.errors.each {
-						log.info  it
-					}
-					flash.message = 'something went wrong while uploading your images'
-					redirect(controller:'main')
-					return
-				}
-
-				if(!galleryInstance.save(flush: true)) {
-					log.info 'Error while saving Gallery with new image.' 
-					galleryInstance.errors.each {
-						log.info it 
-					}
-					flash.message = 'something went wrong while uploading your images'
-					redirect(controller:'main')
-					return
-				}
-
-				// set the gallery subscriptions to dirty, so they will be updated by the Quartz job later on
-				galleryInstance.subscriptions.each {
-					it.needsUpdate = true
-					if(!it.save(flush: true)) {
-						log.error "Could not save subscription after image upload"
-						it.errors.each { error ->
-							log.error error
-						}
-					}
-				}
-				
-				imageService.uploadImage(request, image.id, user.id)
-			}
-			catch(Exception e) {
-				e.printStackTrace()
-				log.error e.toString()
-				flash.message = e.getMessage()
-				render(text: [success: false] as JSON, contentType: 'text/JSON')
+			if(!galleryInstance) {
+				log.info 'Could not retrieve gallery to upload image to'
+				render status: 500
 				return
 			}
-			catch(e) {
-				log.error e.toString()
-				render(text: [success: false] as JSON, contentType: 'text/JSON')
+
+			def c = GalleryUser.createCriteria()
+			def user = c.get {
+				eq('firstName', GalleryUser.INCOGNITO)
+				galleries {
+					eq('id', galleryInstance.id)
+				}
+				lock true
+			}
+
+
+			if(user == null) {
+				log.info "Did not find any incognito users for gallery ${galleryInstance.id}"
+				render status: 500
 				return
 			}
-			def imageURL = imageDBService.getImageThumbURL(image)
-			log.info  'imageURL == ' + imageURL
-			flash.message = "It may take a few moments before all images are processed and available in the gallery."
-			new AdminLog(dateCreated: new Date(), message: "Image upload: ${imageURL}").save(flush: true)
-			render(text: [success: true, imageURL: imageURL] as JSON, contentType: 'text/JSON')
+
+			if(!user.galleries.contains(galleryInstance))
+				user.addToGalleries galleryInstance
+			if(!galleryInstance.users.contains(user))
+				galleryInstance.addToUsers user
+
+			user.addToImages(image)
+			galleryInstance.addToImages image
+
+			if(user.isDirty())user.merge()
+			if(!user.save(flush: true)) {
+				user.errors.each {
+					log.info  it
+				}
+				flash.message = 'something went wrong while uploading your images'
+				redirect(controller:'main')
+				return
+			}
+
+			if(!galleryInstance.save(flush: true)) {
+				log.info 'Error while saving Gallery with new image.' 
+				galleryInstance.errors.each {
+					log.info it 
+				}
+				flash.message = 'something went wrong while uploading your images'
+				redirect(controller:'main')
+				return
+			}
+
+			// set the gallery subscriptions to dirty, so they will be updated by the Quartz job later on
+			galleryInstance.subscriptions.each {
+				it.needsUpdate = true
+				if(!it.save(flush: true)) {
+					log.error "Could not save subscription after image upload"
+					it.errors.each { error ->
+						log.error error
+					}
+				}
+			}
+			
+			imageService.uploadImage(request, image.id, user.id)
+		}
+		catch(Exception e) {
+			e.printStackTrace()
+			log.error e.toString()
+			flash.message = e.getMessage()
+			render(text: [success: false] as JSON, contentType: 'text/JSON')
+			return
+		}
+		catch(e) {
+			log.error e.toString()
+			render(text: [success: false] as JSON, contentType: 'text/JSON')
+			return
+		}
+		def imageURL = imageDBService.getImageThumbURL(image)
+		log.info  'imageURL == ' + imageURL
+		flash.message = "It may take a few moments before all images are processed and available in the gallery."
+		new AdminLog(dateCreated: new Date(), message: "Image upload: ${imageURL}").save(flush: true)
+		render(text: [success: true, imageURL: imageURL] as JSON, contentType: 'text/JSON')
 	}
 
 	def downloadImage = {
